@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<yaf>
+  <globals background="0 0 0 1" drawmode="fill" shading="gouraud" cullface="none" cullorder="CCW"/>
+  <cameras initial="cam1">
+    <perspective id="cam1" near="0.1" far="1000" angle="60" pos="15 15 15" target="0 0.0 0"/>
+    <ortho id="cam2" near="0.1" far="100" left="100" right="100" top="100" bottom="100"/>
+  </cameras>
+  <lighting doublesided="false" local="false" enabled="true" ambient="0.0 0.0 0.0 1.0">
+    <omni id="light1" enabled="true" location="3.75 7.3 3.75" ambient="0.5 0.5 0.5 0.0" diffuse="0.5 0.6 0.8 1" specular="0.2 0.2 0.3 1"/>
+    <spot id="light4" enabled="true" location="2 2 4" ambient="0.0 0.0 0.0 0.0" diffuse="1.0 1.0 1.0 1" specular="0.2 0.2 0.3 1" angle="10.0" exponent="128" direction="-2 -2 -4"/>
+  </lighting>
+  <textures>
+    <texture id="fire" file="fire.jpg"/>
+  </textures>
+  <appearances>
+    <appearance id="waterApp" emissive="0.0 0.0 0.0 0.0" ambient="0.5 0.5 0.5 0.1" diffuse="0.8 0.8 0.8 1.0" specular="0 0 0 0" shininess="10"/>
+    <appearance id="dummyApp" emissive="0.0 0.0 0.0 0.0" ambient="0.5 0.5 0.5 0.1" diffuse="0.8 0.8 0.8 1.0" specular="0 0 0 0" shininess="10" textureref="fire" texlength_s="1" texlength_t="1"/>
+  </appearances>
+  <animations>
+  </animations>
+  <graph rootid="scene">
+    <node id="scene">
+      <transforms>
+      </transforms>
+      <children>
+        <noderef id="vehicle"/>
+        <noderef id="waterfire"/>
+        <noderef id="triangle"/>
+        <noderef id="cylinder"/>
+        <noderef id="sphere"/>
+        <noderef id="torus"/>
+      </children>
+    </node>
+    <node id="waterfire">
+      <transforms>
+        <translate to="2.0 0.0 0.0"/>
+        <rotate axis="x" angle="90"/>
+        <scale factor="8 1 8"/>
+      </transforms>
+      <appearanceref id="waterApp"/>
+      <children>
+        <waterline heightmap="firemap.jpg" texturemap="fire.jpg" fragmentshader="water.frag" vertexshader="water.vert"/>
+      </children>
+    </node>
+    <node id="vehicle">
+      <transforms>
+      </transforms>
+      <appearanceref id="waterApp"/>
+      <children>
+        <vehicle/>
+      </children>
+    </node>
+    <node id="triangle">
+      <transforms>
+        <translate to="8.0 0.0 0.0"/>
+      </transforms>
+      <appearanceref id="dummyApp"/>
+      <children>
+        <triangle xyz1="0 0 0" xyz2="0 0 2" xyz3="0 2 2"/>
+      </children>
+    </node>
+    <node id="cylinder">
+      <transforms>
+        <translate to="12.0 0.0 0.0"/>
+      </transforms>
+      <appearanceref id="dummyApp"/>
+      <children>
+        <cylinder base="2" top="1" height="4" slices="13" stacks="13"/>
+      </children>
+    </node>
+    <node id="sphere">
+      <transforms>
+        <translate to="16.0 0.0 0.0"/>
+      </transforms>
+      <appearanceref id="dummyApp"/>
+      <children>
+        <sphere radius="2" slices="10" stacks="10"/>
+      </children>
+    </node>
+    <node id="torus">
+      <transforms>
+        <translate to="20.0 0.0 0.0"/>
+      </transforms>
+      <appearanceref id="dummyApp"/>
+      <children>
+        <torus inner="0.2" outer="0.5" slices="10" loops="10"/>
+      </children>
+    </node>
+    <node id="rectangle1">
+      <transforms>
+        <translate to="0 0 -0.5"/>
+        <rotate axis="y" angle="180"/>
+      </transforms>
+      <children>
+        <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5"/>
+      </children>
+    </node>
+    <node id="rectangle2">
+      <transforms>
+        <translate to="0 0 0.5"/>
+      </transforms>
+      <children>
+        <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5"/>
+      </children>
+    </node>
+    <node id="rectangle3">
+      <transforms>
+        <translate to="0 -0.5 0"/>
+        <rotate axis="x" angle="90"/>
+      </transforms>
+      <children>
+        <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5"/>
+      </children>
+    </node>
+    <node id="rectangle4">
+      <transforms>
+        <translate to="0 0.5 0"/>
+        <rotate axis="x" angle="-90"/>
+      </transforms>
+      <children>
+        <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5"/>
+      </children>
+    </node>
+    <node id="rectangle5">
+      <transforms>
+        <translate to="-0.5 0 0"/>
+        <rotate axis="y" angle="-90"/>
+      </transforms>
+      <children>
+        <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5"/>
+      </children>
+    </node>
+    <node id="rectangle6">
+      <transforms>
+        <translate to="0.5 0 0"/>
+        <rotate axis="y" angle="90"/>
+      </transforms>
+      <children>
+        <rectangle xy1="-0.5 -0.5" xy2="0.5 0.5"/>
+      </children>
+    </node>
+    <node id="cube">
+      <transforms>
+      </transforms>
+      <children>
+        <!-- Back -->
+        <noderef id="rectangle1"/>
+        <!-- Front -->
+        <noderef id="rectangle2"/>
+        <!-- Bottom -->
+        <noderef id="rectangle3"/>
+        <!-- Top -->
+        <noderef id="rectangle4"/>
+        <!-- Left -->
+        <noderef id="rectangle5"/>
+        <!-- Right -->
+        <noderef id="rectangle6"/>
+      </children>
+    </node>
+  </graph>
+</yaf>
