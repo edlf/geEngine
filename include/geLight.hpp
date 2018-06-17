@@ -55,7 +55,9 @@ class geOmniLight: public geLight {
 protected:
 
 public:
-    geOmniLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular);
+    geOmniLight(const std::string& lightID, int openGLid, bool iEnable,
+            xyzPointFloat iLocation, color iAmbient, color iDiffuse,
+            color iSpecular);
 
     void draw();
     void update();
@@ -70,7 +72,10 @@ protected:
     GLfloat direction[4];
 
 public:
-    geSpotLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular, GLfloat iAngle, GLfloat iExponent, xyzPointFloat iDirection);
+    geSpotLight(const std::string& lightID, int openGLid, bool iEnable,
+            xyzPointFloat iLocation, color iAmbient, color iDiffuse,
+            color iSpecular, GLfloat iAngle, GLfloat iExponent,
+            xyzPointFloat iDirection);
 
     void setAngle(GLdouble input);
     void setExponent(GLfloat input);

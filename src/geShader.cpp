@@ -10,12 +10,12 @@
 namespace ge {
 
 static char* textFileRead(const char *fileName) {
-    char* text = NULL;
+    char* text = nullptr;
 
-    if (fileName != NULL) {
+    if (fileName != nullptr) {
         FILE *file = fopen(fileName, "rt");
 
-        if (file != NULL) {
+        if (file != nullptr) {
             fseek(file, 0, SEEK_END);
             size_t count = ftell(file);
             rewind(file);
@@ -42,7 +42,8 @@ static void validateShader(GLuint shader, const char* file = 0) {
     glGetShaderInfoLog(shader, BUFFER_SIZE, &length, buffer);
 
     if (length > 0) {
-        std::cerr << "Shader " << shader << " (" << (file ? file : "") << ") compile error: " << buffer << std::endl;
+        std::cerr << "Shader " << shader << " (" << (file ? file : "")
+                << ") compile error: " << buffer << std::endl;
     }
 }
 
@@ -55,7 +56,8 @@ static void validateProgram(GLuint program) {
     memset(buffer, 0, BUFFER_SIZE);
     glGetProgramInfoLog(program, BUFFER_SIZE, &length, buffer);
     if (length > 0) {
-        std::cerr << "Program " << program << " link error: " << buffer << std::endl;
+        std::cerr << "Program " << program << " link error: " << buffer
+                << std::endl;
     }
 
     glValidateProgram(program);
@@ -75,13 +77,15 @@ geShader::geShader(const char *vsFile, const char *fsFile) {
     const char* vsText = textFileRead(vsFile);
     const char* fsText = textFileRead(fsFile);
 
-    if (vsText == NULL) {
-        std::cerr << "Problem reading vertex shader file: " << vsFile << std::endl;
+    if (vsText == nullptr) {
+        std::cerr << "Problem reading vertex shader file: " << vsFile
+                << std::endl;
         return;
     }
 
-    if (fsText == NULL) {
-    	std::cerr << "Problem reading fragment shader file: " << fsFile << std::endl;
+    if (fsText == nullptr) {
+        std::cerr << "Problem reading fragment shader file: " << fsFile
+                << std::endl;
         return;
     }
 
@@ -100,6 +104,7 @@ geShader::geShader(const char *vsFile, const char *fsFile) {
     validateProgram(ID);
 
     timeloc = glGetUniformLocation(ID, "time");
+    this->totalTimePassed = 0;
 }
 
 geShader::~geShader() {

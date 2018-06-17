@@ -57,7 +57,7 @@ private:
     GLboolean lightingDoubleSided;
     GLboolean lightingLocal;
     GLboolean lightingEnable;
-    GLfloat   ambientLightColour[4];
+    GLfloat ambientLightColour[4];
     std::vector<geLight*> lightVector;
     unsigned int numberOfLights;
 
@@ -113,7 +113,8 @@ private:
     void xmlLoadGraph();
     void xmlLoadAnimations();
 
-    static TiXmlElement *findChildByAttribute(TiXmlElement *parent, const char * attr, const char *val);
+    static TiXmlElement *findChildByAttribute(TiXmlElement *parent,
+            const char * attr, const char *val);
 
     /* XML Elements */
     TiXmlElement* xmlRootElement;
@@ -127,15 +128,23 @@ private:
     TiXmlElement* xmlAnimationsElement;
 
     /* XML Parse methods */
-    std::string getStringFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    xyzPointDouble getDoublePointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    xyzPointFloat getFloatPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    color getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    double getDoubleFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    float getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    unsigned int getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    std::string getStringFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
+    xyzPointDouble getDoublePointFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
+    xyzPointFloat getFloatPointFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
+    color getColorFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
+    double getDoubleFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
+    float getFloatFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
+    unsigned int getUnsignedIntFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
     bool getAttributeExistence(TiXmlElement* iElement, char const* iAttribute);
-    xyPointDouble get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    xyPointDouble get2DdPointFromElementAttribute(TiXmlElement* iElement,
+            char const* iAttribute, const std::string& Error);
 
     /* End XML related methods */
 

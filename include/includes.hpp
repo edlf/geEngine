@@ -13,13 +13,11 @@
 //#define ENGINE_VERBOSE
 /* Remove the comment bellow to see white spheres on light sources */
 //#define LIGHT_SPHERE_ENABLED
-
 /* OpenGL light max */
 #define MAX_LIGHTS 8
 
 /* Slightly faster than the 60hz */
 #define GLUT_UPDATE_MS 16
-
 
 /* buffer size for the picking */
 #define PICKING_BUFFER_SIZE 256
@@ -36,9 +34,9 @@
 #define STRING_CONSOLE_HEADER_SPACER "                          "
 
 /* GUI camera stuff, once again stolen from CGFlib (divided values by 2 for more accuracy) */
-const double MOUSE_ROTATE_FACTOR =  0.25;
-const double MOUSE_PAN_FACTOR    = 0.025;
-const double MOUSE_ZOOM_FACTOR   =  0.25;
+const double MOUSE_ROTATE_FACTOR = 0.25;
+const double MOUSE_PAN_FACTOR = 0.025;
+const double MOUSE_ZOOM_FACTOR = 0.25;
 
 #define MAX_DISPLAY_LISTS 64
 
@@ -59,8 +57,7 @@ const double MOUSE_ZOOM_FACTOR   =  0.25;
 #include <stack>
 
 /* OpenGL includes */
-extern "C"
-{
+extern "C" {
 #include <GL/glew.h>
 }
 #include <GL/freeglut.h>
@@ -75,5 +72,4 @@ extern "C"
 #endif
 
 #endif
-
 

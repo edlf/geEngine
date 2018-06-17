@@ -9,9 +9,12 @@
 namespace ge {
 void geAnimation::updateDeltas() {
     if (deltaTimeSingleMove > 0) {
-        dX = abs(currentDestionationPoint.x - currentSourcePoint.x) / deltaTimeSingleMove;
-        dY = abs(currentDestionationPoint.y - currentSourcePoint.y) / deltaTimeSingleMove;
-        dZ = abs(currentDestionationPoint.z - currentSourcePoint.z) / deltaTimeSingleMove;
+        dX = abs(currentDestionationPoint.x - currentSourcePoint.x)
+                / deltaTimeSingleMove;
+        dY = abs(currentDestionationPoint.y - currentSourcePoint.y)
+                / deltaTimeSingleMove;
+        dZ = abs(currentDestionationPoint.z - currentSourcePoint.z)
+                / deltaTimeSingleMove;
     }
 }
 
@@ -21,7 +24,8 @@ void geAnimation::updateAngles() {
     angleZ = asin(dZ / dY) * deg2rad;
 }
 
-geAnimation::geAnimation(const std::string& iId, float iSpan, unsigned int iType) {
+geAnimation::geAnimation(const std::string& iId, float iSpan,
+        unsigned int iType) {
     if (iType != 1) {
         throw geException("Bug: Invalid type fed into geAnimation!", true);
     }
@@ -93,12 +97,15 @@ void geAnimation::insertPoint(GLdouble ix, GLdouble iy, GLdouble iz) {
 
     if (numberOfControlPoints != 0) {
         /* Multiply by 1000 to convert to milliseconds */
-        deltaTimeMillis = (long) ((span / (float) numberOfControlPoints) * 1000);
+        deltaTimeMillis =
+                (long) ((span / (float) numberOfControlPoints) * 1000);
 
-        deltaTimeSingleMove = (long) ((span / (float) numberOfControlPoints) * 1000 / GLUT_UPDATE_MS);
+        deltaTimeSingleMove = (long) ((span / (float) numberOfControlPoints)
+                * 1000 / GLUT_UPDATE_MS);
 
     } else {
-        throw geException("Bug: Division by zero on inserPoint at geAnimation.", true);
+        throw geException("Bug: Division by zero on inserPoint at geAnimation.",
+                true);
     }
 }
 
@@ -130,7 +137,8 @@ void geAnimation::updateAnimation(unsigned long timePassed) {
             if (numberOfProcessedControlPoints < numberOfControlPoints) {
                 /* Swap points */
                 currentSourcePoint = currentDestionationPoint;
-                currentDestionationPoint = controlPoints[numberOfProcessedControlPoints];
+                currentDestionationPoint =
+                        controlPoints[numberOfProcessedControlPoints];
 
                 /* Calculate new deltas */
                 updateDeltas();

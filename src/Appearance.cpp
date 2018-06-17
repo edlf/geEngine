@@ -1,4 +1,3 @@
-
 /*
  * Eduardo Fernandes
  *
@@ -10,7 +9,8 @@
 #include <Appearance.hpp>
 
 namespace ge {
-Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess) {
+Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient,
+        color iDiffuse, color iSpecular, GLfloat iShininess) {
     this->id = iID;
 
     setEmissive(iEmissive);
@@ -23,13 +23,16 @@ Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient, 
 
     this->textureRef = "";
 
-    this->texture = NULL;
+    this->texture = nullptr;
 
     this->sWrap = -1;
     this->tWrap = -1;
 }
 
-Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t) {
+Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient,
+        color iDiffuse, color iSpecular, GLfloat iShininess,
+        const std::string& iTextureRef, GLfloat iTexlength_s,
+        GLfloat iTexlength_t) {
     this->id = iID;
 
     setEmissive(iEmissive);
@@ -42,7 +45,7 @@ Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient, 
 
     this->textureRef = iTextureRef;
 
-    this->texture = NULL;
+    this->texture = nullptr;
 
     this->sWrap = iTexlength_s;
     this->tWrap = iTexlength_t;
@@ -53,10 +56,10 @@ void Appearance::apply() {
     glDisable(GL_COLOR_MATERIAL);
     glMaterialf(GL_FRONT, GL_SHININESS, this->shininess);
     glMaterialfv(GL_FRONT, GL_SPECULAR, this->specular);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE,  this->diffuse);
-    glMaterialfv(GL_FRONT, GL_AMBIENT,  this->ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, this->diffuse);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, this->ambient);
 
-    if (texture != NULL) {
+    if (texture != nullptr) {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glEnable(GL_TEXTURE_2D);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->sWrap);
@@ -73,7 +76,8 @@ void Appearance::setEmissive(color input) {
     setEmissive(input.r, input.g, input.b, input.a);
 }
 
-void Appearance::setEmissive(GLdouble iR, GLdouble iG, GLdouble iB, GLdouble iAlpha) {
+void Appearance::setEmissive(GLdouble iR, GLdouble iG, GLdouble iB,
+        GLdouble iAlpha) {
     this->emissive[0] = iR;
     this->emissive[1] = iG;
     this->emissive[2] = iB;
@@ -85,7 +89,8 @@ void Appearance::setAmbient(color input) {
 
 }
 
-void Appearance::setAmbient(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Appearance::setAmbient(GLfloat iR, GLfloat iG, GLfloat iB,
+        GLfloat iAlpha) {
     this->ambient[0] = iR;
     this->ambient[1] = iG;
     this->ambient[2] = iB;
@@ -96,7 +101,8 @@ void Appearance::setDiffuse(color input) {
     setDiffuse(input.r, input.g, input.b, input.a);
 }
 
-void Appearance::setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Appearance::setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB,
+        GLfloat iAlpha) {
     this->diffuse[0] = iR;
     this->diffuse[1] = iG;
     this->diffuse[2] = iB;
@@ -107,7 +113,8 @@ void Appearance::setSpecular(color input) {
     setSpecular(input.r, input.g, input.b, input.a);
 }
 
-void Appearance::setSpecular(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Appearance::setSpecular(GLfloat iR, GLfloat iG, GLfloat iB,
+        GLfloat iAlpha) {
     this->specular[0] = iR;
     this->specular[1] = iG;
     this->specular[2] = iB;
@@ -118,7 +125,8 @@ void Appearance::setColour(color input) {
     setColour(input.r, input.g, input.b, input.a);
 }
 
-void Appearance::setColour(GLdouble iR, GLdouble iG, GLdouble iB, GLdouble iAlpha) {
+void Appearance::setColour(GLdouble iR, GLdouble iG, GLdouble iB,
+        GLdouble iAlpha) {
     this->colour[0] = iR;
     this->colour[1] = iG;
     this->colour[2] = iB;
@@ -131,7 +139,7 @@ void Appearance::setShininess(GLfloat input) {
 }
 
 void Appearance::setTexture(geTexture* input) {
-    if (input != NULL) {
+    if (input != nullptr) {
         this->isTextured = true;
         this->texture = input;
     }

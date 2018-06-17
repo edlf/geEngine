@@ -9,13 +9,13 @@
 namespace ge {
 // Static members
 std::stack<Appearance*> Node::appearanceStack;
-bool  Node::creatingDisplayList = false;
+bool Node::creatingDisplayList = false;
 GLint Node::displayListCount = 1;
 
 Node::Node(std::string& in, bool displayList) {
     this->ID = in;
     this->precalcDone = false;
-    this->nodeAppearance = NULL;
+    this->nodeAppearance = nullptr;
     this->useDisplayList = displayList;
 
     /* Copy paste is cheap */
@@ -42,7 +42,7 @@ Node::Node(std::string& in, bool displayList) {
     this->displayListID = -1;
     this->displayListCreated = false;
 
-    this->nodeAnimation = NULL;
+    this->nodeAnimation = nullptr;
 }
 
 void Node::addTransform(geTransform* in) {
@@ -91,8 +91,10 @@ void Node::calculateNodeMatrix() {
         return;
     }
 
-    for (std::list<geTransform*>::iterator k = transformList.begin(); k != transformList.end(); k++) {
-        setTransformationMatrix(multiplyMatrix((*k)->getTransformationMatrix(), transformationsMatrix));
+    for (auto transform : transformList) {
+        setTransformationMatrix(
+                multiplyMatrix(transform->getTransformationMatrix(),
+                        transformationsMatrix));
     }
 
     this->precalcDone = true;
@@ -135,7 +137,8 @@ void Node::draw() {
      * And we must not already have an display list created
      */
 
-    if (this->useDisplayList && !(this->creatingDisplayList) && (!this->displayListCreated)) {
+    if (this->useDisplayList && !(this->creatingDisplayList)
+            && (!this->displayListCreated)) {
         this->creatingDisplayList = true;
 
         this->displayListID = this->displayListCount;
@@ -161,12 +164,12 @@ void Node::drawHelper() {
     /* Push the stacks */
     glPushMatrix();
     /* If node has an appearance push it to the stack */
-    if (this->nodeAppearance != NULL) {
+    if (this->nodeAppearance != nullptr) {
         appearanceStack.push(nodeAppearance);
     }
 
     /* Apply animation transform (if any) */
-    if (this->nodeAnimation != NULL) {
+    if (this->nodeAnimation != nullptr) {
         this->nodeAnimation->applyAnimation();
     }
 
@@ -176,23 +179,19 @@ void Node::drawHelper() {
     /* Apply apperance */
     appearanceStack.top()->apply();
 
-    /* If there are primitives draw them */
-    if (!this->primitiveVector.empty()) {
-        for (std::vector<Primitives::PrimitiveInterface*>::iterator it = this->primitiveVector.begin(); it != this->primitiveVector.end(); it++) {
-            (*it)->draw(appearanceStack.top()->getTextureSWrap(), appearanceStack.top()->getTextureTWrap());
-        }
+    /* Draw primitives */
+    for (auto primitive : this->primitiveVector) {
+        primitive->draw(appearanceStack.top()->getTextureSWrap(),
+                appearanceStack.top()->getTextureTWrap());
     }
 
     /* Check if we have to go deeper */
-    if (!childrenVector.empty()) {
-        for (std::vector<Node*>::iterator it = this->childrenVector.begin(); it != this->childrenVector.end(); it++) {
-            /* Call this method again but from the child node */
-            (*it)->draw();
-        }
+    for (auto child : this->childrenVector) {
+        child->draw();
     }
 
     /* Done, pop the stacks */
-    if (this->nodeAppearance != NULL) {
+    if (this->nodeAppearance != nullptr) {
         appearanceStack.pop();
     }
     glPopMatrix();
@@ -204,10 +203,14 @@ void Node::printMatrix16x1(GLdouble* in) {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed, std::ios::floatfield);
 
-    std::cout << "|" << in[0] << " " << in[1] << " " << in[2] << " " << in[3] << "|" << std::endl;
-    std::cout << "|" << in[4] << " " << in[5] << " " << in[6] << " " << in[7] << "|" << std::endl;
-    std::cout << "|" << in[8] << " " << in[9] << " " << in[10] << " " << in[11] << "|" << std::endl;
-    std::cout << "|" << in[12] << " " << in[13] << " " << in[14] << " " << in[15] << "|" << std::endl;
+    std::cout << "|" << in[0] << " " << in[1] << " " << in[2] << " " << in[3]
+            << "|" << std::endl;
+    std::cout << "|" << in[4] << " " << in[5] << " " << in[6] << " " << in[7]
+            << "|" << std::endl;
+    std::cout << "|" << in[8] << " " << in[9] << " " << in[10] << " " << in[11]
+            << "|" << std::endl;
+    std::cout << "|" << in[12] << " " << in[13] << " " << in[14] << " "
+            << in[15] << "|" << std::endl;
     std::cout << std::endl;
 
     std::cout.unsetf(std::ios::floatfield);
@@ -221,7 +224,7 @@ Node::~Node() {
 /******************** GRAPH ********************/
 SceneGraph::SceneGraph(std::string& root) {
     this->rootID = root;
-    this->rootNode = NULL;
+    this->rootNode = nullptr;
 
     this->identityMatrix[0] = 1;
     this->identityMatrix[1] = 0;
@@ -262,20 +265,23 @@ SceneGraph::SceneGraph(std::string& root) {
     this->shininess = 2;
 
     const std::string internalAppearanceName = "_INTERNAL_ROOT_APPEARANCE";
-    this->defaultRootAppearance = new Appearance(internalAppearanceName, emissive, ambient, diffuse, specular, shininess);
+    this->defaultRootAppearance = new Appearance(internalAppearanceName,
+            emissive, ambient, diffuse, specular, shininess);
 
     this->firstRun = true;
 }
 
-SceneGraph::~SceneGraph(){
+SceneGraph::~SceneGraph() {
 
 }
 
 void SceneGraph::setRootNode(Node* root) {
-    if (this->rootNode == NULL && root != NULL && (root->getNodeID() == this->rootID)) {
+    if (this->rootNode == nullptr && root != nullptr
+            && (root->getNodeID() == this->rootID)) {
         this->rootNode = root;
     } else {
-        throw geException("Null pointer, root already set or rootID mismatch.", true);
+        throw geException("Null pointer, root already set or rootID mismatch.",
+                true);
     }
 }
 
@@ -283,7 +289,8 @@ void SceneGraph::importNodesPointerVector(std::vector<Node*>& inputNodes) {
     if (!inputNodes.empty()) {
 
         /* Find root node and then remove the pointer from the inputNodes vector */
-        for (std::vector<Node*>::iterator k = inputNodes.begin(); k != inputNodes.end();) {
+        for (std::vector<Node*>::iterator k = inputNodes.begin();
+                k != inputNodes.end();) {
             if (this->rootID == (*k)->getNodeID()) {
                 setRootNode((*k));
                 k = inputNodes.erase(k);
@@ -293,12 +300,12 @@ void SceneGraph::importNodesPointerVector(std::vector<Node*>& inputNodes) {
         }
 
         /* Check if we got a rootNode, if so start a recursive search for children */
-        if (rootNode == NULL) {
+        if (rootNode == nullptr) {
             throw geException("Root node not found!", true);
         }
 
         /* Check if root node has apperance */
-        if (rootNode->getAppearance() == NULL) {
+        if (rootNode->getAppearance() == nullptr) {
             rootNode->setAppearance(defaultRootAppearance);
         }
 
@@ -312,7 +319,8 @@ void SceneGraph::importNodesPointerVector(std::vector<Node*>& inputNodes) {
     }
 }
 
-void SceneGraph::importNodesPointerVectorHelper(std::vector<Node*>& inputNodes, Node* parent) {
+void SceneGraph::importNodesPointerVectorHelper(std::vector<Node*>& inputNodes,
+        Node* parent) {
     parent->calculateNodeMatrix();
 
     /* Current node has no children so bail out */
@@ -322,28 +330,19 @@ void SceneGraph::importNodesPointerVectorHelper(std::vector<Node*>& inputNodes, 
 
     if (!inputNodes.empty()) {
         /* Find children by ID then add pointer to vector */
-        for (std::vector<std::string>::iterator si = parent->getChildrenIDVector().begin(); si != parent->getChildrenIDVector().end(); si++) {
-
-            for (std::vector<Node*>::iterator sp = inputNodes.begin(); sp != inputNodes.end(); sp++) {
-                if ((*sp)->getNodeID() == (*si)) {
-                    /* Children matches */
-                    parent->getChildrenVector().push_back(*sp);
-
+        for (auto si : parent->getChildrenIDVector()) {
+            for (auto inputNode : inputNodes) {
+                if (inputNode->getNodeID() == si) {
+                    parent->getChildrenVector().push_back(inputNode);
                 }
-
             }
-
         }
 
         /* Recursive search */
-        for (std::vector<Node*>::iterator it = parent->getChildrenVector().begin(); it != parent->getChildrenVector().end(); it++) {
-            importNodesPointerVectorHelper(inputNodes, *it);
+        for (auto child : parent->getChildrenVector()) {
+            importNodesPointerVectorHelper(inputNodes, child);
         }
-
-    } else {
-        return;
     }
-
 }
 
 void SceneGraph::draw() {

@@ -8,7 +8,7 @@
 
 namespace ge {
 Scene::Scene(std::string& fileName) {
-    currentCameraPointer = NULL;
+    currentCameraPointer = nullptr;
 
     parseAndLoadXml(fileName);
 
@@ -45,20 +45,21 @@ void Scene::parseAndLoadXml(std::string& fileName) {
     xmlLoadAppearances();
 
     /* Before attempting to load animations check if the section exists */
-    if (xmlAnimationsElement != NULL) {
+    if (xmlAnimationsElement != nullptr) {
         xmlLoadAnimations();
     }
 
     /* Graph is loaded last, since it will get references for the rest */
     xmlLoadGraph();
 
-    if (doc != NULL) {
+    if (doc != nullptr) {
         delete (doc);
     }
 
     delete[] xmlFileName;
 
-    if (!(xmlGlobalsLoaded && xmlCamerasLoaded && xmlLightsLoaded && xmlTexturesLoaded && xmlAppearancesLoaded && xmlGraphLoaded)) {
+    if (!(xmlGlobalsLoaded && xmlCamerasLoaded && xmlLightsLoaded
+            && xmlTexturesLoaded && xmlAppearancesLoaded && xmlGraphLoaded)) {
         throw geException("Something went wrong with the XML parsing.", true);
     }
 }
@@ -75,7 +76,7 @@ void Scene::xmlLoadFile(char *filename) {
 void Scene::xmlCheckDocumentType() {
     xmlRootElement = doc->FirstChildElement(Xml::DOCUMENT_TYPE);
 
-    if (xmlRootElement == NULL) {
+    if (xmlRootElement == nullptr) {
         throw geException("No correct root element found!", true);
     }
 }
@@ -84,36 +85,39 @@ void Scene::xmlLoadMainElements() {
     xmlGlobalsElement = xmlRootElement->FirstChildElement(Xml::SECTION_GLOBALS);
     xmlCamerasElement = xmlRootElement->FirstChildElement(Xml::SECTION_CAMERAS);
     xmlLightingElement = xmlRootElement->FirstChildElement(Xml::SECTION_LIGHTS);
-    xmlTexturesElement = xmlRootElement->FirstChildElement(Xml::SECTION_TEXTURES);
-    xmlAppearancesElement = xmlRootElement->FirstChildElement(Xml::SECTION_APPEARANCES);
+    xmlTexturesElement = xmlRootElement->FirstChildElement(
+            Xml::SECTION_TEXTURES);
+    xmlAppearancesElement = xmlRootElement->FirstChildElement(
+            Xml::SECTION_APPEARANCES);
     xmlGraphElement = xmlRootElement->FirstChildElement(Xml::SECTION_GRAPH);
-    xmlAnimationsElement = xmlRootElement->FirstChildElement(Xml::SECTION_ANIMATIONS);
+    xmlAnimationsElement = xmlRootElement->FirstChildElement(
+            Xml::SECTION_ANIMATIONS);
 }
 
 void Scene::xmlCheckMainElements() {
     /* Check if all required nodes exist */
 
-    if (xmlGlobalsElement == NULL) {
+    if (xmlGlobalsElement == nullptr) {
         throw geException("Globals element not found.");
     }
 
-    if (xmlCamerasElement == NULL) {
+    if (xmlCamerasElement == nullptr) {
         throw geException("Cameras element not found.");
     }
 
-    if (xmlLightingElement == NULL) {
+    if (xmlLightingElement == nullptr) {
         throw geException("Lighting element not found.");
     }
 
-    if (xmlTexturesElement == NULL) {
+    if (xmlTexturesElement == nullptr) {
         throw geException("Textures element not found.");
     }
 
-    if (xmlAppearancesElement == NULL) {
+    if (xmlAppearancesElement == nullptr) {
         throw geException("Appearances element not found.");
     }
 
-    if (xmlGraphElement == NULL) {
+    if (xmlGraphElement == nullptr) {
         throw geException("Graph element not found.");
     }
 }
@@ -124,19 +128,24 @@ void Scene::xmlLoadGlobals() {
         throw geException(Xml::SECTION_GLOBALS_ERROR, true);
     }
 
-    color bgColor = getColorFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_BACKGROUND, Xml::ATTRIBUTE_BACKGROUND_ERROR);
+    color bgColor = getColorFromElementAttribute(xmlGlobalsElement,
+            Xml::ATTRIBUTE_BACKGROUND, Xml::ATTRIBUTE_BACKGROUND_ERROR);
     setBackgroundColor(bgColor);
 
-    std::string drawMode = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_DRAWMODE, Xml::ATTRIBUTE_DRAWMODE_ERROR);
+    std::string drawMode = getStringFromElementAttribute(xmlGlobalsElement,
+            Xml::ATTRIBUTE_DRAWMODE, Xml::ATTRIBUTE_DRAWMODE_ERROR);
     setDrawMode(drawMode);
 
-    std::string shadingMode = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_SHADING, Xml::ATTRIBUTE_SHADING_ERROR);
+    std::string shadingMode = getStringFromElementAttribute(xmlGlobalsElement,
+            Xml::ATTRIBUTE_SHADING, Xml::ATTRIBUTE_SHADING_ERROR);
     setShadingMode(shadingMode);
 
-    std::string cullFace = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_CULLFACE, Xml::ATTRIBUTE_CULLFACE_ERROR);
+    std::string cullFace = getStringFromElementAttribute(xmlGlobalsElement,
+            Xml::ATTRIBUTE_CULLFACE, Xml::ATTRIBUTE_CULLFACE_ERROR);
     setCullFace(cullFace);
 
-    std::string cullOrder = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_CULLORDER, Xml::ATTRIBUTE_CULLORDER_ERROR);
+    std::string cullOrder = getStringFromElementAttribute(xmlGlobalsElement,
+            Xml::ATTRIBUTE_CULLORDER, Xml::ATTRIBUTE_CULLORDER_ERROR);
     setCullOrder(cullOrder);
 
     xmlGlobalsLoaded = true;
@@ -151,50 +160,77 @@ void Scene::xmlLoadCameras() {
     int numberOfPerspectiveCameras = 0, numberOfOrthoCameras = 0;
 
     this->numberOfCameras = 0;
-    this->initialCamera = getStringFromElementAttribute(xmlCamerasElement, Xml::ATTRIBUTE_INITIAL_CAMERA, Xml::ATTRIBUTE_INITIAL_CAMERA_ERROR);
+    this->initialCamera = getStringFromElementAttribute(xmlCamerasElement,
+            Xml::ATTRIBUTE_INITIAL_CAMERA, Xml::ATTRIBUTE_INITIAL_CAMERA_ERROR);
 
     /* Get camera first child */
     TiXmlElement* xmlCameraElement = xmlCamerasElement->FirstChildElement();
 
     bool camerasLastRun = false;
-    while (xmlCameraElement != NULL && !camerasLastRun) {
+    while (xmlCameraElement != nullptr && !camerasLastRun) {
         /* Checks if we are loading the last child, if so this will be the last run. */
         if (xmlCameraElement == xmlCamerasElement->LastChild()) {
             camerasLastRun = true;
         }
 
         /* Camera is perspective */
-        if (strcmp(xmlCameraElement->Value(), Xml::SECTION_CAMERA_PERSPECTIVE) == 0) {
-        	std::string cameraId;
+        if (strcmp(xmlCameraElement->Value(), Xml::SECTION_CAMERA_PERSPECTIVE)
+                == 0) {
+            std::string cameraId;
             float nearIn, farIn, angle;
             xyzPointDouble pos, target;
 
-            cameraId = getStringFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_ID, Xml::SECTION_CAMERA_ID_ERROR);
-            nearIn = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_NEAR, Xml::ATTRIBUTE_CAMERA_NEAR_ERROR);
-            farIn = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_FAR, Xml::ATTRIBUTE_CAMERA_FAR_ERROR);
-            angle = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_ANGLE, Xml::ATTRIBUTE_CAMERA_ANGLE_ERROR);
-            pos = getDoublePointFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_POSITION, Xml::ATTRIBUTE_CAMERA_POSITION_ERROR);
-            target = getDoublePointFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_TARGET, Xml::ATTRIBUTE_CAMERA_TARGET_ERROR);
+            cameraId = getStringFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_ID, Xml::SECTION_CAMERA_ID_ERROR);
+            nearIn = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_NEAR,
+                    Xml::ATTRIBUTE_CAMERA_NEAR_ERROR);
+            farIn = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_FAR, Xml::ATTRIBUTE_CAMERA_FAR_ERROR);
+            angle = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_ANGLE,
+                    Xml::ATTRIBUTE_CAMERA_ANGLE_ERROR);
+            pos = getDoublePointFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_POSITION,
+                    Xml::ATTRIBUTE_CAMERA_POSITION_ERROR);
+            target = getDoublePointFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_TARGET,
+                    Xml::ATTRIBUTE_CAMERA_TARGET_ERROR);
 
-            cameraVector.push_back(new PerspectiveCamera(cameraId, nearIn, farIn, angle, pos, target));
+            cameraVector.push_back(
+                    new PerspectiveCamera(cameraId, nearIn, farIn, angle, pos,
+                            target));
 
             numberOfPerspectiveCameras++;
         }
 
         /* Camera is ortho */
         if (strcmp(xmlCameraElement->Value(), Xml::SECTION_CAMERA_ORTHO) == 0) {
-        	std::string cameraId;
+            std::string cameraId;
             float nearIn, farIn, left, right, top, bottom;
 
-            cameraId = getStringFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_ID, Xml::SECTION_CAMERA_ID_ERROR);
-            nearIn = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_NEAR, Xml::ATTRIBUTE_CAMERA_NEAR_ERROR);
-            farIn = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_FAR, Xml::ATTRIBUTE_CAMERA_FAR_ERROR);
-            left = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_LEFT, Xml::ATTRIBUTE_CAMERA_LEFT_ERROR);
-            right = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_RIGHT, Xml::ATTRIBUTE_CAMERA_RIGHT_ERROR);
-            top = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_TOP, Xml::ATTRIBUTE_CAMERA_TOP_ERROR);
-            bottom = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_BOTTOM, Xml::ATTRIBUTE_CAMERA_BOTTOM_ERROR);
+            cameraId = getStringFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_ID, Xml::SECTION_CAMERA_ID_ERROR);
+            nearIn = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_NEAR,
+                    Xml::ATTRIBUTE_CAMERA_NEAR_ERROR);
+            farIn = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_FAR, Xml::ATTRIBUTE_CAMERA_FAR_ERROR);
+            left = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_LEFT,
+                    Xml::ATTRIBUTE_CAMERA_LEFT_ERROR);
+            right = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_RIGHT,
+                    Xml::ATTRIBUTE_CAMERA_RIGHT_ERROR);
+            top = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_TOP, Xml::ATTRIBUTE_CAMERA_TOP_ERROR);
+            bottom = getFloatFromElementAttribute(xmlCameraElement,
+                    Xml::ATTRIBUTE_CAMERA_BOTTOM,
+                    Xml::ATTRIBUTE_CAMERA_BOTTOM_ERROR);
 
-            cameraVector.push_back(new OrthoCamera(cameraId, nearIn, farIn, left, right, top, bottom));
+            cameraVector.push_back(
+                    new OrthoCamera(cameraId, nearIn, farIn, left, right, top,
+                            bottom));
             numberOfOrthoCameras++;
         }
 
@@ -220,23 +256,29 @@ void Scene::xmlLoadLighting() {
     unsigned int numberOfOmniLights = 0, numberOfSpotLights = 0;
     this->numberOfLights = 0;
 
-    std::string lightingDS = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED, Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED_ERROR);
+    std::string lightingDS = getStringFromElementAttribute(xmlLightingElement,
+            Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED,
+            Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED_ERROR);
     lightingDoubleSided = validateBoolean(lightingDS);
 
-    std::string lightingL = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_LOCAL, Xml::ATTRIBUTE_LIGHTING_LOCAL_ERROR);
+    std::string lightingL = getStringFromElementAttribute(xmlLightingElement,
+            Xml::ATTRIBUTE_LIGHTING_LOCAL, Xml::ATTRIBUTE_LIGHTING_LOCAL_ERROR);
     lightingLocal = validateBoolean(lightingL);
 
-    std::string lightingE = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_ENABLED, Xml::ATTRIBUTE_LIGHTING_ENABLED_ERROR);
+    std::string lightingE = getStringFromElementAttribute(xmlLightingElement,
+            Xml::ATTRIBUTE_ENABLED, Xml::ATTRIBUTE_LIGHTING_ENABLED_ERROR);
     lightingEnable = validateBoolean(lightingE);
 
-    color ambientC = getColorFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_G_AMBIENT_ERROR);
+    color ambientC = getColorFromElementAttribute(xmlLightingElement,
+            Xml::ATTRIBUTE_LIGHTING_AMBIENT,
+            Xml::ATTRIBUTE_LIGHTING_G_AMBIENT_ERROR);
     setAmbientLightColor(ambientC);
 
     /* Get lighting first child */
     TiXmlElement* xmlLightElement = xmlLightingElement->FirstChildElement();
 
     bool lightingLastRun = false;
-    while (xmlLightElement != NULL && !lightingLastRun) {
+    while (xmlLightElement != nullptr && !lightingLastRun) {
         /* Checks if we are loading the last child, if so this will be the last run. */
         if (xmlLightElement == xmlLightingElement->LastChild()) {
             lightingLastRun = true;
@@ -244,48 +286,80 @@ void Scene::xmlLoadLighting() {
 
         /* Omni light */
         if (strcmp(xmlLightElement->Value(), Xml::SECTION_LIGHTING_OMNI) == 0) {
-        	std::string lightId;
+            std::string lightId;
             bool lightEnable;
             xyzPointFloat location;
             color ambient, diffuse, specular;
 
-            lightId = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
+            lightId = getStringFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
 
-            std::string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
+            std::string enabled = getStringFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_ENABLED,
+                    Xml::SECTION_LIGHTING_ENABLED_ERROR);
             lightEnable = validateBoolean(enabled);
 
-            location = getFloatPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
-            ambient = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_AMBIENT_ERROR);
-            diffuse = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIFFUSE, Xml::ATTRIBUTE_LIGHTING_DIFFUSE_ERROR);
-            specular = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_SPECULAR, Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
+            location = getFloatPointFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_LOCATION,
+                    Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
+            ambient = getColorFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_AMBIENT,
+                    Xml::ATTRIBUTE_LIGHTING_AMBIENT_ERROR);
+            diffuse = getColorFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_DIFFUSE,
+                    Xml::ATTRIBUTE_LIGHTING_DIFFUSE_ERROR);
+            specular = getColorFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_SPECULAR,
+                    Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
 
-            lightVector.push_back(new geOmniLight(lightId, numberOfLights, lightEnable, location, ambient, diffuse, specular));
+            lightVector.push_back(
+                    new geOmniLight(lightId, numberOfLights, lightEnable,
+                            location, ambient, diffuse, specular));
             numberOfOmniLights++;
         }
 
         /* Spot light */
         if (strcmp(xmlLightElement->Value(), Xml::SECTION_LIGHTING_SPOT) == 0) {
-        	std::string lightId;
+            std::string lightId;
             bool lightEnable;
             GLfloat angle, exponent;
             xyzPointFloat location;
             xyzPointFloat direction;
             color ambient, diffuse, specular;
 
-            lightId = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
+            lightId = getStringFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
 
-            std::string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
+            std::string enabled = getStringFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_ENABLED,
+                    Xml::SECTION_LIGHTING_ENABLED_ERROR);
             lightEnable = validateBoolean(enabled);
 
-            location  = getFloatPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
-            ambient   = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_AMBIENT_ERROR);
-            diffuse   = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIFFUSE, Xml::ATTRIBUTE_LIGHTING_DIFFUSE_ERROR);
-            specular  = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_SPECULAR, Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
-            angle     = getFloatFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ANGLE, Xml::SECTION_LIGHTING_ANGLE_ERROR);
-            exponent  = getFloatFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_EXPONENT, Xml::ATTRIBUTE_LIGHTING_EXPONENT_ERROR);
-            direction = getFloatPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIRECTION, Xml::ATTRIBUTE_LIGHTING_DIRECTION_ERROR);
+            location = getFloatPointFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_LOCATION,
+                    Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
+            ambient = getColorFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_AMBIENT,
+                    Xml::ATTRIBUTE_LIGHTING_AMBIENT_ERROR);
+            diffuse = getColorFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_DIFFUSE,
+                    Xml::ATTRIBUTE_LIGHTING_DIFFUSE_ERROR);
+            specular = getColorFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_SPECULAR,
+                    Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
+            angle = getFloatFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_ANGLE, Xml::SECTION_LIGHTING_ANGLE_ERROR);
+            exponent = getFloatFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_EXPONENT,
+                    Xml::ATTRIBUTE_LIGHTING_EXPONENT_ERROR);
+            direction = getFloatPointFromElementAttribute(xmlLightElement,
+                    Xml::ATTRIBUTE_LIGHTING_DIRECTION,
+                    Xml::ATTRIBUTE_LIGHTING_DIRECTION_ERROR);
 
-            lightVector.push_back(new geSpotLight(lightId, numberOfLights, lightEnable, location, ambient, diffuse, specular, angle, exponent, direction));
+            lightVector.push_back(
+                    new geSpotLight(lightId, numberOfLights, lightEnable,
+                            location, ambient, diffuse, specular, angle,
+                            exponent, direction));
 
             numberOfSpotLights++;
         }
@@ -293,7 +367,8 @@ void Scene::xmlLoadLighting() {
         xmlLightElement = xmlLightElement->NextSiblingElement();
 
         if (this->numberOfLights == MAX_LIGHTS) {
-        	std::cout << "XML: Lighting: Light limit reached, ignoring lights." << std::endl;
+            std::cout << "XML: Lighting: Light limit reached, ignoring lights."
+                    << std::endl;
             break;
         }
     }
@@ -315,15 +390,17 @@ void Scene::xmlLoadTextures() {
     TiXmlElement* xmlTextureElement = xmlTexturesElement->FirstChildElement();
 
     bool texturesLastRun = false;
-    while (xmlTextureElement != NULL && !texturesLastRun) {
+    while (xmlTextureElement != nullptr && !texturesLastRun) {
         /* Checks if we are loading the last child, if so this will be the last run. */
         if (xmlTextureElement == xmlTextureElement->LastChild()) {
             texturesLastRun = true;
         }
 
         std::string textureId, textureFileName;
-        textureId = getStringFromElementAttribute(xmlTextureElement, Xml::ATTRIBUTE_ID, Xml::SECTION_TEXTURE_ID_ERROR);
-        textureFileName = getStringFromElementAttribute(xmlTextureElement, Xml::ATTRIBUTE_FILE, Xml::SECTION_TEXTURE_FILE_ERROR);
+        textureId = getStringFromElementAttribute(xmlTextureElement,
+                Xml::ATTRIBUTE_ID, Xml::SECTION_TEXTURE_ID_ERROR);
+        textureFileName = getStringFromElementAttribute(xmlTextureElement,
+                Xml::ATTRIBUTE_FILE, Xml::SECTION_TEXTURE_FILE_ERROR);
 
         /* Create texture object here. */
         textureVector.push_back(new geTexture(textureId, textureFileName));
@@ -343,9 +420,10 @@ void Scene::xmlLoadAppearances() {
     int numberOfAppearances = 0;
 
     /* Get apperances first child */
-    TiXmlElement* xmlAppearanceElement = xmlAppearancesElement->FirstChildElement();
+    TiXmlElement* xmlAppearanceElement =
+            xmlAppearancesElement->FirstChildElement();
     bool appearanceLastRun = false;
-    while (xmlAppearanceElement != NULL && !appearanceLastRun) {
+    while (xmlAppearanceElement != nullptr && !appearanceLastRun) {
         /* Checks if we are loading the last child, if so this will be the last run. */
         if (xmlAppearanceElement == xmlAppearancesElement->LastChild()) {
             appearanceLastRun = true;
@@ -356,26 +434,47 @@ void Scene::xmlLoadAppearances() {
         color emissive, ambient, diffuse, specular;
         bool hasTexture;
 
-        appearanceId = getStringFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_ID, Xml::SECTION_APPEARANCE_ID_ERROR);
-        emissive = getColorFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_EMISSIVE, Xml::ATTRIBUTE_APPEARANCE_EMISSIVE_ERROR);
-        ambient = getColorFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_AMBIENT, Xml::ATTRIBUTE_APPEARANCE_AMBIENT_ERROR);
-        diffuse = getColorFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_DIFFUSE, Xml::ATTRIBUTE_APPEARANCE_DIFFUSE_ERROR);
-        specular = getColorFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_SPECULAR, Xml::ATTRIBUTE_APPEARANCE_SPECULAR_ERROR);
-        shininess = getFloatFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_SHININESS, Xml::ATTRIBUTE_APPEARANCE_SHININESS_ERROR);
-        hasTexture = getAttributeExistence(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_TEXTURE_ID);
+        appearanceId = getStringFromElementAttribute(xmlAppearanceElement,
+                Xml::ATTRIBUTE_ID, Xml::SECTION_APPEARANCE_ID_ERROR);
+        emissive = getColorFromElementAttribute(xmlAppearanceElement,
+                Xml::ATTRIBUTE_APPEARANCE_EMISSIVE,
+                Xml::ATTRIBUTE_APPEARANCE_EMISSIVE_ERROR);
+        ambient = getColorFromElementAttribute(xmlAppearanceElement,
+                Xml::ATTRIBUTE_APPEARANCE_AMBIENT,
+                Xml::ATTRIBUTE_APPEARANCE_AMBIENT_ERROR);
+        diffuse = getColorFromElementAttribute(xmlAppearanceElement,
+                Xml::ATTRIBUTE_APPEARANCE_DIFFUSE,
+                Xml::ATTRIBUTE_APPEARANCE_DIFFUSE_ERROR);
+        specular = getColorFromElementAttribute(xmlAppearanceElement,
+                Xml::ATTRIBUTE_APPEARANCE_SPECULAR,
+                Xml::ATTRIBUTE_APPEARANCE_SPECULAR_ERROR);
+        shininess = getFloatFromElementAttribute(xmlAppearanceElement,
+                Xml::ATTRIBUTE_APPEARANCE_SHININESS,
+                Xml::ATTRIBUTE_APPEARANCE_SHININESS_ERROR);
+        hasTexture = getAttributeExistence(xmlAppearanceElement,
+                Xml::ATTRIBUTE_APPEARANCE_TEXTURE_ID);
 
         if (hasTexture) {
-            textureId = getStringFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_TEXTURE_ID, Xml::ATTRIBUTE_APPEARANCE_TEXTURE_ID_ERROR);
-            texlength_s = getFloatFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_S, Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_S_ERROR);
-            texlength_t = getFloatFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_T, Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_T_ERROR);
+            textureId = getStringFromElementAttribute(xmlAppearanceElement,
+                    Xml::ATTRIBUTE_APPEARANCE_TEXTURE_ID,
+                    Xml::ATTRIBUTE_APPEARANCE_TEXTURE_ID_ERROR);
+            texlength_s = getFloatFromElementAttribute(xmlAppearanceElement,
+                    Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_S,
+                    Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_S_ERROR);
+            texlength_t = getFloatFromElementAttribute(xmlAppearanceElement,
+                    Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_T,
+                    Xml::ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_T_ERROR);
 
-            Appearance* temporaryAppearance = new Appearance(appearanceId, emissive, ambient, diffuse, specular, shininess, textureId, texlength_s, texlength_t);
+            Appearance* temporaryAppearance = new Appearance(appearanceId,
+                    emissive, ambient, diffuse, specular, shininess, textureId,
+                    texlength_s, texlength_t);
             appearanceVector.push_back(temporaryAppearance);
-            temporaryAppearance = NULL;
+            temporaryAppearance = nullptr;
         } else {
-            Appearance* temporaryAppearance = new Appearance(appearanceId, emissive, ambient, diffuse, specular, shininess);
+            Appearance* temporaryAppearance = new Appearance(appearanceId,
+                    emissive, ambient, diffuse, specular, shininess);
             appearanceVector.push_back(temporaryAppearance);
-            temporaryAppearance = NULL;
+            temporaryAppearance = nullptr;
         }
 
         numberOfAppearances++;
@@ -397,7 +496,8 @@ void Scene::xmlLoadGraph() {
 
     /* Root ID */
     std::string rootId;
-    rootId = getStringFromElementAttribute(xmlGraphElement, Xml::ATTRIBUTE_GRAPH_ROOTID, Xml::ATTRIBUTE_GRAPH_ROOTID_ERROR);
+    rootId = getStringFromElementAttribute(xmlGraphElement,
+            Xml::ATTRIBUTE_GRAPH_ROOTID, Xml::ATTRIBUTE_GRAPH_ROOTID_ERROR);
 
     /* Create geGraph object */
     graph = new SceneGraph(rootId);
@@ -406,12 +506,12 @@ void Scene::xmlLoadGraph() {
     int numberOfGraphNodes = 0;
     TiXmlElement* xmlNodeElement = xmlGraphElement->FirstChildElement();
 
-    if (xmlGraphElement == NULL) {
+    if (xmlGraphElement == nullptr) {
         throw geException("Graph: Error while reading graph node.", true);
     }
 
     bool nodeLastRun = false;
-    while (xmlNodeElement != NULL && !nodeLastRun) {
+    while (xmlNodeElement != nullptr && !nodeLastRun) {
         /* Checks if we are loading the last child, if so this will be the last run. */
         if (xmlNodeElement == xmlGraphElement->LastChild()) {
             nodeLastRun = true;
@@ -420,15 +520,19 @@ void Scene::xmlLoadGraph() {
         std::string nodeId;
 
         /* Id */
-        nodeId = getStringFromElementAttribute(xmlNodeElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_ID_ERROR);
+        nodeId = getStringFromElementAttribute(xmlNodeElement,
+                Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_ID_ERROR);
 
         /* Display list */
         bool displayList;
-        bool displayListAttribute = getAttributeExistence(xmlNodeElement, Xml::ATTRIBUTE_NODE_DISPLAYLIST);
+        bool displayListAttribute = getAttributeExistence(xmlNodeElement,
+                Xml::ATTRIBUTE_NODE_DISPLAYLIST);
 
         if (displayListAttribute) {
-        	std::string displayListTemp;
-            displayListTemp = getStringFromElementAttribute(xmlNodeElement, Xml::ATTRIBUTE_NODE_DISPLAYLIST, Xml::ATTRIBUTE_NODE_DISPLAYLIST_ERROR);
+            std::string displayListTemp;
+            displayListTemp = getStringFromElementAttribute(xmlNodeElement,
+                    Xml::ATTRIBUTE_NODE_DISPLAYLIST,
+                    Xml::ATTRIBUTE_NODE_DISPLAYLIST_ERROR);
             displayList = validateBoolean(displayListTemp);
         } else {
             displayList = false;
@@ -440,36 +544,46 @@ void Scene::xmlLoadGraph() {
         /*************************************** Begin transforms ***************************************/
         /* Get node first child (transforms) */
         int numberOfTransforms = 0;
-        TiXmlElement* xmlTransformsElement = xmlNodeElement->FirstChildElement(Xml::BLOCK_TRANSFORMS);
-        if (xmlTransformsElement == NULL) {
-            throw geException("Node: No transform block found.", true, xmlNodeElement->Row());
+        TiXmlElement* xmlTransformsElement = xmlNodeElement->FirstChildElement(
+                Xml::BLOCK_TRANSFORMS);
+        if (xmlTransformsElement == nullptr) {
+            throw geException("Node: No transform block found.", true,
+                    xmlNodeElement->Row());
         }
 
-        TiXmlElement* xmlTransformElement = xmlTransformsElement->FirstChildElement();
+        TiXmlElement* xmlTransformElement =
+                xmlTransformsElement->FirstChildElement();
 
         bool transformsLastRun = false;
-        while (xmlTransformElement != NULL && !transformsLastRun) {
+        while (xmlTransformElement != nullptr && !transformsLastRun) {
             /* Checks if we are loading the last child, if so this will be the last run. */
             if (xmlTransformElement == xmlNodeElement->LastChild()) {
                 transformsLastRun = true;
             }
 
-            if (strcmp(xmlTransformElement->Value(), Xml::SECTION_TRANSFORM_SCALE) == 0) {
+            if (strcmp(xmlTransformElement->Value(),
+                    Xml::SECTION_TRANSFORM_SCALE) == 0) {
                 /* Factor */
                 xyzPointDouble scaleFactor;
-                scaleFactor = getDoublePointFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_FACTOR, Xml::ATTRIBUTE_TRANSFORM_FACTOR_ERROR);
+                scaleFactor = getDoublePointFromElementAttribute(
+                        xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_FACTOR,
+                        Xml::ATTRIBUTE_TRANSFORM_FACTOR_ERROR);
 
-                temporaryNode->addTransform(new geTransformScale(scaleFactor, numberOfTransforms));
+                temporaryNode->addTransform(
+                        new geTransformScale(scaleFactor, numberOfTransforms));
                 numberOfTransforms++;
             }
 
-            if (strcmp(xmlTransformElement->Value(), Xml::SECTION_TRANSFORM_ROTATE) == 0) {
-            	std::string axis;
+            if (strcmp(xmlTransformElement->Value(),
+                    Xml::SECTION_TRANSFORM_ROTATE) == 0) {
+                std::string axis;
                 int axisInt;
                 float angle;
 
                 /* Axis */
-                axis = getStringFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_AXIS, Xml::ATTRIBUTE_TRANSFORM_AXIS_ERROR);
+                axis = getStringFromElementAttribute(xmlTransformElement,
+                        Xml::ATTRIBUTE_TRANSFORM_AXIS,
+                        Xml::ATTRIBUTE_TRANSFORM_AXIS_ERROR);
 
                 if (axis == "x") {
                     axisInt = 0;
@@ -478,22 +592,32 @@ void Scene::xmlLoadGraph() {
                 } else if (axis == "z") {
                     axisInt = 2;
                 } else {
-                    throw geException("Transform: Invalid string in transform axis.", true, xmlTransformElement->Row());
+                    throw geException(
+                            "Transform: Invalid string in transform axis.",
+                            true, xmlTransformElement->Row());
                 }
 
                 /* Angle */
-                angle = getFloatFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_ANGLE, Xml::ATTRIBUTE_ANGLE_ERROR);
+                angle = getFloatFromElementAttribute(xmlTransformElement,
+                        Xml::ATTRIBUTE_ANGLE, Xml::ATTRIBUTE_ANGLE_ERROR);
 
-                temporaryNode->addTransform(new geTransformRotate(axisInt, angle, numberOfTransforms));
+                temporaryNode->addTransform(
+                        new geTransformRotate(axisInt, angle,
+                                numberOfTransforms));
                 numberOfTransforms++;
             }
 
             /* Translate */
-            if (strcmp(xmlTransformElement->Value(), Xml::SECTION_TRANSFORM_TRANSLATE) == 0) {
+            if (strcmp(xmlTransformElement->Value(),
+                    Xml::SECTION_TRANSFORM_TRANSLATE) == 0) {
                 xyzPointDouble translate;
-                translate = getDoublePointFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_TO, Xml::ATTRIBUTE_TRANSFORM_TO_ERROR);
+                translate = getDoublePointFromElementAttribute(
+                        xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_TO,
+                        Xml::ATTRIBUTE_TRANSFORM_TO_ERROR);
 
-                temporaryNode->addTransform(new geTransformTranslate(translate, numberOfTransforms));
+                temporaryNode->addTransform(
+                        new geTransformTranslate(translate,
+                                numberOfTransforms));
                 numberOfTransforms++;
             }
 
@@ -503,26 +627,31 @@ void Scene::xmlLoadGraph() {
         /* End transforms */
 
         /*************************************** Begin appearanceref ***************************************/
-        TiXmlElement* xmlAppearancerefElement = xmlNodeElement->FirstChildElement(Xml::REFERENCE_APPEARANCE);
-        if (xmlAppearancerefElement == NULL) {
+        TiXmlElement* xmlAppearancerefElement =
+                xmlNodeElement->FirstChildElement(Xml::REFERENCE_APPEARANCE);
+        if (xmlAppearancerefElement == nullptr) {
 
         } else {
-        	std::string appearanceId;
+            std::string appearanceId;
             /* Id */
-            appearanceId = getStringFromElementAttribute(xmlAppearancerefElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_APPEARANCE_ID_ERROR);
+            appearanceId = getStringFromElementAttribute(
+                    xmlAppearancerefElement, Xml::ATTRIBUTE_ID,
+                    Xml::SECTION_GRAPH_APPEARANCE_ID_ERROR);
 
             temporaryNode->setAppearance(getAppearanceByString(appearanceId));
         }
         /* End appearanceref */
 
         /*************************************** Begin animationref ***************************************/
-        TiXmlElement* xmlAnimationrefElement = xmlNodeElement->FirstChildElement(Xml::REFERENCE_ANIMATION);
-        if (xmlAnimationrefElement == NULL) {
+        TiXmlElement* xmlAnimationrefElement =
+                xmlNodeElement->FirstChildElement(Xml::REFERENCE_ANIMATION);
+        if (xmlAnimationrefElement == nullptr) {
 
         } else {
             /* Id */
-        	std::string animationId;
-            animationId = getStringFromElementAttribute(xmlAnimationrefElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_ANIMATION_ID_ERROR);
+            std::string animationId;
+            animationId = getStringFromElementAttribute(xmlAnimationrefElement,
+                    Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_ANIMATION_ID_ERROR);
 
             temporaryNode->setAnimation(getAnimationByString(animationId));
         }
@@ -531,157 +660,233 @@ void Scene::xmlLoadGraph() {
         /*************************************** Begin children ***************************************/
         /* Get node first child (children) */
         int numberOfChildren = 0;
-        TiXmlElement* xmlChildrensElement = xmlNodeElement->FirstChildElement(Xml::BLOCK_CHILDREN);
-        if (xmlChildrensElement == NULL) {
-            throw geException("Node: No children block found.", true, xmlNodeElement->Row());
+        TiXmlElement* xmlChildrensElement = xmlNodeElement->FirstChildElement(
+                Xml::BLOCK_CHILDREN);
+        if (xmlChildrensElement == nullptr) {
+            throw geException("Node: No children block found.", true,
+                    xmlNodeElement->Row());
         }
 
-        TiXmlElement* xmlChildrenElement = xmlChildrensElement->FirstChildElement();
+        TiXmlElement* xmlChildrenElement =
+                xmlChildrensElement->FirstChildElement();
 
         bool childrensLastRun = false;
-        while (xmlChildrenElement != NULL && !childrensLastRun) {
+        while (xmlChildrenElement != nullptr && !childrensLastRun) {
             /* Checks if we are loading the last child, if so this will be the last run. */
             if (xmlChildrenElement == xmlChildrensElement->LastChild()) {
                 childrensLastRun = true;
             }
 
             /*Rectangle*/
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_RECTANGLE) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_RECTANGLE) == 0) {
                 xyPointDouble pt1, pt2;
 
                 /* XY1 */
-                pt1 = get2DdPointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XY1, Xml::ATTRIBUTE_PRIMITIVE_XY1_ERROR);
+                pt1 = get2DdPointFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_XY1,
+                        Xml::ATTRIBUTE_PRIMITIVE_XY1_ERROR);
 
                 /* XY2 */
-                pt2 = get2DdPointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XY2, Xml::ATTRIBUTE_PRIMITIVE_XY2_ERROR);
+                pt2 = get2DdPointFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_XY2,
+                        Xml::ATTRIBUTE_PRIMITIVE_XY2_ERROR);
 
                 /* Create rectangle and store pointer in graph */
-                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Rectangle(pt1, pt2);
+                Primitives::PrimitiveInterface* primitiveTemp =
+                        new Primitives::Rectangle(pt1, pt2);
                 temporaryNode->addPrimitive(primitiveTemp);
-                primitiveTemp = NULL;
+                primitiveTemp = nullptr;
 
                 numberOfChildren++;
             }
 
             /*Triangle*/
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_TRIANGLE) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_TRIANGLE) == 0) {
                 xyzPointDouble point1, point2, point3;
-                point1 = getDoublePointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ1, Xml::ATTRIBUTE_PRIMITIVE_XYZ1_ERROR);
-                point2 = getDoublePointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ2, Xml::ATTRIBUTE_PRIMITIVE_XYZ2_ERROR);
-                point3 = getDoublePointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ3, Xml::ATTRIBUTE_PRIMITIVE_XYZ3_ERROR);
+                point1 = getDoublePointFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_XYZ1,
+                        Xml::ATTRIBUTE_PRIMITIVE_XYZ1_ERROR);
+                point2 = getDoublePointFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_XYZ2,
+                        Xml::ATTRIBUTE_PRIMITIVE_XYZ2_ERROR);
+                point3 = getDoublePointFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_XYZ3,
+                        Xml::ATTRIBUTE_PRIMITIVE_XYZ3_ERROR);
 
                 /* Create triangle and store pointer in graph */
-                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Triangle(point1, point2, point3);
+                Primitives::PrimitiveInterface* primitiveTemp =
+                        new Primitives::Triangle(point1, point2, point3);
                 temporaryNode->addPrimitive(primitiveTemp);
-                primitiveTemp = NULL;
+                primitiveTemp = nullptr;
 
                 numberOfChildren++;
             }
 
             /*Cylinder*/
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_CYLINDER) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_CYLINDER) == 0) {
                 float base, top, height;
                 unsigned int slices, stacks;
 
-                base = getFloatFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_BASE, Xml::ATTRIBUTE_PRIMITIVE_CYL_BASE_ERROR);
-                top = getFloatFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_TOP, Xml::ATTRIBUTE_PRIMITIVE_CYL_TOP_ERROR);
-                height = getFloatFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_HEIGHT, Xml::ATTRIBUTE_PRIMITIVE_CYL_HEIGHT_ERROR);
-                slices = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_SLICES, Xml::ATTRIBUTE_PRIMITIVE_CYL_SLICES_ERROR);
-                stacks = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_STACKS, Xml::ATTRIBUTE_PRIMITIVE_CYL_STACKS_ERROR);
+                base = getFloatFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_BASE,
+                        Xml::ATTRIBUTE_PRIMITIVE_CYL_BASE_ERROR);
+                top = getFloatFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_TOP,
+                        Xml::ATTRIBUTE_PRIMITIVE_CYL_TOP_ERROR);
+                height = getFloatFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_HEIGHT,
+                        Xml::ATTRIBUTE_PRIMITIVE_CYL_HEIGHT_ERROR);
+                slices = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_SLICES,
+                        Xml::ATTRIBUTE_PRIMITIVE_CYL_SLICES_ERROR);
+                stacks = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_STACKS,
+                        Xml::ATTRIBUTE_PRIMITIVE_CYL_STACKS_ERROR);
 
                 /* Create cylinder and store pointer in graph */
-                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Cylinder(base, top, height, slices, stacks);
+                Primitives::PrimitiveInterface* primitiveTemp =
+                        new Primitives::Cylinder(base, top, height, slices,
+                                stacks);
                 temporaryNode->addPrimitive(primitiveTemp);
-                primitiveTemp = NULL;
+                primitiveTemp = nullptr;
 
                 numberOfChildren++;
             }
 
             /*Sphere*/
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_SPHERE) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_SPHERE) == 0) {
                 float radius;
                 unsigned int slices, stacks;
 
-                radius = getFloatFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_RADIUS, Xml::ATTRIBUTE_PRIMITIVE_SPHERE_RADIUS_ERROR);
-                slices = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_SLICES, Xml::ATTRIBUTE_PRIMITIVE_SPHERE_SLICES_ERROR);
-                stacks = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_STACKS, Xml::ATTRIBUTE_PRIMITIVE_SPHERE_STACKS_ERROR);
+                radius = getFloatFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_RADIUS,
+                        Xml::ATTRIBUTE_PRIMITIVE_SPHERE_RADIUS_ERROR);
+                slices = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_SLICES,
+                        Xml::ATTRIBUTE_PRIMITIVE_SPHERE_SLICES_ERROR);
+                stacks = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_STACKS,
+                        Xml::ATTRIBUTE_PRIMITIVE_SPHERE_STACKS_ERROR);
 
                 /* Create sphere and store pointer in graph */
-                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Sphere(radius, slices, stacks);
+                Primitives::PrimitiveInterface* primitiveTemp =
+                        new Primitives::Sphere(radius, slices, stacks);
                 temporaryNode->addPrimitive(primitiveTemp);
-                primitiveTemp = NULL;
+                primitiveTemp = nullptr;
 
                 numberOfChildren++;
             }
 
             /*Torus*/
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_TORUS) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_TORUS) == 0) {
                 float inner, outer;
                 unsigned int slices, loops;
 
-                inner = getFloatFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_INNER, Xml::ATTRIBUTE_PRIMITIVE_TORUS_INNER_ERROR);
-                outer = getFloatFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_OUTER, Xml::ATTRIBUTE_PRIMITIVE_TORUS_OUTER_ERROR);
-                slices = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_SLICES, Xml::ATTRIBUTE_PRIMITIVE_TORUS_SLICES_ERROR);
-                loops = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_LOOPS, Xml::ATTRIBUTE_PRIMITIVE_TORUS_LOOPS_ERROR);
+                inner = getFloatFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_INNER,
+                        Xml::ATTRIBUTE_PRIMITIVE_TORUS_INNER_ERROR);
+                outer = getFloatFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_OUTER,
+                        Xml::ATTRIBUTE_PRIMITIVE_TORUS_OUTER_ERROR);
+                slices = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_SLICES,
+                        Xml::ATTRIBUTE_PRIMITIVE_TORUS_SLICES_ERROR);
+                loops = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_LOOPS,
+                        Xml::ATTRIBUTE_PRIMITIVE_TORUS_LOOPS_ERROR);
 
                 /* Create torus and store pointer in graph */
-                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Torus(inner, outer, slices, loops);
+                Primitives::PrimitiveInterface* primitiveTemp =
+                        new Primitives::Torus(inner, outer, slices, loops);
                 temporaryNode->addPrimitive(primitiveTemp);
-                primitiveTemp = NULL;
+                primitiveTemp = nullptr;
 
                 numberOfChildren++;
             }
 
             /* Plane */
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_PLANE) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_PLANE) == 0) {
                 unsigned int parts;
 
-                parts = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_PARTS, Xml::ATTRIBUTE_PRIMITIVE_PLANE_PARTS_ERROR);
+                parts = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_PARTS,
+                        Xml::ATTRIBUTE_PRIMITIVE_PLANE_PARTS_ERROR);
 
                 /* Create plane and store pointer in graph */
-                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Plane(parts);
+                Primitives::PrimitiveInterface* primitiveTemp =
+                        new Primitives::Plane(parts);
                 temporaryNode->addPrimitive(primitiveTemp);
-                primitiveTemp = NULL;
+                primitiveTemp = nullptr;
 
                 numberOfChildren++;
             }
 
             /* Patch */
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_PATCH) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_PATCH) == 0) {
                 unsigned int order, partsU, partsV, compute;
 
-                order = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_ORDER, Xml::ATTRIBUTE_PRIMITIVE_PATCH_ORDER_ERROR);
-                partsU = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_PARTSU, Xml::ATTRIBUTE_PRIMITIVE_PATCH_PARTSU_ERROR);
-                partsV = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_PARTSV, Xml::ATTRIBUTE_PRIMITIVE_PATCH_PARTSV_ERROR);
-                compute = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_COMPUTE, Xml::ATTRIBUTE_PRIMITIVE_PATCH_COMPUTE_ERROR);
+                order = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_ORDER,
+                        Xml::ATTRIBUTE_PRIMITIVE_PATCH_ORDER_ERROR);
+                partsU = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_PARTSU,
+                        Xml::ATTRIBUTE_PRIMITIVE_PATCH_PARTSU_ERROR);
+                partsV = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_PARTSV,
+                        Xml::ATTRIBUTE_PRIMITIVE_PATCH_PARTSV_ERROR);
+                compute = getUnsignedIntFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_COMPUTE,
+                        Xml::ATTRIBUTE_PRIMITIVE_PATCH_COMPUTE_ERROR);
 
-                Primitives::Patch* primitiveTempP = new Primitives::Patch(order, partsU, partsV, compute);
+                Primitives::Patch* primitiveTempP = new Primitives::Patch(order,
+                        partsU, partsV, compute);
 
                 /* Get number of points to be read */
-                unsigned int numberOfPoints = primitiveTempP->getNumberOfPoints();
+                unsigned int numberOfPoints =
+                        primitiveTempP->getNumberOfPoints();
 
-                TiXmlElement* xmlPatchPointElement = xmlChildrenElement->FirstChildElement();
+                TiXmlElement* xmlPatchPointElement =
+                        xmlChildrenElement->FirstChildElement();
 
                 bool pointsLastRun = false;
                 unsigned int readPoints = 0;
 
-                while (xmlPatchPointElement != NULL && !pointsLastRun) {
+                while (xmlPatchPointElement != nullptr && !pointsLastRun) {
                     /* Checks if we are loading the last child, if so this will be the last run. */
-                    if (xmlPatchPointElement == xmlPatchPointElement->LastChild()) {
+                    if (xmlPatchPointElement
+                            == xmlPatchPointElement->LastChild()) {
                         pointsLastRun = true;
                     }
 
                     /* Point */
-                    if (strcmp(xmlPatchPointElement->Value(), Xml::SECTION_PRIMITIVE_CONTROLPOINT) == 0) {
+                    if (strcmp(xmlPatchPointElement->Value(),
+                            Xml::SECTION_PRIMITIVE_CONTROLPOINT) == 0) {
                         xyzPointDouble point;
-                        point.x = getFloatFromElementAttribute(xmlPatchPointElement, Xml::ATTRIBUTE_PRIMITIVE_X, Xml::ATTRIBUTE_PRIMITIVE_PATCH_X_ERROR);
-                        point.y = getFloatFromElementAttribute(xmlPatchPointElement, Xml::ATTRIBUTE_PRIMITIVE_Y, Xml::ATTRIBUTE_PRIMITIVE_PATCH_Y_ERROR);
-                        point.z = getFloatFromElementAttribute(xmlPatchPointElement, Xml::ATTRIBUTE_PRIMITIVE_Z, Xml::ATTRIBUTE_PRIMITIVE_PATCH_Z_ERROR);
+                        point.x = getFloatFromElementAttribute(
+                                xmlPatchPointElement,
+                                Xml::ATTRIBUTE_PRIMITIVE_X,
+                                Xml::ATTRIBUTE_PRIMITIVE_PATCH_X_ERROR);
+                        point.y = getFloatFromElementAttribute(
+                                xmlPatchPointElement,
+                                Xml::ATTRIBUTE_PRIMITIVE_Y,
+                                Xml::ATTRIBUTE_PRIMITIVE_PATCH_Y_ERROR);
+                        point.z = getFloatFromElementAttribute(
+                                xmlPatchPointElement,
+                                Xml::ATTRIBUTE_PRIMITIVE_Z,
+                                Xml::ATTRIBUTE_PRIMITIVE_PATCH_Z_ERROR);
 
                         primitiveTempP->insertPoint(point);
                         readPoints++;
 
-                        xmlPatchPointElement = xmlPatchPointElement->NextSiblingElement();
+                        xmlPatchPointElement =
+                                xmlPatchPointElement->NextSiblingElement();
                     } else {
                         throw geException("Patch: Invalid child found.", true);
                     }
@@ -690,18 +895,20 @@ void Scene::xmlLoadGraph() {
                 if (readPoints == numberOfPoints) {
 
                 } else {
-                    throw geException("Patch: Number of read points is invalid.", true);
+                    throw geException(
+                            "Patch: Number of read points is invalid.", true);
                 }
 
                 /* Store gePatch pointer in graph */
                 temporaryNode->addPrimitive(primitiveTempP);
-                primitiveTempP = NULL;
+                primitiveTempP = nullptr;
 
                 numberOfChildren++;
             }
 
             /* Vehicle */
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_VEHICLE) == 0) {
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_VEHICLE) == 0) {
 
                 /* Create vehicle */
                 Primitives::Vehicle* primitiveTempV = new Primitives::Vehicle();
@@ -711,36 +918,48 @@ void Scene::xmlLoadGraph() {
 
                 /* Store geVehicle pointer in graph */
                 temporaryNode->addPrimitive(primitiveTempV);
-                primitiveTempV = NULL;
+                primitiveTempV = nullptr;
 
                 numberOfChildren++;
             }
 
             /* Water line */
-            if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_WATERLINE) == 0) {
-            	std::string hmap, tmap, fshader, vshader;
+            if (strcmp(xmlChildrenElement->Value(),
+                    Xml::SECTION_PRIMITIVE_WATERLINE) == 0) {
+                std::string hmap, tmap, fshader, vshader;
 
-                hmap = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_HEIGHTMAP, Xml::ATTRIBUTE_PRIMITIVE_WL_HEIGHTMAP_ERROR);
-                tmap = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_TEXTUREMAP, Xml::ATTRIBUTE_PRIMITIVE_WL_TEXTUREMAP_ERROR);
-                fshader = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_FRAGMENTSHADER, Xml::ATTRIBUTE_PRIMITIVE_WL_FRAGMENTSHADER_ERROR);
-                vshader = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_VERTEXSHADER, Xml::ATTRIBUTE_PRIMITIVE_WL_VERTEXSHADER_ERRROR);
+                hmap = getStringFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_HEIGHTMAP,
+                        Xml::ATTRIBUTE_PRIMITIVE_WL_HEIGHTMAP_ERROR);
+                tmap = getStringFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_TEXTUREMAP,
+                        Xml::ATTRIBUTE_PRIMITIVE_WL_TEXTUREMAP_ERROR);
+                fshader = getStringFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_FRAGMENTSHADER,
+                        Xml::ATTRIBUTE_PRIMITIVE_WL_FRAGMENTSHADER_ERROR);
+                vshader = getStringFromElementAttribute(xmlChildrenElement,
+                        Xml::ATTRIBUTE_PRIMITIVE_VERTEXSHADER,
+                        Xml::ATTRIBUTE_PRIMITIVE_WL_VERTEXSHADER_ERRROR);
 
                 /* Create waterline */
-                Primitives::WaterLine* primitiveTempWL = new Primitives::WaterLine(hmap, tmap, fshader, vshader);
+                Primitives::WaterLine* primitiveTempWL =
+                        new Primitives::WaterLine(hmap, tmap, fshader, vshader);
 
                 /* Store geVehicle pointer in graph */
                 temporaryNode->addPrimitive(primitiveTempWL);
                 waterLineVector.push_back(primitiveTempWL);
 
-                primitiveTempWL = NULL;
+                primitiveTempWL = nullptr;
 
                 numberOfChildren++;
             }
 
             /* Noderef */
             if (strcmp(xmlChildrenElement->Value(), Xml::REFERENCE_NODE) == 0) {
-            	std::string nodeReferenceId;
-                nodeReferenceId = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_CHILDREN_ID_ERROR);
+                std::string nodeReferenceId;
+                nodeReferenceId = getStringFromElementAttribute(
+                        xmlChildrenElement, Xml::ATTRIBUTE_ID,
+                        Xml::SECTION_GRAPH_CHILDREN_ID_ERROR);
 
                 /* Set reference id */
                 temporaryNode->addChildrenID(nodeReferenceId);
@@ -777,10 +996,11 @@ void Scene::xmlLoadAnimations() {
     int numberOfAnimations = 0;
 
     /* Get animations first child */
-    TiXmlElement* xmlAnimationElement = xmlAnimationsElement->FirstChildElement();
+    TiXmlElement* xmlAnimationElement =
+            xmlAnimationsElement->FirstChildElement();
 
     bool animationsLastRun = false;
-    while (xmlAnimationElement != NULL && !animationsLastRun) {
+    while (xmlAnimationElement != nullptr && !animationsLastRun) {
         /* Checks if we are loading the last child, if so this will be the last run. */
         if (xmlAnimationElement == xmlAnimationElement->LastChild()) {
             animationsLastRun = true;
@@ -790,48 +1010,65 @@ void Scene::xmlLoadAnimations() {
         float animationSpan;
         unsigned int animationTypeNumber;
 
-        animationId = getStringFromElementAttribute(xmlAnimationElement, Xml::ATTRIBUTE_ID, Xml::ATTRIBUTE_ANIMATION_ID_ERROR);
-        animationSpan = getFloatFromElementAttribute(xmlAnimationElement, Xml::ATTRIBUTE_ANIMATION_SPAN, Xml::ATTRIBUTE_ANIMATION_SPAN_ERROR);
-        animationType = getStringFromElementAttribute(xmlAnimationElement, Xml::ATTRIBUTE_ANIMATION_TYPE, Xml::ATTRIBUTE_ANIMATION_TYPE_ERROR);
+        animationId = getStringFromElementAttribute(xmlAnimationElement,
+                Xml::ATTRIBUTE_ID, Xml::ATTRIBUTE_ANIMATION_ID_ERROR);
+        animationSpan = getFloatFromElementAttribute(xmlAnimationElement,
+                Xml::ATTRIBUTE_ANIMATION_SPAN,
+                Xml::ATTRIBUTE_ANIMATION_SPAN_ERROR);
+        animationType = getStringFromElementAttribute(xmlAnimationElement,
+                Xml::ATTRIBUTE_ANIMATION_TYPE,
+                Xml::ATTRIBUTE_ANIMATION_TYPE_ERROR);
 
         /* Check the animation type string */
         if (animationType == Xml::VALUE_ANIMATION_LINEAR) {
             animationTypeNumber = 1;
         } else {
-            throw geException("Animations: Invalid animation type string.", true, xmlAnimationElement->Row());
+            throw geException("Animations: Invalid animation type string.",
+                    true, xmlAnimationElement->Row());
         }
 
         /* Create animation object here. (So that we can add control points later) */
         geAnimation* temporaryAnimation;
-        temporaryAnimation = new geAnimation(animationId, animationSpan, animationTypeNumber);
+        temporaryAnimation = new geAnimation(animationId, animationSpan,
+                animationTypeNumber);
 
         animationsVector.push_back(temporaryAnimation);
 
         /* Control Points */
-        TiXmlElement* xmlAnimationPointElement = xmlAnimationElement->FirstChildElement();
+        TiXmlElement* xmlAnimationPointElement =
+                xmlAnimationElement->FirstChildElement();
 
         bool pointsLastRun = false;
         unsigned int readPoints = 0;
 
-        while (xmlAnimationPointElement != NULL && !pointsLastRun) {
+        while (xmlAnimationPointElement != nullptr && !pointsLastRun) {
             /* Checks if we are loading the last child, if so this will be the last run. */
-            if (xmlAnimationPointElement == xmlAnimationPointElement->LastChild()) {
+            if (xmlAnimationPointElement
+                    == xmlAnimationPointElement->LastChild()) {
                 pointsLastRun = true;
             }
 
             /* Point */
-            if (strcmp(xmlAnimationPointElement->Value(), Xml::SECTION_PRIMITIVE_CONTROLPOINT) == 0) {
+            if (strcmp(xmlAnimationPointElement->Value(),
+                    Xml::SECTION_PRIMITIVE_CONTROLPOINT) == 0) {
                 xyzPointDouble point;
 
-                point.x = getFloatFromElementAttribute(xmlAnimationPointElement, Xml::ATTRIBUTE_ANIMATION_X, Xml::ATTRIBUTE_ANIMATION_X_ERROR);
-                point.y = getFloatFromElementAttribute(xmlAnimationPointElement, Xml::ATTRIBUTE_ANIMATION_Y, Xml::ATTRIBUTE_ANIMATION_Y_ERROR);
-                point.z = getFloatFromElementAttribute(xmlAnimationPointElement, Xml::ATTRIBUTE_ANIMATION_Z, Xml::ATTRIBUTE_ANIMATION_Z_ERROR);
+                point.x = getFloatFromElementAttribute(xmlAnimationPointElement,
+                        Xml::ATTRIBUTE_ANIMATION_X,
+                        Xml::ATTRIBUTE_ANIMATION_X_ERROR);
+                point.y = getFloatFromElementAttribute(xmlAnimationPointElement,
+                        Xml::ATTRIBUTE_ANIMATION_Y,
+                        Xml::ATTRIBUTE_ANIMATION_Y_ERROR);
+                point.z = getFloatFromElementAttribute(xmlAnimationPointElement,
+                        Xml::ATTRIBUTE_ANIMATION_Z,
+                        Xml::ATTRIBUTE_ANIMATION_Z_ERROR);
 
                 temporaryAnimation->insertPoint(point);
 
                 readPoints++;
 
-                xmlAnimationPointElement = xmlAnimationPointElement->NextSiblingElement();
+                xmlAnimationPointElement =
+                        xmlAnimationPointElement->NextSiblingElement();
             } else {
                 throw geException("Animation: Invalid child found.", true);
             }
@@ -844,12 +1081,14 @@ void Scene::xmlLoadAnimations() {
     xmlAnimationsLoaded = true;
 }
 
-TiXmlElement *Scene::findChildByAttribute(TiXmlElement *parent, const char * attr, const char *val) {
+TiXmlElement *Scene::findChildByAttribute(TiXmlElement *parent,
+        const char * attr, const char *val) {
     TiXmlElement *child = parent->FirstChildElement();
     bool found = false;
 
     while (child && !found) {
-        if (child->Attribute(attr) && strcmp(child->Attribute(attr), val) == 0) {
+        if (child->Attribute(attr)
+                && strcmp(child->Attribute(attr), val) == 0) {
             found = true;
         } else {
             child = child->NextSiblingElement();
@@ -859,51 +1098,62 @@ TiXmlElement *Scene::findChildByAttribute(TiXmlElement *parent, const char * att
     return child;
 }
 
-std::string Scene::getStringFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
-	std::string output;
+std::string Scene::getStringFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
+    std::string output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
     if (valString) {
-        output = std::string(valString);
+        return std::string(valString);
     }
 
     throw geException(Error, true, iElement->Row());
 }
 
-xyzPointDouble Scene::getDoublePointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+xyzPointDouble Scene::getDoublePointFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
     xyzPointDouble output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
-    if (valString && sscanf(valString, "%lf %lf %lf", &output.x, &output.y, &output.z) == 3) {
+    if (valString
+            && sscanf(valString, "%lf %lf %lf", &output.x, &output.y, &output.z)
+                    == 3) {
         return output;
     }
 
     throw geException(Error, true, iElement->Row());
 }
 
-xyzPointFloat Scene::getFloatPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
-	xyzPointFloat output;
+xyzPointFloat Scene::getFloatPointFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
+    xyzPointFloat output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
-    if (valString && sscanf(valString, "%f %f %f", &output.x, &output.y, &output.z) == 3) {
+    if (valString
+            && sscanf(valString, "%f %f %f", &output.x, &output.y, &output.z)
+                    == 3) {
         return output;
     }
 
     throw geException(Error, true, iElement->Row());
 }
 
-color Scene::getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+color Scene::getColorFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
     color output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
-    if (valString && sscanf(valString, "%f %f %f %f", &output.r, &output.g, &output.b, &output.a) == 4) {
+    if (valString
+            && sscanf(valString, "%f %f %f %f", &output.r, &output.g, &output.b,
+                    &output.a) == 4) {
         return output;
     }
 
     throw geException(Error, true, iElement->Row());
 }
 
-double Scene::getDoubleFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+double Scene::getDoubleFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
     double output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -914,7 +1164,8 @@ double Scene::getDoubleFromElementAttribute(TiXmlElement* iElement, char const* 
     throw geException(Error, true, iElement->Row());
 }
 
-float Scene::getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+float Scene::getFloatFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
     float output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -925,7 +1176,8 @@ float Scene::getFloatFromElementAttribute(TiXmlElement* iElement, char const* iA
     throw geException(Error, true, iElement->Row());
 }
 
-unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
     unsigned int output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -936,7 +1188,8 @@ unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement, c
     throw geException(Error, true, iElement->Row());
 }
 
-bool Scene::getAttributeExistence(TiXmlElement* iElement, char const* iAttribute) {
+bool Scene::getAttributeExistence(TiXmlElement* iElement,
+        char const* iAttribute) {
     char * valString = (char *) iElement->Attribute(iAttribute);
 
     if (valString) {
@@ -946,7 +1199,8 @@ bool Scene::getAttributeExistence(TiXmlElement* iElement, char const* iAttribute
     }
 }
 
-xyPointDouble Scene::get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+xyPointDouble Scene::get2DdPointFromElementAttribute(TiXmlElement* iElement,
+        char const* iAttribute, const std::string& Error) {
     xyPointDouble output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -1003,7 +1257,9 @@ bool Scene::validateBoolean(std::string& input) {
 }
 
 void Scene::setDrawMode(std::string& input) {
-    if ((input == Xml::ATTRIBUTE_VALUE_DRAWMODE_FILL) || (input == Xml::ATTRIBUTE_VALUE_DRAWMODE_LINE) || (input == Xml::ATTRIBUTE_VALUE_DRAWMODE_POINT)) {
+    if ((input == Xml::ATTRIBUTE_VALUE_DRAWMODE_FILL)
+            || (input == Xml::ATTRIBUTE_VALUE_DRAWMODE_LINE)
+            || (input == Xml::ATTRIBUTE_VALUE_DRAWMODE_POINT)) {
         this->drawMode = input;
 
     } else {
@@ -1012,7 +1268,8 @@ void Scene::setDrawMode(std::string& input) {
 }
 
 void Scene::setShadingMode(std::string& input) {
-    if ((input == Xml::ATTRIBUTE_VALUE_SHADING_FLAT) || (input == Xml::ATTRIBUTE_VALUE_SHADING_GOURAUD)) {
+    if ((input == Xml::ATTRIBUTE_VALUE_SHADING_FLAT)
+            || (input == Xml::ATTRIBUTE_VALUE_SHADING_GOURAUD)) {
         this->shadingMode = input;
     } else {
         throw geException("Shading mode string not recognized!", true);
@@ -1020,7 +1277,10 @@ void Scene::setShadingMode(std::string& input) {
 }
 
 void Scene::setCullFace(std::string& input) {
-    if ((input == Xml::ATTRIBUTE_VALUE_CULLFACE_NONE) || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_BACK) || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_FRONT) || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_BOTH)) {
+    if ((input == Xml::ATTRIBUTE_VALUE_CULLFACE_NONE)
+            || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_BACK)
+            || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_FRONT)
+            || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_BOTH)) {
         this->cullFace = input;
     } else {
         throw geException("Cull face string not recognized!", true);
@@ -1028,7 +1288,8 @@ void Scene::setCullFace(std::string& input) {
 }
 
 void Scene::setCullOrder(std::string& input) {
-    if ((input == Xml::ATTRIBUTE_VALUE_CULLORDER_CCW) || (input == Xml::ATTRIBUTE_VALUE_CULLORDER_CW)) {
+    if ((input == Xml::ATTRIBUTE_VALUE_CULLORDER_CCW)
+            || (input == Xml::ATTRIBUTE_VALUE_CULLORDER_CW)) {
         this->cullOrder = input;
     } else {
         throw geException("Cull order string not recognized!", true);
@@ -1039,7 +1300,8 @@ void Scene::setCullOrder(std::string& input) {
 /* Apply globals */
 void Scene::applyGlobals() {
     /* Background color [OK] */
-    glClearColor(backgroundColour[0], backgroundColour[1], backgroundColour[2], backgroundColour[3]);
+    glClearColor(backgroundColour[0], backgroundColour[1], backgroundColour[2],
+            backgroundColour[3]);
 
     /* Cull order */
     if (this->cullOrder == Xml::ATTRIBUTE_VALUE_CULLORDER_CCW) {
@@ -1109,7 +1371,7 @@ GLboolean Scene::getLightingEnableStatus() {
 
 void Scene::init() {
 #ifdef ENGINE_VERBOSE
-	std::cout << "Setting up globals" << std::endl;
+    std::cout << "Setting up globals" << std::endl;
 #endif
     applyGlobals();
 #ifdef ENGINE_VERBOSE
@@ -1144,7 +1406,7 @@ void Scene::initLights() {
     if (!this->lightVector.empty ()) {
         for (std::vector<geLight*>::iterator it = lightVector.begin (); it != this->lightVector.end (); it++) {
             if ((*it)->getLightEnableStatus ()) {
-            	std::cout << "Light enabled: [" << (*it)->getID () << "]" << std::endl;
+                std::cout << "Light enabled: [" << (*it)->getID () << "]" << std::endl;
             }
         }
     }
@@ -1153,19 +1415,23 @@ void Scene::initLights() {
 
 /* Initialize textures (throws a fatal geException if texture file doesn't exist) */
 void Scene::initTextures() {
-    for (std::vector<geTexture*>::iterator jt = textureVector.begin(); jt != this->textureVector.end(); jt++) {
+    for (std::vector<geTexture*>::iterator jt = textureVector.begin();
+            jt != this->textureVector.end(); jt++) {
         (*jt)->loadTexture();
     }
 }
 
 /* Assign textures to appearances */
 void Scene::initAppearanceTextures() {
-    if (!this->textureVector.empty() && this->xmlAppearancesLoaded && this->xmlTexturesLoaded) {
-        for (std::vector<Appearance*>::iterator it = appearanceVector.begin(); it != this->appearanceVector.end(); it++) {
+    if (!this->textureVector.empty() && this->xmlAppearancesLoaded
+            && this->xmlTexturesLoaded) {
+        for (std::vector<Appearance*>::iterator it = appearanceVector.begin();
+                it != this->appearanceVector.end(); it++) {
 
-        	std::string apperanceRef = (*it)->getTextureReference();
+            std::string apperanceRef = (*it)->getTextureReference();
 
-            for (std::vector<geTexture*>::iterator jt = textureVector.begin(); jt != this->textureVector.end(); jt++) {
+            for (std::vector<geTexture*>::iterator jt = textureVector.begin();
+                    jt != this->textureVector.end(); jt++) {
                 if ((*jt)->getXmlId() == apperanceRef) {
                     (*it)->setTexture(*jt);
 
@@ -1183,7 +1449,7 @@ void Scene::setInitialCamera() {
         throw geException("Camera vector is empty!", true);
     }
 
-    if (currentCameraPointer != NULL) {
+    if (currentCameraPointer != nullptr) {
         throw geException("Current camera pointer is not NULL!", true);
     }
 
@@ -1198,7 +1464,7 @@ void Scene::setInitialCamera() {
         cameraIt++;
     }
 
-    if (currentCameraPointer == NULL) {
+    if (currentCameraPointer == nullptr) {
         throw geException("Initial camera not found!", true);
     }
 }
@@ -1206,7 +1472,8 @@ void Scene::setInitialCamera() {
 /* Draw lights (each light pushes and pops a matrix) */
 void Scene::displayLights() {
     if (!this->lightVector.empty()) {
-        for (std::vector<geLight*>::iterator it = lightVector.begin(); it != this->lightVector.end(); it++) {
+        for (std::vector<geLight*>::iterator it = lightVector.begin();
+                it != this->lightVector.end(); it++) {
             if ((*it)->getLightEnableStatus()) {
                 (*it)->draw();
             }
@@ -1216,7 +1483,7 @@ void Scene::displayLights() {
 
 /* Apply current camera view */
 void Scene::applyCameraView() {
-    if (this->currentCameraPointer != NULL) {
+    if (this->currentCameraPointer != nullptr) {
         this->currentCameraPointer->applyView(this->aspectRatio);
     } else {
         throw geException("The current camera pointer is NULL.", true);
@@ -1253,14 +1520,18 @@ GLdouble* Scene::getViewProjection() {
 void Scene::update(unsigned long millis) {
     /* Call the animations update */
     if (!this->animationsVector.empty()) {
-        for (std::vector<geAnimation*>::iterator it = this->animationsVector.begin(); it != this->animationsVector.end(); ++it) {
+        for (std::vector<geAnimation*>::iterator it =
+                this->animationsVector.begin();
+                it != this->animationsVector.end(); ++it) {
             (*it)->updateAnimation(millis);
         }
     }
 
     /* Call the shader update */
     if (!this->waterLineVector.empty()) {
-        for (std::vector<Primitives::WaterLine*>::iterator it = this->waterLineVector.begin(); it != this->waterLineVector.end(); ++it) {
+        for (std::vector<Primitives::WaterLine*>::iterator it =
+                this->waterLineVector.begin();
+                it != this->waterLineVector.end(); ++it) {
             (*it)->update(millis);
         }
     }
@@ -1286,21 +1557,27 @@ Appearance* Scene::getAppearanceByString(std::string& in) {
     if (this->xmlAppearancesLoaded) {
 
         if (!this->appearanceVector.empty()) {
-            for (std::vector<Appearance*>::iterator it = this->appearanceVector.begin(); it != this->appearanceVector.end(); ++it) {
+            for (std::vector<Appearance*>::iterator it =
+                    this->appearanceVector.begin();
+                    it != this->appearanceVector.end(); ++it) {
                 if ((*it)->getAppearanceID() == in) {
                     return *it;
                 }
             }
 
-            throw geException("XML: Reference to a non existing appearance [" + in + "].", true);
+            throw geException(
+                    "XML: Reference to a non existing appearance [" + in + "].",
+                    true);
 
         } else {
             throw geException("Bug: appearances vector is empty!", true);
         }
 
     } else {
-        throw geException("Bug: Attempting to find an apperance without appearances being loaded.", true);
-        return NULL;
+        throw geException(
+                "Bug: Attempting to find an apperance without appearances being loaded.",
+                true);
+        return nullptr;
     }
 }
 
@@ -1308,21 +1585,29 @@ geAnimation* Scene::getAnimationByString(std::string& in) {
     if (this->xmlAnimationsLoaded) {
 
         if (!this->animationsVector.empty()) {
-            for (std::vector<geAnimation*>::iterator it = this->animationsVector.begin(); it != this->animationsVector.end(); ++it) {
+            for (std::vector<geAnimation*>::iterator it =
+                    this->animationsVector.begin();
+                    it != this->animationsVector.end(); ++it) {
                 if ((*it)->getID() == in) {
                     return *it;
                 }
             }
 
-            throw geException("XML: Reference to a non existing animation [" + in + "].", true);
+            throw geException(
+                    "XML: Reference to a non existing animation [" + in + "].",
+                    true);
 
         } else {
-            throw geException("XML: Reference to an animation, but no animation exists!", true);
+            throw geException(
+                    "XML: Reference to an animation, but no animation exists!",
+                    true);
         }
 
     } else {
-        throw geException("Bug: Attempting to find an animation without animations being loaded.", true);
-        return NULL;
+        throw geException(
+                "Bug: Attempting to find an animation without animations being loaded.",
+                true);
+        return nullptr;
     }
 }
 
@@ -1331,7 +1616,7 @@ void Scene::changeCameraToExernal() {
 }
 
 void Scene::changeCameraToSceneDefault() {
-	std::vector<CameraInterface*>::iterator cameraIt;
+    std::vector<CameraInterface*>::iterator cameraIt;
     cameraIt = cameraVector.begin();
     while (cameraIt != cameraVector.end()) {
         if ((*cameraIt)->getID() == this->initialCamera) {
@@ -1355,23 +1640,23 @@ int Scene::getPolygonMode() {
 
 void Scene::reSetPolygonMode(int in) {
     switch (in) {
-    case 0:
-        glPolygonMode(GL_FRONT, GL_FILL);
-        glPolygonMode(GL_BACK, GL_FILL);
-        break;
+        case 0:
+            glPolygonMode(GL_FRONT, GL_FILL);
+            glPolygonMode(GL_BACK, GL_FILL);
+            break;
 
-    case 1:
-        glPolygonMode(GL_FRONT, GL_LINE);
-        glPolygonMode(GL_BACK, GL_LINE);
-        break;
+        case 1:
+            glPolygonMode(GL_FRONT, GL_LINE);
+            glPolygonMode(GL_BACK, GL_LINE);
+            break;
 
-    case 2:
-        glPolygonMode(GL_FRONT, GL_POINT);
-        glPolygonMode(GL_BACK, GL_POINT);
-        break;
+        case 2:
+            glPolygonMode(GL_FRONT, GL_POINT);
+            glPolygonMode(GL_BACK, GL_POINT);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -1419,7 +1704,8 @@ unsigned int Scene::getCurrentCamera() {
 
 void Scene::moveVehicleUp() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveUp();
         }
     }
@@ -1427,7 +1713,8 @@ void Scene::moveVehicleUp() {
 
 void Scene::moveVehicleDown() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveDown();
         }
     }
@@ -1435,7 +1722,8 @@ void Scene::moveVehicleDown() {
 
 void Scene::moveVehicleFront() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveFront();
         }
     }
@@ -1443,7 +1731,8 @@ void Scene::moveVehicleFront() {
 
 void Scene::moveVehicleBack() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveBack();
         }
     }
@@ -1451,7 +1740,8 @@ void Scene::moveVehicleBack() {
 
 void Scene::moveVehicleLeft() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveLeft();
         }
     }
@@ -1459,7 +1749,8 @@ void Scene::moveVehicleLeft() {
 
 void Scene::moveVehicleRight() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveRight();
         }
     }
@@ -1467,7 +1758,8 @@ void Scene::moveVehicleRight() {
 
 void Scene::tiltVehicleLeft() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->tiltLeft();
         }
     }
@@ -1475,18 +1767,19 @@ void Scene::tiltVehicleLeft() {
 
 void Scene::tiltVehicleRight() {
     if (!this->sceneVehicles.empty()) {
-        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i =
+                sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->tiltRight();
         }
     }
 }
 
 Scene::~Scene() {
-    if (graph != NULL) {
+    if (graph != nullptr) {
         delete (graph);
     }
 
-    if (doc != NULL) {
+    if (doc != nullptr) {
         delete (doc);
     }
 }

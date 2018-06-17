@@ -19,3 +19,4 @@ Default/makefile
 # Output
 *.d
 geEngine
+/Debug/

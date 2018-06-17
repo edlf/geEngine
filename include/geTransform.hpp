@@ -128,84 +128,86 @@ public:
 
         /* 0 for x, 1 for y and 2 for z */
         switch (iAxis) {
-        case 0:
-            axisArray[0] = 1;
+            case 0:
+                axisArray[0] = 1;
 
-            /* X axis rotation (roll) */
-            matrix[0] = 1;
-            matrix[1] = 0;
-            matrix[2] = 0;
-            matrix[3] = 0;
+                /* X axis rotation (roll) */
+                matrix[0] = 1;
+                matrix[1] = 0;
+                matrix[2] = 0;
+                matrix[3] = 0;
 
-            matrix[4] = 0;
-            matrix[5] = cos(angleRad);
-            matrix[6] = sin(angleRad);
-            matrix[7] = 0;
+                matrix[4] = 0;
+                matrix[5] = cos(angleRad);
+                matrix[6] = sin(angleRad);
+                matrix[7] = 0;
 
-            matrix[8] = 0;
-            matrix[9] = -sin(angleRad);
-            matrix[10] = cos(angleRad);
-            matrix[11] = 0;
+                matrix[8] = 0;
+                matrix[9] = -sin(angleRad);
+                matrix[10] = cos(angleRad);
+                matrix[11] = 0;
 
-            matrix[12] = 0;
-            matrix[13] = 0;
-            matrix[14] = 0;
-            matrix[15] = 1;
-            break;
+                matrix[12] = 0;
+                matrix[13] = 0;
+                matrix[14] = 0;
+                matrix[15] = 1;
+                break;
 
-        case 1:
-            axisArray[1] = 1;
+            case 1:
+                axisArray[1] = 1;
 
-            /* Y axis rotation (pitch) */
-            matrix[0] = cos(angleRad);
-            matrix[1] = 0;
-            matrix[2] = -sin(angleRad);
-            matrix[3] = 0;
+                /* Y axis rotation (pitch) */
+                matrix[0] = cos(angleRad);
+                matrix[1] = 0;
+                matrix[2] = -sin(angleRad);
+                matrix[3] = 0;
 
-            matrix[4] = 0;
-            matrix[5] = 1;
-            matrix[6] = 0;
-            matrix[7] = 0;
+                matrix[4] = 0;
+                matrix[5] = 1;
+                matrix[6] = 0;
+                matrix[7] = 0;
 
-            matrix[8] = sin(angleRad);
-            matrix[9] = 0;
-            matrix[10] = cos(angleRad);
-            matrix[11] = 0;
+                matrix[8] = sin(angleRad);
+                matrix[9] = 0;
+                matrix[10] = cos(angleRad);
+                matrix[11] = 0;
 
-            matrix[12] = 0;
-            matrix[13] = 0;
-            matrix[14] = 0;
-            matrix[15] = 1;
-            break;
+                matrix[12] = 0;
+                matrix[13] = 0;
+                matrix[14] = 0;
+                matrix[15] = 1;
+                break;
 
-        case 2:
-            axisArray[2] = 1;
+            case 2:
+                axisArray[2] = 1;
 
-            /* Z axis rotation (yaw) */
-            matrix[0] = cos(angleRad);
-            matrix[1] = sin(angleRad);
-            matrix[2] = 0;
-            matrix[3] = 0;
+                /* Z axis rotation (yaw) */
+                matrix[0] = cos(angleRad);
+                matrix[1] = sin(angleRad);
+                matrix[2] = 0;
+                matrix[3] = 0;
 
-            matrix[4] = -sin(angleRad);
-            matrix[5] = cos(angleRad);
-            matrix[6] = 0;
-            matrix[7] = 0;
+                matrix[4] = -sin(angleRad);
+                matrix[5] = cos(angleRad);
+                matrix[6] = 0;
+                matrix[7] = 0;
 
-            matrix[8] = 0;
-            matrix[9] = 0;
-            matrix[10] = 1;
-            matrix[11] = 0;
+                matrix[8] = 0;
+                matrix[9] = 0;
+                matrix[10] = 1;
+                matrix[11] = 0;
 
-            matrix[12] = 0;
-            matrix[13] = 0;
-            matrix[14] = 0;
-            matrix[15] = 1;
-            break;
+                matrix[12] = 0;
+                matrix[13] = 0;
+                matrix[14] = 0;
+                matrix[15] = 1;
+                break;
 
-        default:
-            throw geException("Bug: Invalid value fed to axis at geTransformRotate!", true);
-            break;
+            default:
+                throw geException(
+                        "Bug: Invalid value fed to axis at geTransformRotate!",
+                        true);
+                break;
         }
 
         angle = iAngle;

@@ -8,7 +8,9 @@
 #include "geLight.hpp"
 
 namespace ge {
-geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular) {
+geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable,
+        xyzPointFloat iLocation, color iAmbient, color iDiffuse,
+        color iSpecular) {
 
     this->id = lightID;
     this->openGLid = GL_LIGHT0 + openGLid;
@@ -22,7 +24,9 @@ geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable,
     gluQuadric = gluNewQuadric();
 }
 
-geSpotLight::geSpotLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular, GLfloat iSpotAngle, GLfloat iSpotExponent,
+geSpotLight::geSpotLight(const std::string& lightID, int openGLid, bool iEnable,
+        xyzPointFloat iLocation, color iAmbient, color iDiffuse,
+        color iSpecular, GLfloat iSpotAngle, GLfloat iSpotExponent,
         xyzPointFloat iSpotDirection) {
 
     this->id = lightID;

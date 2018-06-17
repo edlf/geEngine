@@ -48,7 +48,8 @@ private:
     GLdouble left, right, top, bottom;
 
 public:
-    OrthoCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iLeft, GLdouble iRight, GLdouble iTop, GLdouble iBottom);
+    OrthoCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iLeft,
+            GLdouble iRight, GLdouble iTop, GLdouble iBottom);
 
     virtual void applyView(double aspectRatio);
     virtual ~OrthoCamera();
@@ -73,15 +74,16 @@ public:
     virtual ~PerspectiveCamera();
 
     /* Regular camera for xml scene */
-    PerspectiveCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iAngle, xyzPointDouble iFrom, xyzPointDouble iTo);
+    PerspectiveCamera(std::string& iId, GLdouble iNear, GLdouble iFar,
+            GLdouble iAngle, xyzPointDouble iFrom, xyzPointDouble iTo);
 
     virtual void applyView(double aspectRatio);
 
-    virtual void rotateTo(int axis, double angle);   ///< Rotates the camera around _axis_ by _increment_ degrees, unless it has reached _angle_ degrees. Useful for stepping a rotation in an animation.
-    virtual void rotate(int axis, double angle);                             ///< Rotates the camera around _axis_ by _angle_ degrees.
-    virtual void setRotation(int axis, double angle);                        ///< Sets the rotation around _axis_ to be _angle_ degrees
-    virtual void moveTo(int axis, double value, double increment = 0.5f);       ///< Moves the camera along _axis_ by _increment_ units, unless _value_ has been reached.
-    virtual void translate(int axis, double value);                          ///< Moves the camera along _axis_ by _value_ units.
+    virtual void rotateTo(int axis, double angle); ///< Rotates the camera around _axis_ by _increment_ degrees, unless it has reached _angle_ degrees. Useful for stepping a rotation in an animation.
+    virtual void rotate(int axis, double angle); ///< Rotates the camera around _axis_ by _angle_ degrees.
+    virtual void setRotation(int axis, double angle); ///< Sets the rotation around _axis_ to be _angle_ degrees
+    virtual void moveTo(int axis, double value, double increment = 0.5f); ///< Moves the camera along _axis_ by _increment_ units, unless _value_ has been reached.
+    virtual void translate(int axis, double value); ///< Moves the camera along _axis_ by _value_ units.
 
     void resetCamera();
 };

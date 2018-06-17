@@ -3,7 +3,10 @@
 
 #include <string>
 
-unsigned char * reverseImage(unsigned char* data, const int width, const int height, const int channels);
+unsigned char * reverseImage(unsigned char* data,
+                             const int width,
+                             const int height,
+                             const int channels);
 
 void takeSnapshot(const int width, const int height);
 

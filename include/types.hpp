@@ -18,11 +18,11 @@ struct xyzPointFloat {
 };
 
 struct xyPointDouble {
-	GLdouble x, y;
+    GLdouble x, y;
 };
 
 struct xyPointFloat {
-	GLfloat x, y;
+    GLfloat x, y;
 };
 
 struct color {

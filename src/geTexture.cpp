@@ -37,7 +37,8 @@ void geTexture::loadTexture() {
 
         std::string pathFileName = std::string(TEXTURE_FOLDER) + this->fileName;
 
-        unsigned char *data = loadRGBImage(pathFileName.c_str(), &this->width, &this->height);
+        unsigned char *data = loadRGBImage(pathFileName.c_str(), &this->width,
+                &this->height);
 
         if (data) {
 
@@ -54,7 +55,9 @@ void geTexture::loadTexture() {
             free(data);
 
         } else {
-            throw geException("The texture could not be loaded: [" + this->fileName + "]", true);
+            throw geException(
+                    "The texture could not be loaded: [" + this->fileName + "]",
+                    true);
         }
     }
 }

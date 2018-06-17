@@ -34,7 +34,8 @@ public:
         errorMessage = str;
 
         if (fatal) {
-            std::cerr << "Fatal exception caught: " << errorMessage.c_str() << std::endl << std::flush;
+            std::cerr << "Fatal exception caught: " << errorMessage.c_str()
+                    << std::endl << std::flush;
             PressEnterToContinue();
             exit(-1);
         }
@@ -45,7 +46,8 @@ public:
         errorMessage = str;
 
         if (fatal) {
-            std::cerr << "Fatal exception while parsing xml at or near line: " << line << std::endl;
+            std::cerr << "Fatal exception while parsing xml at or near line: "
+                    << line << std::endl;
             std::cerr << "Error: " << errorMessage.c_str() << std::endl;
             PressEnterToContinue();
             exit(-1);

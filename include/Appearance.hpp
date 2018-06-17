@@ -32,8 +32,12 @@ private:
     GLfloat sWrap, tWrap;
 
 public:
-    Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess);
-    Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t);
+    Appearance(const std::string& iID, color iEmissive, color iAmbient,
+            color iDiffuse, color iSpecular, GLfloat iShininess);
+    Appearance(const std::string& iID, color iEmissive, color iAmbient,
+            color iDiffuse, color iSpecular, GLfloat iShininess,
+            const std::string& iTextureRef, GLfloat iTexlength_s,
+            GLfloat iTexlength_t);
     virtual ~Appearance();
 
     void apply();

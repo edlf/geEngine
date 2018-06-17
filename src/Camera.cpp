@@ -7,11 +7,12 @@
 #include <Camera.hpp>
 
 namespace ge {
-CameraInterface::CameraInterface(){
+CameraInterface::CameraInterface() {
 
 }
 
-CameraInterface::CameraInterface(std::string& iId, GLdouble iNear, GLdouble iFar) {
+CameraInterface::CameraInterface(std::string& iId, GLdouble iNear,
+        GLdouble iFar) {
     this->id = iId;
     this->geNear = iNear;
     this->geFar = iFar;
@@ -58,7 +59,8 @@ CameraInterface::~CameraInterface() {
 
 }
 
-OrthoCamera::OrthoCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iLeft, GLdouble iRight, GLdouble iTop, GLdouble iBottom) :
+OrthoCamera::OrthoCamera(std::string& iId, GLdouble iNear, GLdouble iFar,
+        GLdouble iLeft, GLdouble iRight, GLdouble iTop, GLdouble iBottom) :
         CameraInterface(iId, iNear, iFar) {
 
     this->left = iLeft;
@@ -68,7 +70,8 @@ OrthoCamera::OrthoCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdoub
 }
 
 void OrthoCamera::applyView(double) {
-    glOrtho(this->left, this->right, this->bottom, this->top, this->geNear, this->geFar);
+    glOrtho(this->left, this->right, this->bottom, this->top, this->geNear,
+            this->geFar);
 }
 
 OrthoCamera::~OrthoCamera() {
@@ -113,7 +116,9 @@ PerspectiveCamera::PerspectiveCamera() {
     this->examineMode = true;
 }
 
-PerspectiveCamera::PerspectiveCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iAngle, xyzPointDouble iFrom, xyzPointDouble iTo) :
+PerspectiveCamera::PerspectiveCamera(std::string& iId, GLdouble iNear,
+        GLdouble iFar, GLdouble iAngle, xyzPointDouble iFrom,
+        xyzPointDouble iTo) :
         CameraInterface(iId, iNear, iFar) {
 
     this->angle = iAngle;
@@ -140,7 +145,8 @@ void PerspectiveCamera::applyView(double aspectRatio) {
     } else {
 
         gluPerspective(this->angle, aspectRatio, this->geNear, this->geFar);
-        gluLookAt(this->from[0], this->from[1], this->from[2], this->to[0], this->to[1], this->to[2], 0, 1, 0);
+        gluLookAt(this->from[0], this->from[1], this->from[2], this->to[0],
+                this->to[1], this->to[2], 0, 1, 0);
 
     }
 }

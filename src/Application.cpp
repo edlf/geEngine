@@ -7,8 +7,8 @@
 
 namespace ge {
 /* Input args */
-int     Application::argCount;
-char**  Application::arguments;
+int Application::argCount;
+char** Application::arguments;
 
 std::string Application::sceneFile;
 
@@ -38,40 +38,41 @@ int Application::polygonModeStatus;
 ge::Scene* Application::scene;
 
 /* State and control variables to handle mouse interaction */
-int  Application::displacementX;
-int  Application::displacementY;
+int Application::displacementX;
+int Application::displacementY;
 bool Application::pressingMouseLeft;
 bool Application::pressingMouseMiddle;
 bool Application::pressingMouseRight;
-int  Application::prev_X;
-int  Application::prev_Y;
+int Application::prev_X;
+int Application::prev_Y;
 
 /* Picking buffer */
 GLuint Application::selectBuf[PICKING_BUFFER_SIZE];
 
-Application::Application(int argCount, char** args, std::string& sceneFileName){
-	this->argCount = argCount;
-	this->arguments = args;
+Application::Application(int argCount, char** args,
+        std::string& sceneFileName) {
+    this->argCount = argCount;
+    this->arguments = args;
 
-	this->sceneFile = sceneFileName;
+    this->sceneFile = sceneFileName;
 
-	try {
-		scene = new ge::Scene(sceneFile);
-	} catch (geException& e) {
-	    e.printerErrorMessage();
-	}
+    try {
+        scene = new ge::Scene(sceneFile);
+    } catch (geException& e) {
+        e.printerErrorMessage();
+    }
 
-	glutConfig(argCount, arguments);
+    glutConfig(argCount, arguments);
 
-	geInitialize();
+    geInitialize();
 
-	/* RTFM */
-	std::cout << "Check readme file for instructions." << std::endl;
+    /* RTFM */
+    std::cout << "Check readme file for instructions." << std::endl;
 
-	glutMainLoop();
+    glutMainLoop();
 }
 
-Application::~Application(){
+Application::~Application() {
 
 }
 
@@ -100,73 +101,73 @@ void Application::callBack(int control) {
      */
 
     switch (control) {
-    /* Draw mode has changed */
-    case 100:
-        scene->reSetPolygonMode(polygonModeStatus);
-        break;
+        /* Draw mode has changed */
+        case 100:
+            scene->reSetPolygonMode(polygonModeStatus);
+            break;
 
-        /* Some light has been toggled */
-    case 200:
-        toggleLight(0);
-        break;
+            /* Some light has been toggled */
+        case 200:
+            toggleLight(0);
+            break;
 
-    case 201:
-        toggleLight(1);
-        break;
+        case 201:
+            toggleLight(1);
+            break;
 
-    case 202:
-        toggleLight(2);
-        break;
+        case 202:
+            toggleLight(2);
+            break;
 
-    case 203:
-        toggleLight(3);
-        break;
+        case 203:
+            toggleLight(3);
+            break;
 
-    case 204:
-        toggleLight(4);
-        break;
+        case 204:
+            toggleLight(4);
+            break;
 
-    case 205:
-        toggleLight(5);
-        break;
+        case 205:
+            toggleLight(5);
+            break;
 
-    case 206:
-        toggleLight(6);
-        break;
+        case 206:
+            toggleLight(6);
+            break;
 
-    case 207:
-        toggleLight(7);
-        break;
+        case 207:
+            toggleLight(7);
+            break;
 
-        /* Someone wants a different view */
-    case 300:
-        if (cameraListBox->get_int_val() == 399) {
-            scene->changeCameraToExernal();
-        } else {
-            scene->setCamera(cameraListBox->get_int_val());
-        }
+            /* Someone wants a different view */
+        case 300:
+            if (cameraListBox->get_int_val() == 399) {
+                scene->changeCameraToExernal();
+            } else {
+                scene->setCamera(cameraListBox->get_int_val());
+            }
 
-        glutPostRedisplay();
-        break;
+            glutPostRedisplay();
+            break;
 
-    case 400:
-        scene->resetUserCamera();
-        glutPostRedisplay();
-        break;
+        case 400:
+            scene->resetUserCamera();
+            glutPostRedisplay();
+            break;
 
-    case 401:
-        gluiSubWindow->hide();
-        panelVisibility = false;
-        glutPostRedisplay();
-        break;
+        case 401:
+            gluiSubWindow->hide();
+            panelVisibility = false;
+            glutPostRedisplay();
+            break;
 
-    case 402:
-        snapshot();
-        break;
+        case 402:
+            snapshot();
+            break;
 
-        /* Rats */
-    default:
-        break;
+            /* Rats */
+        default:
+            break;
     }
 
 }
@@ -206,15 +207,21 @@ void Application::processMouseMoved(int x, int y) {
     displacementY = y - static_cast<int>(prev_Y);
 
     if (pressingMouseLeft && keyModifiers == 0) {
-        scene->externalGuiCamera->rotate(0, static_cast<GLdouble>(displacementY) * MOUSE_ROTATE_FACTOR);
-        scene->externalGuiCamera->rotate(1, static_cast<GLdouble>(displacementX) * MOUSE_ROTATE_FACTOR);
+        scene->externalGuiCamera->rotate(0,
+                static_cast<GLdouble>(displacementY) * MOUSE_ROTATE_FACTOR);
+        scene->externalGuiCamera->rotate(1,
+                static_cast<GLdouble>(displacementX) * MOUSE_ROTATE_FACTOR);
 
     } else if (pressingMouseRight && keyModifiers == 0) {
-        scene->externalGuiCamera->translate(0, static_cast<GLdouble>(displacementX) * MOUSE_PAN_FACTOR);
-        scene->externalGuiCamera->translate(1, static_cast<GLdouble>(-displacementY) * MOUSE_PAN_FACTOR);
+        scene->externalGuiCamera->translate(0,
+                static_cast<GLdouble>(displacementX) * MOUSE_PAN_FACTOR);
+        scene->externalGuiCamera->translate(1,
+                static_cast<GLdouble>(-displacementY) * MOUSE_PAN_FACTOR);
 
-    } else if (pressingMouseMiddle || (pressingMouseLeft && (keyModifiers & GLUT_ACTIVE_CTRL))) {
-        scene->externalGuiCamera->translate(2, static_cast<GLdouble>(displacementY) * MOUSE_ZOOM_FACTOR);
+    } else if (pressingMouseMiddle
+            || (pressingMouseLeft && (keyModifiers & GLUT_ACTIVE_CTRL))) {
+        scene->externalGuiCamera->translate(2,
+                static_cast<GLdouble>(displacementY) * MOUSE_ZOOM_FACTOR);
     }
 
     prev_X = x;
@@ -252,46 +259,46 @@ void Application::keyboard(unsigned char key, int x, int y) {
     keyModifiers = glutGetModifiers();
 
     switch (key) {
-    case 27:		// ESC
-        exit(0);
-        break;
+        case 27:		// ESC
+            exit(0);
+            break;
 
-    case 'p':
-        snapshot();
-        break;
+        case 'p':
+            snapshot();
+            break;
 
-        /* Vehicle control */
-    case 'w':
-        scene->moveVehicleFront();
-        break;
+            /* Vehicle control */
+        case 'w':
+            scene->moveVehicleFront();
+            break;
 
-    case 's':
-        scene->moveVehicleBack();
-        break;
+        case 's':
+            scene->moveVehicleBack();
+            break;
 
-    case 'q':
-        scene->moveVehicleUp();
-        break;
+        case 'q':
+            scene->moveVehicleUp();
+            break;
 
-    case 'e':
-        scene->moveVehicleDown();
-        break;
+        case 'e':
+            scene->moveVehicleDown();
+            break;
 
-    case 'a':
-        scene->moveVehicleLeft();
-        break;
+        case 'a':
+            scene->moveVehicleLeft();
+            break;
 
-    case 'd':
-        scene->moveVehicleRight();
-        break;
+        case 'd':
+            scene->moveVehicleRight();
+            break;
 
-    case 'z':
-        scene->tiltVehicleLeft();
-        break;
+        case 'z':
+            scene->tiltVehicleLeft();
+            break;
 
-    case 'x':
-        scene->tiltVehicleRight();
-        break;
+        case 'x':
+            scene->tiltVehicleRight();
+            break;
 
     }
 }
@@ -304,25 +311,25 @@ void Application::specialKeyboard(int key, int x, int y) {
     keyModifiers = glutGetModifiers();
 
     switch (key) {
-    case GLUT_KEY_HOME:
-        scene->changeCameraToSceneDefault();
-        glutPostRedisplay();
-        break;
+        case GLUT_KEY_HOME:
+            scene->changeCameraToSceneDefault();
+            glutPostRedisplay();
+            break;
 
-    case GLUT_KEY_END:
-        if (panelVisibility) {
-            gluiSubWindow->hide();
-        } else {
-            gluiSubWindow->show();
-        }
+        case GLUT_KEY_END:
+            if (panelVisibility) {
+                gluiSubWindow->hide();
+            } else {
+                gluiSubWindow->show();
+            }
 
-        panelVisibility = !panelVisibility;
+            panelVisibility = !panelVisibility;
 
-        glutPostRedisplay();
-        break;
+            glutPostRedisplay();
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -363,7 +370,7 @@ void Application::geInitialize() {
     prev_Y = 0;
 
     /* Check if scene has a valid pointer */
-    if (scene == NULL) {
+    if (scene == nullptr) {
         std::cerr << "Null scene pointer. You got bugs to fix!" << std::endl;
         exit(-1);
     }
@@ -388,7 +395,8 @@ void Application::geInitialize() {
 
     GLUI_RadioGroup *radioGroup;
 
-    radioGroup = gluiSubWindow->add_radiogroup_to_panel(polygonPanel, &polygonModeStatus, 100, callBack);
+    radioGroup = gluiSubWindow->add_radiogroup_to_panel(polygonPanel,
+            &polygonModeStatus, 100, callBack);
     gluiSubWindow->add_radiobutton_to_group(radioGroup, "Fill");
     gluiSubWindow->add_radiobutton_to_group(radioGroup, "Wireframe");
     gluiSubWindow->add_radiobutton_to_group(radioGroup, "Point");
@@ -404,7 +412,8 @@ void Application::geInitialize() {
     lightPanel->set_alignment(1);
 
     for (unsigned int i = 0; i < numberOfLightCheckboxes; i++) {
-        lightcb[i] = gluiSubWindow->add_checkbox_to_panel(lightPanel, lightIDs[i].c_str(), &lightEnableStatus[i], 200 + i, callBack);
+        lightcb[i] = gluiSubWindow->add_checkbox_to_panel(lightPanel,
+                lightIDs[i].c_str(), &lightEnableStatus[i], 200 + i, callBack);
     }
 
     for (unsigned int i = 0; i < numberOfLightCheckboxes; i++) {
@@ -426,7 +435,8 @@ void Application::geInitialize() {
     GLUI_Panel* cameraPanel;
     cameraPanel = gluiSubWindow->add_panel("Camera", 1);
     cameraPanel->set_alignment(1);
-    cameraListBox = gluiSubWindow->add_listbox_to_panel(cameraPanel, "ID:", &cameraListBoxStatus, 300, callBack);
+    cameraListBox = gluiSubWindow->add_listbox_to_panel(cameraPanel, "ID:",
+            &cameraListBoxStatus, 300, callBack);
 
     for (unsigned int i = 0; i < numberOfCameraComboBoxEntries; i++) {
         cameraListBox->add_item(i, cameraIDs[i].c_str());
@@ -435,7 +445,8 @@ void Application::geInitialize() {
     cameraListBox->add_item(399, "User Camera");
     cameraListBox->set_int_val(scene->getCurrentCamera());
 
-    gluiSubWindow->add_button_to_panel(cameraPanel, "Reset User Cam", 400, callBack);
+    gluiSubWindow->add_button_to_panel(cameraPanel, "Reset User Cam", 400,
+            callBack);
 
     gluiSubWindow->add_statictext(" ");
     gluiSubWindow->add_button("Hide Panel", 401, callBack);
@@ -452,7 +463,7 @@ void Application::geInitialize() {
 /* Picking */
 void Application::performPicking(int x, int y) {
     // Sets the buffer to be used for selection and activate selection mode
-    glSelectBuffer (PICKING_BUFFER_SIZE, selectBuf);
+    glSelectBuffer(PICKING_BUFFER_SIZE, selectBuf);
     glRenderMode(GL_SELECT);
 
     // Initialize the picking name stack
@@ -463,7 +474,7 @@ void Application::performPicking(int x, int y) {
     glMatrixMode(GL_PROJECTION);
 
     //store current projection matrix to restore easily in the end with a pop
-    glPushMatrix ();
+    glPushMatrix();
 
     //get the actual projection matrix values on an array of our own to multiply with pick matrix later
     GLdouble projmat[16];
@@ -478,7 +489,7 @@ void Application::performPicking(int x, int y) {
     glGetIntegerv(GL_VIEWPORT, viewport);
 
     // this is multiplied in the projection matrix
-    gluPickMatrix ((GLdouble) x, (GLdouble) (height - y), 5.0, 5.0, viewport);
+    gluPickMatrix((GLdouble) x, (GLdouble) (height - y), 5.0, 5.0, viewport);
 
     // multiply the projection matrix stored in our array to ensure same conditions as in normal render
     glMultMatrixd(projmat);
@@ -488,8 +499,8 @@ void Application::performPicking(int x, int y) {
     scene->display();
 
     // restore original projection matrix
-    glMatrixMode (GL_PROJECTION);
-    glPopMatrix ();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
 
     glFlush();
 
@@ -502,43 +513,43 @@ void Application::performPicking(int x, int y) {
 void Application::processHits(GLint hits, GLuint buffer[]) {
     GLuint *ptr = buffer;
     GLuint mindepth = 0xFFFFFFFF;
-    GLuint *selected=NULL;
+    GLuint *selected = nullptr;
     GLuint nselected;
 
     // iterate over the list of hits, and choosing the one closer to the viewer (lower depth)
-    for (int i=0;i<hits;i++) {
-        int num = *ptr; ptr++;
-        GLuint z1 = *ptr; ptr++;
+    for (int i = 0; i < hits; i++) {
+        int num = *ptr;
         ptr++;
-        if (z1 < mindepth && num>0) {
+        GLuint z1 = *ptr;
+        ptr++;
+        ptr++;
+        if (z1 < mindepth && num > 0) {
             mindepth = z1;
             selected = ptr;
-            nselected=num;
+            nselected = num;
         }
-        for (int j=0; j < num; j++)
+        for (int j = 0; j < num; j++)
             ptr++;
     }
 
     // if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
-    if (selected!=NULL)
-    {
+    if (selected != nullptr) {
         // this should be replaced by code handling the picked object's ID's (stored in "selected"),
         // possibly invoking a method on the scene class and passing "selected" and "nselected"
         printf("Picked ID's: ");
         for (unsigned int i = 0; i < nselected; ++i) {
-        	printf("%d ",selected[i]);
+            printf("%d ", selected[i]);
         }
         printf("\n");
-    }
-    else {
-    	printf("Nothing selected while picking \n");
+    } else {
+        printf("Nothing selected while picking \n");
     }
 }
 
 void Application::glutConfig(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    width  = WINDOW_SIZE_X;
+    width = WINDOW_SIZE_X;
     height = WINDOW_SIZE_Y;
     glutInitWindowSize(width, height);
     glutInitWindowPosition(WINDOW_INITIALPOS_X, WINDOW_INITIALPOS_Y);
@@ -556,7 +567,8 @@ void Application::glutConfig(int argc, char** argv) {
     GLUI_Master.set_glutIdleFunc(glutIdle);
 
     /* Left division controls */
-    gluiSubWindow = GLUI_Master.create_glui_subwindow(mainWindow, GLUI_SUBWINDOW_LEFT);
+    gluiSubWindow = GLUI_Master.create_glui_subwindow(mainWindow,
+            GLUI_SUBWINDOW_LEFT);
     gluiSubWindow->set_main_gfx_window(mainWindow);
 }
 }

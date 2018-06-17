@@ -11,13 +11,15 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.c"
 
-unsigned char * reverseImage(unsigned char* data, const int width, const int height, const int channels) {
+unsigned char * reverseImage(unsigned char* data, const int width,
+        const int height, const int channels) {
 
     int rowWidth = width * channels;
     unsigned char* result = (unsigned char*) malloc(height * rowWidth);
 
     for (int i = 0; i < height; i++)
-        memcpy(result + (height - i - 1) * rowWidth, data + i * rowWidth, rowWidth);
+        memcpy(result + (height - i - 1) * rowWidth, data + i * rowWidth,
+                rowWidth);
 
     return result;
 
@@ -33,10 +35,11 @@ void takeSnapshot(const int width, const int height) {
 
     char ts[120];
 
-    sprintf(ts, "Snapshot_%04d%02d%02d_%02d%02d%02d.png", Tm->tm_year + 1900, Tm->tm_mon + 1, Tm->tm_mday, Tm->tm_hour, Tm->tm_min, Tm->tm_sec);
+    sprintf(ts, "Snapshot_%04d%02d%02d_%02d%02d%02d.png", Tm->tm_year + 1900,
+            Tm->tm_mon + 1, Tm->tm_mday, Tm->tm_hour, Tm->tm_min, Tm->tm_sec);
 
     /* define where to extract the snapshot from (GL_BACK or GLFRONT) */
-    glReadBuffer (GL_FRONT);
+    glReadBuffer(GL_FRONT);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
     /* Allocate memory for storing the image */
@@ -45,7 +48,8 @@ void takeSnapshot(const int width, const int height) {
     /* Read the image to the buffer */
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 
-    unsigned char* result = reverseImage((unsigned char*) imageData, width, height, 4);
+    unsigned char* result = reverseImage((unsigned char*) imageData, width,
+            height, 4);
     /* Save it to a JPEG file */
     stbi_write_png(ts, width, height,/*RGBA*/4, result, width * 4);
 

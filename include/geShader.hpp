@@ -23,7 +23,7 @@ public:
     geShader(const char *vsFile, const char *fsFile);
     virtual ~geShader();
 
-    virtual void update(float time);		///< Updates the _time_ uniform (if it exists) with the value _time_.
+    virtual void update(float time);///< Updates the _time_ uniform (if it exists) with the value _time_.
 
     /* Activates the shader */
     virtual void bind();

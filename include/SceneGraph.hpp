@@ -107,7 +107,8 @@ public:
     virtual ~SceneGraph();
 
     void importNodesPointerVector(std::vector<Node*>& inputNodes);
-    void importNodesPointerVectorHelper(std::vector<Node*>& unprocessedNodes, Node* parent);
+    void importNodesPointerVectorHelper(std::vector<Node*>& unprocessedNodes,
+            Node* parent);
 
     /* Recursive draw function */
     void draw();
