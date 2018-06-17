@@ -32,19 +32,19 @@ protected:
 
     /* OpenGL related */
     /* The transformationsMatrix only includes current node transforms */
-    GLfloat transformationsMatrix[16]; /* Ma */
+    GLdouble transformationsMatrix[16]; /* Ma */
 
-    std::vector<GLfloat*> transformationMatrixVector;
+    std::vector<GLdouble*> transformationMatrixVector;
 
     Appearance* nodeAppearance;
     geAnimation* nodeAnimation;
 
-    std::vector<Primitives::Base*> primitiveVector;
+    std::vector<Primitives::PrimitiveInterface*> primitiveVector;
 
-    void setTransformationMatrix(GLfloat* in);
+    void setTransformationMatrix(GLdouble* in);
 
     /* Result must be deleted */
-    GLfloat* multiplyMatrix(GLfloat* left, GLfloat* right);
+    GLdouble* multiplyMatrix(GLdouble* left, GLdouble* right);
 
     /* Graph related */
     /* Appearance stack */
@@ -56,15 +56,17 @@ protected:
     static GLint displayListCount;
 
     /* Debug */
-    void printMatrix16x1(GLfloat* in);
+    void printMatrix16x1(GLdouble* in);
+
 public:
     /* Constructor */
     Node(std::string& in, bool displayList);
+    virtual ~Node();
 
     /* Input */
     void addTransform(geTransform* in);
     void setAppearance(Appearance* in);
-    void addPrimitive(Primitives::Base* in);
+    void addPrimitive(Primitives::PrimitiveInterface* in);
     void addChildrenID(std::string& in);
     void setAnimation(geAnimation* in);
     std::vector<std::string>& getChildrenIDVector();
@@ -81,8 +83,6 @@ public:
     /* Runtime (Draw method) */
     void draw();
     void drawHelper();
-
-    ~Node();
 };
 
 class SceneGraph {
@@ -93,17 +93,18 @@ private:
     /* Internal */
     void setRootNode(Node* root);
 
-    GLfloat identityMatrix[16];
+    GLdouble identityMatrix[16];
 
     /* Default appearance values */
     GLfloat shininess;
-    geColor emissive, ambient, diffuse, specular;
+    color emissive, ambient, diffuse, specular;
     Appearance* defaultRootAppearance;
 
     bool firstRun;
 
 public:
     SceneGraph(std::string& root);
+    virtual ~SceneGraph();
 
     void importNodesPointerVector(std::vector<Node*>& inputNodes);
     void importNodesPointerVectorHelper(std::vector<Node*>& unprocessedNodes, Node* parent);

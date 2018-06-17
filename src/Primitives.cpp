@@ -20,7 +20,7 @@ namespace Primitives {
  */
 
 /* Primitive super class */
-void Base::fghCircleTable (double **sint, double **cost, const int n) {
+void PrimitiveInterface::fghCircleTable (double **sint, double **cost, const int n) {
     int i;
 
     /* Table size, the sign of n flips the circle direction */
@@ -60,9 +60,9 @@ void Base::fghCircleTable (double **sint, double **cost, const int n) {
     (*cost) [size] = (*cost) [0];
 }
 
-void Base::calculateNormal (float v [3] [3], float out [3])                // Calculates Normal For A Quad Using 3 Points
+void PrimitiveInterface::calculateNormal (GLdouble v [3] [3], GLdouble out [3])                // Calculates Normal For A Quad Using 3 Points
         {
-    float v1 [3], v2 [3];                      // Vector 1 (x,y,z) & Vector 2 (x,y,z)
+	GLdouble v1 [3], v2 [3];                      // Vector 1 (x,y,z) & Vector 2 (x,y,z)
     static const int x = 0;                     // Define X Coord
     static const int y = 1;                     // Define Y Coord
     static const int z = 2;                     // Define Z Coord
@@ -86,11 +86,11 @@ void Base::calculateNormal (float v [3] [3], float out [3])                // Ca
     NormalizeVector (out);
 }
 
-void Base::NormalizeVector (float vector [3]) {
-    float length;
+void PrimitiveInterface::NormalizeVector (GLdouble vector [3]) {
+	GLdouble length;
 
     /* Vector Length */
-    length = (float) sqrt ((vector [0] * vector [0]) + (vector [1] * vector [1]) + (vector [2] * vector [2]));
+    length = (GLdouble) sqrt ((vector [0] * vector [0]) + (vector [1] * vector [1]) + (vector [2] * vector [2]));
 
     if (length == 0.0f) {
         length = 1.0f;
@@ -101,14 +101,11 @@ void Base::NormalizeVector (float vector [3]) {
     vector [2] /= length;
 }
 
-void Base::draw (GLfloat s, GLfloat t) {
-}
-
-Base::~Base () {
+PrimitiveInterface::~PrimitiveInterface () {
 }
 
 /* Rectangle primitive */
-Rectangle::Rectangle (ge2dPoint pt1, ge2dPoint pt2) {
+Rectangle::Rectangle (xyPointDouble pt1, xyPointDouble pt2) {
     /* Check if rectangle is valid */
     if (pt1.x == pt2.x || pt1.y == pt2.y) {
         throw geException ("Invalid rectangle defined: the sides must not be equal!", true);
@@ -122,7 +119,7 @@ Rectangle::Rectangle (ge2dPoint pt1, ge2dPoint pt2) {
     /* end */
 }
 
-Rectangle::Rectangle (GLfloat inX0, GLfloat inY0, GLfloat inX1, GLfloat inY1) {
+Rectangle::Rectangle (GLdouble inX0, GLdouble inY0, GLdouble inX1, GLdouble inY1) {
     /* Check if rectangle is valid */
     if (inX0 == inX1 || inY0 == inY1) {
         throw geException ("Invalid rectangle defined: the sides must not be equal!", true);
@@ -136,30 +133,34 @@ Rectangle::Rectangle (GLfloat inX0, GLfloat inY0, GLfloat inX1, GLfloat inY1) {
     /* end */
 }
 
-void Rectangle::draw (GLfloat s, GLfloat t) {
+Rectangle::~Rectangle(){
+
+}
+
+void Rectangle::draw (GLdouble s, GLdouble t) {
     glEnable (GL_TEXTURE_2D);
     glPushMatrix ();
     glBegin (GL_POLYGON);
     if ((this->y2 < this->y1) && (this->x2 < this->x1)) {
         glNormal3d (0.0, 0.0, -1.0);
         glTexCoord2f (0.0, 0.0);
-        glVertex3f (this->x2, this->y2, 0.0);
-        glTexCoord2f ((this->x1 - this->x2) / s, 0.0);
-        glVertex3f (this->x1, this->y2, 0.0);
-        glTexCoord2f ((this->x2 - this->x1) / s, (this->y2 - this->y1) / t);
-        glVertex3f (this->x1, this->y1, 0.0);
-        glTexCoord2f (0.0, (this->y2 - this->y1) / t);
-        glVertex3f (this->x2, this->y1, 0.0);
+        glVertex3d (this->x2, this->y2, 0.0);
+        glTexCoord2d ((this->x1 - this->x2) / s, 0.0);
+        glVertex3d (this->x1, this->y2, 0.0);
+        glTexCoord2d ((this->x2 - this->x1) / s, (this->y2 - this->y1) / t);
+        glVertex3d (this->x1, this->y1, 0.0);
+        glTexCoord2d (0.0, (this->y2 - this->y1) / t);
+        glVertex3d (this->x2, this->y1, 0.0);
     } else {
         glNormal3d (0.0, 0.0, 1.0);
-        glTexCoord2f (0.0, 0.0);
-        glVertex3f (this->x1, this->y1, 0.0);
-        glTexCoord2f ((this->x2 - this->x1) / s, 0.0);
-        glVertex3f (this->x2, this->y1, 0.0);
-        glTexCoord2f ((this->x2 - this->x1) / s, (this->y2 - this->y1) / t);
-        glVertex3f (this->x2, this->y2, 0.0);
-        glTexCoord2f (0.0, (this->y2 - this->y1) / t);
-        glVertex3f (this->x1, this->y2, 0.0);
+        glTexCoord2d (0.0, 0.0);
+        glVertex3d (this->x1, this->y1, 0.0);
+        glTexCoord2d ((this->x2 - this->x1) / s, 0.0);
+        glVertex3d (this->x2, this->y1, 0.0);
+        glTexCoord2d ((this->x2 - this->x1) / s, (this->y2 - this->y1) / t);
+        glVertex3d (this->x2, this->y2, 0.0);
+        glTexCoord2d (0.0, (this->y2 - this->y1) / t);
+        glVertex3d (this->x1, this->y2, 0.0);
     }
 
     glEnd ();
@@ -168,7 +169,7 @@ void Rectangle::draw (GLfloat s, GLfloat t) {
 }
 
 /* Triangle primitive */
-Triangle::Triangle (GLfloat inX1, GLfloat inY1, GLfloat inZ1, GLfloat inX2, GLfloat inY2, GLfloat inZ2, GLfloat inX3, GLfloat inY3, GLfloat inZ3) {
+Triangle::Triangle (GLdouble inX1, GLdouble inY1, GLdouble inZ1, GLdouble inX2, GLdouble inY2, GLdouble inZ2, GLdouble inX3, GLdouble inY3, GLdouble inZ3) {
     this->point1 [0] = inX1;
     this->point1 [1] = inY1;
     this->point1 [2] = inZ1;
@@ -182,7 +183,7 @@ Triangle::Triangle (GLfloat inX1, GLfloat inY1, GLfloat inZ1, GLfloat inX2, GLfl
     this->point3 [2] = inZ3;
 }
 
-Triangle::Triangle (gePoint pt1, gePoint pt2, gePoint pt3) {
+Triangle::Triangle (xyzPointDouble pt1, xyzPointDouble pt2, xyzPointDouble pt3) {
     this->point1 [0] = pt1.x;
     this->point1 [1] = pt1.y;
     this->point1 [2] = pt1.z;
@@ -195,26 +196,30 @@ Triangle::Triangle (gePoint pt1, gePoint pt2, gePoint pt3) {
     this->point3 [1] = pt3.y;
     this->point3 [2] = pt3.z;
 
-    float pontos [3] [3] = { {this->point1 [0], this->point1 [1], this->point1 [2]}, {this->point2 [0], this->point2 [1], this->point2 [2]}, {this->point3 [0],
+    GLdouble pontos [3] [3] = { {this->point1 [0], this->point1 [1], this->point1 [2]}, {this->point2 [0], this->point2 [1], this->point2 [2]}, {this->point3 [0],
             this->point3 [1], this->point3 [2]}};
-    calculateNormal (pontos, normal);
+    calculateNormal(pontos, normal);
 }
 
-void Triangle::draw (GLfloat s, GLfloat t) {
+Triangle::~Triangle(){
+
+}
+
+void Triangle::draw (GLdouble s, GLdouble t) {
     glEnable (GL_TEXTURE_2D);
     glPushMatrix ();
     glBegin (GL_TRIANGLES);
     glNormal3d (normal [0], normal [1], normal [2]);
-    glTexCoord2f (0.0, 0.0);
+    glTexCoord2d (0.0, 0.0);
     glVertex3d (this->point1 [0], this->point1 [1], this->point1 [2]);
 
-    glTexCoord2f (
+    glTexCoord2d (
             abs (
                     (this->point2 [0] - this->point1 [0]) / s * normal [2] + (this->point2 [0] - this->point1 [0]) / s * normal [1]
                             + (this->point2 [2] - this->point1 [2]) / s * normal [0]), 0.0);
     glVertex3d (this->point2 [0], this->point2 [1], this->point2 [2]);
 
-    glTexCoord2f (
+    glTexCoord2d (
             abs (
                     (this->point3 [0] - this->point1 [0]) / s * normal [2] + (this->point3 [0] - this->point1 [0]) / s * normal [1]
                             + (this->point3 [2] - this->point1 [2]) / s * normal [0]),
@@ -229,7 +234,7 @@ void Triangle::draw (GLfloat s, GLfloat t) {
 }
 
 /* Cylinder primitive */
-Cylinder::Cylinder (GLfloat iBase, GLfloat iTop, GLfloat iHeight, unsigned int iSlices, unsigned int iStacks) {
+Cylinder::Cylinder (GLdouble iBase, GLdouble iTop, GLdouble iHeight, unsigned int iSlices, unsigned int iStacks) {
     this->baseRadius = iBase;
     this->topRadius = iTop;
     this->height = iHeight;
@@ -241,17 +246,17 @@ Cylinder::Cylinder (GLfloat iBase, GLfloat iTop, GLfloat iHeight, unsigned int i
     /* Precalc */
 
     /* Allocs */
-    sinCache = (float *) calloc (sizeof(float), slices + 1);
-    cosCache = (float *) calloc (sizeof(float), slices + 1);
-    sinCache2 = (float *) calloc (sizeof(float), slices + 1);
-    cosCache2 = (float *) calloc (sizeof(float), slices + 1);
-    sinCache3 = (float *) calloc (sizeof(float), slices + 1);
-    cosCache3 = (float *) calloc (sizeof(float), slices + 1);
+    sinCache  = (double *) calloc (sizeof(double), slices + 1);
+    cosCache  = (double *) calloc (sizeof(double), slices + 1);
+    sinCache2 = (double *) calloc (sizeof(double), slices + 1);
+    cosCache2 = (double *) calloc (sizeof(double), slices + 1);
+    sinCache3 = (double *) calloc (sizeof(double), slices + 1);
+    cosCache3 = (double *) calloc (sizeof(double), slices + 1);
 
-    GLfloat angle;
-    GLfloat length;
+    GLdouble angle;
+    GLdouble length;
 
-    GLfloat xyNormalRatio;
+    GLdouble xyNormalRatio;
 
     if (slices < 2 || stacks < 1 || baseRadius < 0.0 || topRadius < 0.0 || height < 0.0) {
         throw geException ("Invalid values fed to geCylinder.", true);
@@ -291,11 +296,11 @@ Cylinder::Cylinder (GLfloat iBase, GLfloat iTop, GLfloat iHeight, unsigned int i
     this->deltaAngle = 2.0 * M_PI / (this->slices);
 }
 
-void Cylinder::draw (GLfloat s, GLfloat t) {
+void Cylinder::draw (GLdouble, GLdouble) {
     glPushMatrix ();
 
-    GLfloat radiusLow, radiusHigh;
-    GLfloat zLow, zHigh;
+    GLdouble radiusLow, radiusHigh;
+    GLdouble zLow, zHigh;
 
     /* Cover the base and top */
     if (baseRadius > 0.0) {
@@ -305,7 +310,7 @@ void Cylinder::draw (GLfloat s, GLfloat t) {
     /* Top needs a translation */
     if (topRadius > 0.0) {
         glPushMatrix ();
-        glTranslatef (0, 0, this->height);
+        glTranslated (0, 0, this->height);
         drawCircle (this->topRadius);
         glPopMatrix ();
     }
@@ -313,17 +318,17 @@ void Cylinder::draw (GLfloat s, GLfloat t) {
     for (int j = 0; j < stacks; j++) {
         zLow = j * height / stacks;
         zHigh = (j + 1) * height / stacks;
-        radiusLow = baseRadius - deltaRadius * ((float) j / stacks);
-        radiusHigh = baseRadius - deltaRadius * ((float) (j + 1) / stacks);
+        radiusLow = baseRadius - deltaRadius * ((float) j / (float) stacks);
+        radiusHigh = baseRadius - deltaRadius * ((float) (j + 1) / (float) stacks);
 
         glBegin (GL_QUAD_STRIP);
         for (int i = 0; i <= slices; i++) {
-            glNormal3f (sinCache2 [i], cosCache2 [i], zNormal);
+            glNormal3d (sinCache2 [i], cosCache2 [i], zNormal);
 
-            glTexCoord2f (1 - (float) i / slices, (float) j / stacks);
-            glVertex3f (radiusLow * sinCache [i], radiusLow * cosCache [i], zLow);
-            glTexCoord2f (1 - (float) i / slices, (float) (j + 1) / stacks);
-            glVertex3f (radiusHigh * sinCache [i], radiusHigh * cosCache [i], zHigh);
+            glTexCoord2d (1 - (GLdouble) i / slices, (GLdouble) j / (GLdouble) stacks);
+            glVertex3d (radiusLow * sinCache [i], radiusLow * cosCache [i], zLow);
+            glTexCoord2d (1 - (GLdouble) i / slices, (GLdouble) (j + 1) / (GLdouble) stacks);
+            glVertex3d (radiusHigh * sinCache [i], radiusHigh * cosCache [i], zHigh);
         }
     }
     glEnd ();
@@ -333,42 +338,42 @@ void Cylinder::draw (GLfloat s, GLfloat t) {
 }
 
 /* Needs optimizations */
-void Cylinder::drawCircle (GLfloat radius) {
-    GLfloat vertex [4];
-    GLfloat texcoord [2];
+void Cylinder::drawCircle (GLdouble radius) {
+    GLdouble vertex [4];
+    GLdouble texcoord [2];
 
     glBegin (GL_TRIANGLE_FAN);
 
     /* draw the vertex at the center of the circle */
     texcoord [0] = 0.5;
     texcoord [1] = 0.5;
-    glTexCoord2fv (texcoord);
+    glTexCoord2dv (texcoord);
 
     vertex [0] = vertex [1] = vertex [2] = 0.0;
     vertex [3] = 1.0;
-    glVertex4fv (vertex);
+    glVertex4dv (vertex);
 
     for (int i = 0; i < this->slices; i++) {
         texcoord [0] = (cosCache [i] + 1.0) * 0.5;
         texcoord [1] = (sinCache [i] + 1.0) * 0.5;
-        glTexCoord2fv (texcoord);
+        glTexCoord2dv (texcoord);
 
         vertex [0] = cosCache [i] * radius;
         vertex [1] = sinCache [i] * radius;
         vertex [2] = 0.0;
         vertex [3] = 1.0;
-        glVertex4fv (vertex);
+        glVertex4dv (vertex);
     }
 
     texcoord [0] = (1.0 + 1.0) * 0.5;
     texcoord [1] = (0.0 + 1.0) * 0.5;
-    glTexCoord2fv (texcoord);
+    glTexCoord2dv (texcoord);
 
     vertex [0] = 1.0 * radius;
     vertex [1] = 0.0 * radius;
     vertex [2] = 0.0;
     vertex [3] = 1.0;
-    glVertex4fv (vertex);
+    glVertex4dv (vertex);
     glEnd ();
 }
 
@@ -382,7 +387,7 @@ Cylinder::~Cylinder () {
 }
 
 /* Sphere primitive */
-Sphere::Sphere (GLfloat iRadius, int iSlices, int iStacks) {
+Sphere::Sphere (GLdouble iRadius, int iSlices, int iStacks) {
     this->radius = iRadius;
     this->slices = iSlices;
     this->stacks = iStacks;
@@ -391,7 +396,7 @@ Sphere::Sphere (GLfloat iRadius, int iSlices, int iStacks) {
     fghCircleTable (&sint2, &cost2, this->stacks * 2);
 }
 
-void Sphere::draw (GLfloat s, GLfloat t) {
+void Sphere::draw (GLdouble, GLdouble) {
     glPushMatrix ();
 
     int i, j;
@@ -530,7 +535,12 @@ Torus::Torus (GLdouble iInner, GLdouble iOuter, int iSlices, int iLoops) {
     /* End precalcs */
 }
 
-void Torus::draw (GLfloat s, GLfloat t) {
+Torus::~Torus () {
+    free (vertex);
+    free (normal);
+}
+
+void Torus::draw (GLdouble, GLdouble) {
     glPushMatrix ();
 
     glBegin (GL_QUADS);
@@ -552,31 +562,34 @@ void Torus::draw (GLfloat s, GLfloat t) {
     glPopMatrix ();
 }
 
-Torus::~Torus () {
-    free (vertex);
-    free (normal);
-}
-
 /* Plane primitive */
-Plane::Plane (unsigned int parts) {
+GLdouble Plane::planeGrid [4] [4] [3] = {{{-0.5, 0.0,   -0.5}, {-0.125, 0.0,   -0.5}, {0.125, 0.0,   -0.5}, {0.5, 0.0,   -0.5}},
+                                        {{-0.5, 0.0, -0.125}, {-0.125, 0.0, -0.125}, {0.125, 0.0, -0.125}, {0.5, 0.0, -0.125}},
+                                        {{-0.5, 0.0,  0.125}, {-0.125, 0.0,  0.125}, {0.125, 0.0,  0.125}, {0.5, 0.0,  0.125}},
+                                        {{-0.5, 0.0,    0.5}, {-0.125, 0.0,    0.5}, {0.125, 0.0,    0.5}, {0.5, 0.0,    0.5}}};
+
+Plane::Plane(unsigned int parts) {
     this->partsPerAxis = parts;
     this->evaluatorOrder = 4;
-    this->grid = &gePlaneGrid [0] [0] [0];
-}
-
-void Plane::draw (GLfloat s, GLfloat t) {
-    glEnable (GL_MAP2_VERTEX_3);
-    glMapGrid2f (this->partsPerAxis, 0.0, 1.0, this->partsPerAxis, 0.0, 1.0);
-    glColor3f (1.0, 1.0, 1.0);
-    glMap2f (GL_MAP2_VERTEX_3, 0, 1, 3, evaluatorOrder, 0, 1, evaluatorOrder * 3, evaluatorOrder, grid);
-    glEvalMesh2 (GL_FILL, 0, this->partsPerAxis, 0, this->partsPerAxis);
+    this->grid = &planeGrid [0] [0] [0];
 }
 
 Plane::~Plane () {
 
 }
 
+void Plane::draw (GLdouble, GLdouble) {
+    glEnable (GL_MAP2_VERTEX_3);
+    glMapGrid2f (this->partsPerAxis, 0.0, 1.0, this->partsPerAxis, 0.0, 1.0);
+    glColor3f (1.0, 1.0, 1.0);
+    glMap2d(GL_MAP2_VERTEX_3, 0, 1, 3, evaluatorOrder, 0, 1, evaluatorOrder * 3, evaluatorOrder, grid);
+    glEvalMesh2 (GL_FILL, 0, this->partsPerAxis, 0, this->partsPerAxis);
+}
+
 /* Patch primitive */
+/* Texture points for the evaluators */
+GLdouble Patch::texturePoints [4] [2] = {{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
+
 Patch::Patch (unsigned int iorder, unsigned int ipartsU, unsigned int ipartsV, unsigned int icompute) {
     this->order = iorder + 1;
     this->partsU = ipartsU;
@@ -596,10 +609,10 @@ unsigned int Patch::getNumberOfPoints () {
     return this->numberOfPoints;
 }
 
-void Patch::insertPoint (GLfloat ix, GLfloat iy, GLfloat iz) {
+void Patch::insertPoint (GLdouble ix, GLdouble iy, GLdouble iz) {
     if (readPoints < numberOfPoints) {
 
-        gePoint temporaryPoint;
+        xyzPointDouble temporaryPoint;
 
         temporaryPoint.x = ix;
         temporaryPoint.y = iy;
@@ -619,7 +632,11 @@ void Patch::insertPoint (GLfloat ix, GLfloat iy, GLfloat iz) {
     }
 }
 
-void Patch::insertPoint (gePoint i) {
+Patch::~Patch () {
+    points.clear ();
+}
+
+void Patch::insertPoint (xyzPointDouble i) {
     if (readPoints < numberOfPoints) {
         points.push_back (i);
 
@@ -635,16 +652,16 @@ void Patch::insertPoint (gePoint i) {
     }
 }
 
-void Patch::draw (GLfloat s, GLfloat t) {
+void Patch::draw (GLdouble, GLdouble) {
     glEnable (GL_MAP2_VERTEX_3);
     glEnable (GL_MAP2_TEXTURE_COORD_2);
 
     glMapGrid2f (this->partsU, 0.0, 1.0, this->partsV, 0.0, 1.0);
 
     //glMap2f (GL_MAP2_VERTEX_3, 0, 1, 3, this->partsU, 0, 1, this->partsU * 3, this->partsV, grid);
-    glMap2f (GL_MAP2_VERTEX_3, 0, 1, 3, this->order, 0, 1, this->order * 3, this->order, grid);
+    glMap2d(GL_MAP2_VERTEX_3, 0, 1, 3, this->order, 0, 1, this->order * 3, this->order, grid);
 
-    glMap2f (GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 2, 2, 0.0, 1.0, 4, 2, &texturePoints [0] [0]);
+    glMap2d(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 2, 2, 0.0, 1.0, 4, 2, &texturePoints [0] [0]);
 
     switch (this->compute) {
         case '0':
@@ -665,15 +682,10 @@ void Patch::draw (GLfloat s, GLfloat t) {
     }
 
     glEnable(GL_AUTO_NORMAL);
-
-}
-
-Patch::~Patch () {
-    points.clear ();
 }
 
 /* Vehicle primitive */
-Vehicle::Vehicle () {
+Vehicle::Vehicle() {
     numberOfSlices = 20;
 
     topHub = new Cylinder (0.5, 0.5, 0.3, numberOfSlices, 4);
@@ -709,28 +721,28 @@ Vehicle::Vehicle () {
     evaluatorDemo->insertPoint (2, 0, 1);
 }
 
-void Vehicle::draw (GLfloat s, GLfloat t) {
+void Vehicle::draw (GLdouble s, GLdouble t) {
     glPushMatrix ();
 
     /* Position the vehicle */
-    glTranslatef (posX, posY, posZ);
-    glRotatef (direction, 0, 1, 0);
+    glTranslated (posX, posY, posZ);
+    glRotated (direction, 0, 1, 0);
 
     /* Rotate the ufo */
-    glRotatef (-90, 1, 0, 0);
+    glRotated (-90, 1, 0, 0);
 
-    glRotatef (tilt, 0, 1, 0);
+    glRotated (tilt, 0, 1, 0);
 
-    glRotatef (90, 0, 0, 1);
+    glRotated (90, 0, 0, 1);
     evaluatorDemo->draw (s, t);
 
     bottomBody->draw (0, 0);
 
-    glTranslatef (0, 0, 0.3);
+    glTranslated (0, 0, 0.3);
 
     topBody->draw (0, 0);
 
-    glTranslatef (0, 0, 0.7);
+    glTranslated (0, 0, 0.7);
 
     topHub->draw (0, 0);
 
@@ -801,7 +813,11 @@ WaterLine::WaterLine (std::string& hmap, std::string& tmap, std::string& fshader
     this->deltaTimeLoc = 0;
 }
 
-void WaterLine::draw (GLfloat s, GLfloat t) {
+WaterLine::~WaterLine(){
+
+}
+
+void WaterLine::draw (GLdouble s, GLdouble t) {
     if (waterShader == NULL) {
         /* Create the actual shader object */
         this->waterShader = new geShader (vertexshader.c_str (), fragmentshader.c_str ());
@@ -814,7 +830,7 @@ void WaterLine::draw (GLfloat s, GLfloat t) {
 
         /*Sending variables to shader */
         deltaTimeLoc = glGetUniformLocation (waterShader->getId(), "dT");
-        glUniform1f (deltaTimeLoc, dT);
+        glUniform1d (deltaTimeLoc, dT);
 
         baseImageLoc = glGetUniformLocation (waterShader->getId(), "baseTexture");
         glUniform1i (baseImageLoc, 0);
@@ -837,7 +853,7 @@ void WaterLine::draw (GLfloat s, GLfloat t) {
     }
 }
 
-void WaterLine::update(unsigned long timePassed) {
+void WaterLine::update(unsigned long/* timePassed */) {
     if (waterShader != NULL) {
 
         //waterShader->update(timePassed);

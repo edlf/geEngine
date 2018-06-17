@@ -14,77 +14,76 @@ namespace ge {
 class CameraInterface {
 protected:
     std::string id;
-    GLfloat geNear, geFar;
-    GLfloat position[3];
-    GLfloat rotation[3];
+    GLdouble geNear, geFar;
+    GLdouble position[3];
+    GLdouble rotation[3];
 
 public:
     CameraInterface();
-    CameraInterface(std::string& iid, GLfloat iNear, GLfloat iFar);
+    CameraInterface(std::string& iid, GLdouble iNear, GLdouble iFar);
     std::string getID();
 
-    GLfloat getNear();
-    GLfloat getFar();
+    GLdouble getNear();
+    GLdouble getFar();
 
     virtual void applyView(double aspectRatio) = 0;
     virtual void updateProjectionMatrix(int width, int height);
 
-    void setPosition(gePoint in);
-    void setX(GLfloat x);
-    void setY(GLfloat y);
-    void setZ(GLfloat z);
+    void setPosition(xyzPointDouble in);
+    void setX(GLdouble x);
+    void setY(GLdouble y);
+    void setZ(GLdouble z);
 
-    virtual void rotateTo(int axis, float angle) = 0;
-    virtual void rotate(int axis, float angle) = 0;
-    virtual void setRotation(int axis, float angle) = 0;
-    virtual void moveTo(int axis, float value, float increment) = 0;
-    virtual void translate(int axis, float value) = 0;
+    virtual void rotateTo(int axis, double angle) = 0;
+    virtual void rotate(int axis, double angle) = 0;
+    virtual void setRotation(int axis, double angle) = 0;
+    virtual void moveTo(int axis, double value, double increment) = 0;
+    virtual void translate(int axis, double value) = 0;
 
     virtual ~CameraInterface();
 };
 
 class OrthoCamera: public CameraInterface {
 private:
-    GLfloat left, right, top, bottom;
+    GLdouble left, right, top, bottom;
 
 public:
-    OrthoCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom);
+    OrthoCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iLeft, GLdouble iRight, GLdouble iTop, GLdouble iBottom);
 
     virtual void applyView(double aspectRatio);
     virtual ~OrthoCamera();
 
-    virtual void rotateTo(int, float);
-    virtual void rotate(int, float);
-    virtual void setRotation(int, float);
-    virtual void moveTo(int, float, float);
-    virtual void translate(int, float);
+    virtual void rotateTo(int, double);
+    virtual void rotate(int, double);
+    virtual void setRotation(int, double);
+    virtual void moveTo(int, double, double);
+    virtual void translate(int, double);
 };
 
+/* Special camera for GUI */
 class PerspectiveCamera: public CameraInterface {
 private:
-    GLfloat angle;
-    GLfloat from[3], to[3];
+    GLdouble angle;
+    GLdouble from[3], to[3];
     /* If examine mode is true, camera has been manipulated by mouse */
     bool examineMode;
 
 public:
-    /* Special camera for GUI */
     PerspectiveCamera();
+    virtual ~PerspectiveCamera();
 
     /* Regular camera for xml scene */
-    PerspectiveCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo);
+    PerspectiveCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iAngle, xyzPointDouble iFrom, xyzPointDouble iTo);
 
     virtual void applyView(double aspectRatio);
 
-    virtual void rotateTo(int axis, float angle);   ///< Rotates the camera around _axis_ by _increment_ degrees, unless it has reached _angle_ degrees. Useful for stepping a rotation in an animation.
-    virtual void rotate(int axis, float angle);                             ///< Rotates the camera around _axis_ by _angle_ degrees.
-    virtual void setRotation(int axis, float angle);                        ///< Sets the rotation around _axis_ to be _angle_ degrees
-    virtual void moveTo(int axis, float value, float increment = 0.5f);       ///< Moves the camera along _axis_ by _increment_ units, unless _value_ has been reached.
-    virtual void translate(int axis, float value);                          ///< Moves the camera along _axis_ by _value_ units.
+    virtual void rotateTo(int axis, double angle);   ///< Rotates the camera around _axis_ by _increment_ degrees, unless it has reached _angle_ degrees. Useful for stepping a rotation in an animation.
+    virtual void rotate(int axis, double angle);                             ///< Rotates the camera around _axis_ by _angle_ degrees.
+    virtual void setRotation(int axis, double angle);                        ///< Sets the rotation around _axis_ to be _angle_ degrees
+    virtual void moveTo(int axis, double value, double increment = 0.5f);       ///< Moves the camera along _axis_ by _increment_ units, unless _value_ has been reached.
+    virtual void translate(int axis, double value);                          ///< Moves the camera along _axis_ by _value_ units.
 
     void resetCamera();
-
-    virtual ~PerspectiveCamera();
 };
 
 }

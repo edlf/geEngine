@@ -10,7 +10,7 @@
 #include <Appearance.hpp>
 
 namespace ge {
-Appearance::Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess) {
+Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess) {
     this->id = iID;
 
     setEmissive(iEmissive);
@@ -29,7 +29,7 @@ Appearance::Appearance(const std::string& iID, geColor iEmissive, geColor iAmbie
     this->tWrap = -1;
 }
 
-Appearance::Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t) {
+Appearance::Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t) {
     this->id = iID;
 
     setEmissive(iEmissive);
@@ -53,14 +53,14 @@ void Appearance::apply() {
     glDisable(GL_COLOR_MATERIAL);
     glMaterialf(GL_FRONT, GL_SHININESS, this->shininess);
     glMaterialfv(GL_FRONT, GL_SPECULAR, this->specular);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, this->diffuse);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, this->ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,  this->diffuse);
+    glMaterialfv(GL_FRONT, GL_AMBIENT,  this->ambient);
 
     if (texture != NULL) {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         glEnable(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->sWrap);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->tWrap);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->sWrap);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->tWrap);
         this->texture->apply();
 
     } else {
@@ -69,18 +69,18 @@ void Appearance::apply() {
     }
 }
 
-void Appearance::setEmissive(geColor input) {
+void Appearance::setEmissive(color input) {
     setEmissive(input.r, input.g, input.b, input.a);
 }
 
-void Appearance::setEmissive(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Appearance::setEmissive(GLdouble iR, GLdouble iG, GLdouble iB, GLdouble iAlpha) {
     this->emissive[0] = iR;
     this->emissive[1] = iG;
     this->emissive[2] = iB;
     this->emissive[3] = iAlpha;
 }
 
-void Appearance::setAmbient(geColor input) {
+void Appearance::setAmbient(color input) {
     setAmbient(input.r, input.g, input.b, input.a);
 
 }
@@ -92,7 +92,7 @@ void Appearance::setAmbient(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) 
     this->ambient[3] = iAlpha;
 }
 
-void Appearance::setDiffuse(geColor input) {
+void Appearance::setDiffuse(color input) {
     setDiffuse(input.r, input.g, input.b, input.a);
 }
 
@@ -103,7 +103,7 @@ void Appearance::setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) 
     this->diffuse[3] = iAlpha;
 }
 
-void Appearance::setSpecular(geColor input) {
+void Appearance::setSpecular(color input) {
     setSpecular(input.r, input.g, input.b, input.a);
 }
 
@@ -114,11 +114,11 @@ void Appearance::setSpecular(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha)
     this->specular[3] = iAlpha;
 }
 
-void Appearance::setColour(geColor input) {
+void Appearance::setColour(color input) {
     setColour(input.r, input.g, input.b, input.a);
 }
 
-void Appearance::setColour(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Appearance::setColour(GLdouble iR, GLdouble iG, GLdouble iB, GLdouble iAlpha) {
     this->colour[0] = iR;
     this->colour[1] = iG;
     this->colour[2] = iB;
@@ -150,11 +150,11 @@ std::string Appearance::getAppearanceID() {
     return this->id;
 }
 
-GLfloat Appearance::getTextureSWrap() {
+GLdouble Appearance::getTextureSWrap() {
     return this->sWrap;
 }
 
-GLfloat Appearance::getTextureTWrap() {
+GLdouble Appearance::getTextureTWrap() {
     return this->tWrap;
 }
 

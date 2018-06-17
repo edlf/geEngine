@@ -10,27 +10,30 @@
 #include "includes.hpp"
 
 namespace ge {
+
 class geTransform {
 protected:
     int transformNumber;
-    GLfloat matrix[16];
+    GLdouble matrix[16];
 
 public:
     geTransform(int number) {
         transformNumber = number;
     }
-    ~geTransform() {}
+    virtual ~geTransform() {
 
-    virtual GLfloat* getTransformationMatrix() = 0;
+    }
+
+    virtual GLdouble* getTransformationMatrix() = 0;
     virtual void apply() = 0;
 };
 
 class geTransformTranslate: public geTransform {
 private:
-    GLfloat destination[3];
+    GLdouble destination[3];
 
 public:
-    geTransformTranslate(gePoint in, int tN) :
+    geTransformTranslate(xyzPointDouble in, int tN) :
             geTransform(tN) {
         destination[0] = in.x;
         destination[1] = in.y;
@@ -57,7 +60,7 @@ public:
         matrix[15] = 1;
     }
 
-    geTransformTranslate(GLfloat x, GLfloat y, GLfloat z, int tN) :
+    geTransformTranslate(GLdouble x, GLdouble y, GLdouble z, int tN) :
             geTransform(tN) {
         destination[0] = x;
         destination[1] = y;
@@ -84,20 +87,20 @@ public:
         matrix[15] = 1;
     }
 
-    GLfloat* getTransformationMatrix() {
+    GLdouble* getTransformationMatrix() {
         return matrix;
     }
 
     void apply() {
-        glTranslatef(destination[0], destination[1], destination[2]);
+        glTranslated(destination[0], destination[1], destination[2]);
     }
 };
 
 class geTransformRotate: public geTransform {
 private:
-    GLfloat axisArray[3];
-    GLfloat angle;
-    GLfloat angleRad;
+    GLdouble axisArray[3];
+    GLdouble angle;
+    GLdouble angleRad;
 
     unsigned int getAxisId() {
         if (axisArray[0] == 1) {
@@ -115,7 +118,7 @@ private:
     }
 
 public:
-    geTransformRotate(int iAxis, GLfloat iAngle, int tN) :
+    geTransformRotate(int iAxis, GLdouble iAngle, int tN) :
             geTransform(tN) {
         angleRad = (iAngle * M_PI) / 180;
 
@@ -208,21 +211,25 @@ public:
         angle = iAngle;
     }
 
-    GLfloat* getTransformationMatrix() {
+    virtual ~geTransformRotate() {
+
+    }
+
+    GLdouble* getTransformationMatrix() {
         return matrix;
     }
 
     void apply() {
-        glRotatef(angle, axisArray[0], axisArray[1], axisArray[2]);
+        glRotated(angle, axisArray[0], axisArray[1], axisArray[2]);
     }
 
 };
 
 class geTransformScale: public geTransform {
 private:
-    GLfloat scaleFactor[3];
+    GLdouble scaleFactor[3];
 public:
-    geTransformScale(gePoint in, int tN) :
+    geTransformScale(xyzPointDouble in, int tN) :
             geTransform(tN) {
         scaleFactor[0] = in.x;
         scaleFactor[1] = in.y;
@@ -249,7 +256,7 @@ public:
         matrix[15] = 1;
     }
 
-    geTransformScale(GLfloat x, GLfloat y, GLfloat z, int tN) :
+    geTransformScale(GLdouble x, GLdouble y, GLdouble z, int tN) :
             geTransform(tN) {
         scaleFactor[0] = x;
         scaleFactor[1] = y;
@@ -276,12 +283,12 @@ public:
         matrix[15] = 1;
     }
 
-    GLfloat* getTransformationMatrix() {
+    GLdouble* getTransformationMatrix() {
         return matrix;
     }
 
     void apply() {
-        glScalef(scaleFactor[0], scaleFactor[1], scaleFactor[2]);
+        glScaled(scaleFactor[0], scaleFactor[1], scaleFactor[2]);
     }
 
 };

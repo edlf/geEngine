@@ -16,7 +16,7 @@ class Application {
 
 public:
 	Application(int argCount, char** args, std::string& sceneFileName);
-	~Application();
+	virtual ~Application();
 
 private:
 	/* Input args */

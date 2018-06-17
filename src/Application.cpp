@@ -206,15 +206,15 @@ void Application::processMouseMoved(int x, int y) {
     displacementY = y - static_cast<int>(prev_Y);
 
     if (pressingMouseLeft && keyModifiers == 0) {
-        scene->externalGuiCamera->rotate(0, displacementY * MOUSE_ROTATE_FACTOR);
-        scene->externalGuiCamera->rotate(1, displacementX * MOUSE_ROTATE_FACTOR);
+        scene->externalGuiCamera->rotate(0, static_cast<GLdouble>(displacementY) * MOUSE_ROTATE_FACTOR);
+        scene->externalGuiCamera->rotate(1, static_cast<GLdouble>(displacementX) * MOUSE_ROTATE_FACTOR);
 
     } else if (pressingMouseRight && keyModifiers == 0) {
-        scene->externalGuiCamera->translate(0, displacementX * MOUSE_PAN_FACTOR);
-        scene->externalGuiCamera->translate(1, -displacementY * MOUSE_PAN_FACTOR);
+        scene->externalGuiCamera->translate(0, static_cast<GLdouble>(displacementX) * MOUSE_PAN_FACTOR);
+        scene->externalGuiCamera->translate(1, static_cast<GLdouble>(-displacementY) * MOUSE_PAN_FACTOR);
 
     } else if (pressingMouseMiddle || (pressingMouseLeft && (keyModifiers & GLUT_ACTIVE_CTRL))) {
-        scene->externalGuiCamera->translate(2, displacementY * MOUSE_ZOOM_FACTOR);
+        scene->externalGuiCamera->translate(2, static_cast<GLdouble>(displacementY) * MOUSE_ZOOM_FACTOR);
     }
 
     prev_X = x;
@@ -466,8 +466,8 @@ void Application::performPicking(int x, int y) {
     glPushMatrix ();
 
     //get the actual projection matrix values on an array of our own to multiply with pick matrix later
-    GLfloat projmat[16];
-    glGetFloatv(GL_PROJECTION_MATRIX,projmat);
+    GLdouble projmat[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projmat);
 
     // reset projection matrix
     glLoadIdentity();
@@ -481,7 +481,7 @@ void Application::performPicking(int x, int y) {
     gluPickMatrix ((GLdouble) x, (GLdouble) (height - y), 5.0, 5.0, viewport);
 
     // multiply the projection matrix stored in our array to ensure same conditions as in normal render
-    glMultMatrixf(projmat);
+    glMultMatrixd(projmat);
 
     // force scene drawing under this mode
     // only the names of objects that fall in the 5x5 window will actually be stored in the buffer

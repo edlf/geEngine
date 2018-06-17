@@ -17,7 +17,7 @@ protected:
     float span;
     unsigned int type;
 
-    std::vector<gePoint> controlPoints;
+    std::vector<xyzPointDouble> controlPoints;
     unsigned int numberOfControlPoints;
 
     unsigned long deltaTimeMillis;
@@ -28,30 +28,31 @@ protected:
     unsigned long spanMilliseconds;
     unsigned long totalTimePassed;
 
-    float x, y, z;
+    GLdouble x, y, z;
 
-    float angleX;
-    float angleZ;
+    GLdouble angleX;
+    GLdouble angleZ;
 
     void updateAngles();
 
     bool hasEnded;
 
-    gePoint currentSourcePoint;
-    gePoint currentDestionationPoint;
+    xyzPointDouble currentSourcePoint;
+    xyzPointDouble currentDestionationPoint;
     unsigned int numberOfProcessedControlPoints;
 
-    float dX, dY, dZ;
+    GLdouble dX, dY, dZ;
 
     void updateDeltas();
 
-    float deg2rad;
+    GLdouble deg2rad;
 
 public:
     geAnimation(const std::string& iId, float iSpan, unsigned int iType);
+    virtual ~geAnimation();
 
-    void insertPoint(gePoint in);
-    void insertPoint(GLfloat ix, GLfloat iy, GLfloat iz);
+    void insertPoint(xyzPointDouble in);
+    void insertPoint(GLdouble ix, GLdouble iy, GLdouble iz);
 
     unsigned long getDeltaTime();
     std::string getID();
@@ -59,8 +60,6 @@ public:
     /* Receives the (approximated) time passed since last update */
     void updateAnimation(unsigned long timePassed);
     void applyAnimation();
-
-    ~geAnimation();
 };
 
 } //namespace ge

@@ -124,7 +124,7 @@ void Scene::xmlLoadGlobals() {
         throw geException(Xml::SECTION_GLOBALS_ERROR, true);
     }
 
-    geColor bgColor = getColorFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_BACKGROUND, Xml::ATTRIBUTE_BACKGROUND_ERROR);
+    color bgColor = getColorFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_BACKGROUND, Xml::ATTRIBUTE_BACKGROUND_ERROR);
     setBackgroundColor(bgColor);
 
     std::string drawMode = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_DRAWMODE, Xml::ATTRIBUTE_DRAWMODE_ERROR);
@@ -167,14 +167,14 @@ void Scene::xmlLoadCameras() {
         if (strcmp(xmlCameraElement->Value(), Xml::SECTION_CAMERA_PERSPECTIVE) == 0) {
         	std::string cameraId;
             float nearIn, farIn, angle;
-            gePoint pos, target;
+            xyzPointDouble pos, target;
 
             cameraId = getStringFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_ID, Xml::SECTION_CAMERA_ID_ERROR);
             nearIn = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_NEAR, Xml::ATTRIBUTE_CAMERA_NEAR_ERROR);
             farIn = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_FAR, Xml::ATTRIBUTE_CAMERA_FAR_ERROR);
             angle = getFloatFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_ANGLE, Xml::ATTRIBUTE_CAMERA_ANGLE_ERROR);
-            pos = getPointFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_POSITION, Xml::ATTRIBUTE_CAMERA_POSITION_ERROR);
-            target = getPointFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_TARGET, Xml::ATTRIBUTE_CAMERA_TARGET_ERROR);
+            pos = getDoublePointFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_POSITION, Xml::ATTRIBUTE_CAMERA_POSITION_ERROR);
+            target = getDoublePointFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_CAMERA_TARGET, Xml::ATTRIBUTE_CAMERA_TARGET_ERROR);
 
             cameraVector.push_back(new PerspectiveCamera(cameraId, nearIn, farIn, angle, pos, target));
 
@@ -229,7 +229,7 @@ void Scene::xmlLoadLighting() {
     std::string lightingE = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_ENABLED, Xml::ATTRIBUTE_LIGHTING_ENABLED_ERROR);
     lightingEnable = validateBoolean(lightingE);
 
-    geColor ambientC = getColorFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_G_AMBIENT_ERROR);
+    color ambientC = getColorFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_G_AMBIENT_ERROR);
     setAmbientLightColor(ambientC);
 
     /* Get lighting first child */
@@ -246,15 +246,15 @@ void Scene::xmlLoadLighting() {
         if (strcmp(xmlLightElement->Value(), Xml::SECTION_LIGHTING_OMNI) == 0) {
         	std::string lightId;
             bool lightEnable;
-            gePoint location;
-            geColor ambient, diffuse, specular;
+            xyzPointFloat location;
+            color ambient, diffuse, specular;
 
             lightId = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
 
             std::string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
             lightEnable = validateBoolean(enabled);
 
-            location = getPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
+            location = getFloatPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
             ambient = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_AMBIENT_ERROR);
             diffuse = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIFFUSE, Xml::ATTRIBUTE_LIGHTING_DIFFUSE_ERROR);
             specular = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_SPECULAR, Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
@@ -267,22 +267,23 @@ void Scene::xmlLoadLighting() {
         if (strcmp(xmlLightElement->Value(), Xml::SECTION_LIGHTING_SPOT) == 0) {
         	std::string lightId;
             bool lightEnable;
-            float angle, exponent;
-            gePoint location, direction;
-            geColor ambient, diffuse, specular;
+            GLfloat angle, exponent;
+            xyzPointFloat location;
+            xyzPointFloat direction;
+            color ambient, diffuse, specular;
 
             lightId = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
 
             std::string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
             lightEnable = validateBoolean(enabled);
 
-            location = getPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
-            ambient = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_AMBIENT_ERROR);
-            diffuse = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIFFUSE, Xml::ATTRIBUTE_LIGHTING_DIFFUSE_ERROR);
-            specular = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_SPECULAR, Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
-            angle = getFloatFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ANGLE, Xml::SECTION_LIGHTING_ANGLE_ERROR);
-            exponent = getFloatFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_EXPONENT, Xml::ATTRIBUTE_LIGHTING_EXPONENT_ERROR);
-            direction = getPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIRECTION, Xml::ATTRIBUTE_LIGHTING_DIRECTION_ERROR);
+            location  = getFloatPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
+            ambient   = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_AMBIENT_ERROR);
+            diffuse   = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIFFUSE, Xml::ATTRIBUTE_LIGHTING_DIFFUSE_ERROR);
+            specular  = getColorFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_SPECULAR, Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
+            angle     = getFloatFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ANGLE, Xml::SECTION_LIGHTING_ANGLE_ERROR);
+            exponent  = getFloatFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_EXPONENT, Xml::ATTRIBUTE_LIGHTING_EXPONENT_ERROR);
+            direction = getFloatPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_DIRECTION, Xml::ATTRIBUTE_LIGHTING_DIRECTION_ERROR);
 
             lightVector.push_back(new geSpotLight(lightId, numberOfLights, lightEnable, location, ambient, diffuse, specular, angle, exponent, direction));
 
@@ -352,7 +353,7 @@ void Scene::xmlLoadAppearances() {
 
         std::string appearanceId, textureId;
         float shininess, texlength_s, texlength_t;
-        geColor emissive, ambient, diffuse, specular;
+        color emissive, ambient, diffuse, specular;
         bool hasTexture;
 
         appearanceId = getStringFromElementAttribute(xmlAppearanceElement, Xml::ATTRIBUTE_ID, Xml::SECTION_APPEARANCE_ID_ERROR);
@@ -455,8 +456,8 @@ void Scene::xmlLoadGraph() {
 
             if (strcmp(xmlTransformElement->Value(), Xml::SECTION_TRANSFORM_SCALE) == 0) {
                 /* Factor */
-                gePoint scaleFactor;
-                scaleFactor = getPointFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_FACTOR, Xml::ATTRIBUTE_TRANSFORM_FACTOR_ERROR);
+                xyzPointDouble scaleFactor;
+                scaleFactor = getDoublePointFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_FACTOR, Xml::ATTRIBUTE_TRANSFORM_FACTOR_ERROR);
 
                 temporaryNode->addTransform(new geTransformScale(scaleFactor, numberOfTransforms));
                 numberOfTransforms++;
@@ -489,8 +490,8 @@ void Scene::xmlLoadGraph() {
 
             /* Translate */
             if (strcmp(xmlTransformElement->Value(), Xml::SECTION_TRANSFORM_TRANSLATE) == 0) {
-                gePoint translate;
-                translate = getPointFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_TO, Xml::ATTRIBUTE_TRANSFORM_TO_ERROR);
+                xyzPointDouble translate;
+                translate = getDoublePointFromElementAttribute(xmlTransformElement, Xml::ATTRIBUTE_TRANSFORM_TO, Xml::ATTRIBUTE_TRANSFORM_TO_ERROR);
 
                 temporaryNode->addTransform(new geTransformTranslate(translate, numberOfTransforms));
                 numberOfTransforms++;
@@ -546,7 +547,7 @@ void Scene::xmlLoadGraph() {
 
             /*Rectangle*/
             if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_RECTANGLE) == 0) {
-                ge2dPoint pt1, pt2;
+                xyPointDouble pt1, pt2;
 
                 /* XY1 */
                 pt1 = get2DdPointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XY1, Xml::ATTRIBUTE_PRIMITIVE_XY1_ERROR);
@@ -555,7 +556,7 @@ void Scene::xmlLoadGraph() {
                 pt2 = get2DdPointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XY2, Xml::ATTRIBUTE_PRIMITIVE_XY2_ERROR);
 
                 /* Create rectangle and store pointer in graph */
-                Primitives::Base* primitiveTemp = new Primitives::Rectangle(pt1, pt2);
+                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Rectangle(pt1, pt2);
                 temporaryNode->addPrimitive(primitiveTemp);
                 primitiveTemp = NULL;
 
@@ -564,13 +565,13 @@ void Scene::xmlLoadGraph() {
 
             /*Triangle*/
             if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_TRIANGLE) == 0) {
-                gePoint point1, point2, point3;
-                point1 = getPointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ1, Xml::ATTRIBUTE_PRIMITIVE_XYZ1_ERROR);
-                point2 = getPointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ2, Xml::ATTRIBUTE_PRIMITIVE_XYZ2_ERROR);
-                point3 = getPointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ3, Xml::ATTRIBUTE_PRIMITIVE_XYZ3_ERROR);
+                xyzPointDouble point1, point2, point3;
+                point1 = getDoublePointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ1, Xml::ATTRIBUTE_PRIMITIVE_XYZ1_ERROR);
+                point2 = getDoublePointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ2, Xml::ATTRIBUTE_PRIMITIVE_XYZ2_ERROR);
+                point3 = getDoublePointFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_XYZ3, Xml::ATTRIBUTE_PRIMITIVE_XYZ3_ERROR);
 
                 /* Create triangle and store pointer in graph */
-                Primitives::Base* primitiveTemp = new Primitives::Triangle(point1, point2, point3);
+                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Triangle(point1, point2, point3);
                 temporaryNode->addPrimitive(primitiveTemp);
                 primitiveTemp = NULL;
 
@@ -589,7 +590,7 @@ void Scene::xmlLoadGraph() {
                 stacks = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_STACKS, Xml::ATTRIBUTE_PRIMITIVE_CYL_STACKS_ERROR);
 
                 /* Create cylinder and store pointer in graph */
-                Primitives::Base* primitiveTemp = new Primitives::Cylinder(base, top, height, slices, stacks);
+                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Cylinder(base, top, height, slices, stacks);
                 temporaryNode->addPrimitive(primitiveTemp);
                 primitiveTemp = NULL;
 
@@ -606,7 +607,7 @@ void Scene::xmlLoadGraph() {
                 stacks = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_STACKS, Xml::ATTRIBUTE_PRIMITIVE_SPHERE_STACKS_ERROR);
 
                 /* Create sphere and store pointer in graph */
-                Primitives::Base* primitiveTemp = new Primitives::Sphere(radius, slices, stacks);
+                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Sphere(radius, slices, stacks);
                 temporaryNode->addPrimitive(primitiveTemp);
                 primitiveTemp = NULL;
 
@@ -624,7 +625,7 @@ void Scene::xmlLoadGraph() {
                 loops = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_LOOPS, Xml::ATTRIBUTE_PRIMITIVE_TORUS_LOOPS_ERROR);
 
                 /* Create torus and store pointer in graph */
-                Primitives::Base* primitiveTemp = new Primitives::Torus(inner, outer, slices, loops);
+                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Torus(inner, outer, slices, loops);
                 temporaryNode->addPrimitive(primitiveTemp);
                 primitiveTemp = NULL;
 
@@ -638,7 +639,7 @@ void Scene::xmlLoadGraph() {
                 parts = getUnsignedIntFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_PARTS, Xml::ATTRIBUTE_PRIMITIVE_PLANE_PARTS_ERROR);
 
                 /* Create plane and store pointer in graph */
-                Primitives::Base* primitiveTemp = new Primitives::Plane(parts);
+                Primitives::PrimitiveInterface* primitiveTemp = new Primitives::Plane(parts);
                 temporaryNode->addPrimitive(primitiveTemp);
                 primitiveTemp = NULL;
 
@@ -672,7 +673,7 @@ void Scene::xmlLoadGraph() {
 
                     /* Point */
                     if (strcmp(xmlPatchPointElement->Value(), Xml::SECTION_PRIMITIVE_CONTROLPOINT) == 0) {
-                        gePoint point;
+                        xyzPointDouble point;
                         point.x = getFloatFromElementAttribute(xmlPatchPointElement, Xml::ATTRIBUTE_PRIMITIVE_X, Xml::ATTRIBUTE_PRIMITIVE_PATCH_X_ERROR);
                         point.y = getFloatFromElementAttribute(xmlPatchPointElement, Xml::ATTRIBUTE_PRIMITIVE_Y, Xml::ATTRIBUTE_PRIMITIVE_PATCH_Y_ERROR);
                         point.z = getFloatFromElementAttribute(xmlPatchPointElement, Xml::ATTRIBUTE_PRIMITIVE_Z, Xml::ATTRIBUTE_PRIMITIVE_PATCH_Z_ERROR);
@@ -820,7 +821,7 @@ void Scene::xmlLoadAnimations() {
 
             /* Point */
             if (strcmp(xmlAnimationPointElement->Value(), Xml::SECTION_PRIMITIVE_CONTROLPOINT) == 0) {
-                gePoint point;
+                xyzPointDouble point;
 
                 point.x = getFloatFromElementAttribute(xmlAnimationPointElement, Xml::ATTRIBUTE_ANIMATION_X, Xml::ATTRIBUTE_ANIMATION_X_ERROR);
                 point.y = getFloatFromElementAttribute(xmlAnimationPointElement, Xml::ATTRIBUTE_ANIMATION_Y, Xml::ATTRIBUTE_ANIMATION_Y_ERROR);
@@ -864,36 +865,53 @@ std::string Scene::getStringFromElementAttribute(TiXmlElement* iElement, char co
 
     if (valString) {
         output = std::string(valString);
-    } else {
-        throw geException(Error, true, iElement->Row());
     }
-    return output;
+
+    throw geException(Error, true, iElement->Row());
 }
 
-gePoint Scene::getPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
-    gePoint output;
+xyzPointDouble Scene::getDoublePointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+    xyzPointDouble output;
+    char * valString = (char *) iElement->Attribute(iAttribute);
+
+    if (valString && sscanf(valString, "%lf %lf %lf", &output.x, &output.y, &output.z) == 3) {
+        return output;
+    }
+
+    throw geException(Error, true, iElement->Row());
+}
+
+xyzPointFloat Scene::getFloatPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+	xyzPointFloat output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
     if (valString && sscanf(valString, "%f %f %f", &output.x, &output.y, &output.z) == 3) {
         return output;
-    } else {
-        throw geException(Error, true, iElement->Row());
     }
 
-    return output;
+    throw geException(Error, true, iElement->Row());
 }
 
-geColor Scene::getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
-    geColor output;
+color Scene::getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+    color output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
     if (valString && sscanf(valString, "%f %f %f %f", &output.r, &output.g, &output.b, &output.a) == 4) {
         return output;
-    } else {
-        throw geException(Error, true, iElement->Row());
     }
 
-    return output;
+    throw geException(Error, true, iElement->Row());
+}
+
+double Scene::getDoubleFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+    double output;
+    char * valString = (char *) iElement->Attribute(iAttribute);
+
+    if (valString && sscanf(valString, "%lf", &output) == 1) {
+        return output;
+    }
+
+    throw geException(Error, true, iElement->Row());
 }
 
 float Scene::getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
@@ -902,11 +920,9 @@ float Scene::getFloatFromElementAttribute(TiXmlElement* iElement, char const* iA
 
     if (valString && sscanf(valString, "%f", &output) == 1) {
         return output;
-    } else {
-        throw geException(Error, true, iElement->Row());
     }
 
-    return output;
+    throw geException(Error, true, iElement->Row());
 }
 
 unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
@@ -915,11 +931,9 @@ unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement, c
 
     if (valString && sscanf(valString, "%u", &output) == 1) {
         return output;
-    } else {
-        throw geException(Error, true, iElement->Row());
     }
 
-    return output;
+    throw geException(Error, true, iElement->Row());
 }
 
 bool Scene::getAttributeExistence(TiXmlElement* iElement, char const* iAttribute) {
@@ -932,30 +946,28 @@ bool Scene::getAttributeExistence(TiXmlElement* iElement, char const* iAttribute
     }
 }
 
-ge2dPoint Scene::get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
-    ge2dPoint output;
+xyPointDouble Scene::get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+    xyPointDouble output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
-    if (valString && sscanf(valString, "%f %f", &output.x, &output.y) == 2) {
+    if (valString && sscanf(valString, "%lf %lf", &output.x, &output.y) == 2) {
         return output;
-    } else {
-        throw geException(Error, true, iElement->Row());
     }
 
-    return output;
+    throw geException(Error, true, iElement->Row());
 }
 
 /* End XML functions */
 
 /* Set stuff */
-void Scene::setBackgroundColor(geColor in) {
+void Scene::setBackgroundColor(color in) {
     backgroundColour[0] = in.r;
     backgroundColour[1] = in.g;
     backgroundColour[2] = in.b;
     backgroundColour[3] = in.a;
 }
 
-void Scene::setAmbientLightColor(geColor in) {
+void Scene::setAmbientLightColor(color in) {
     ambientLightColour[0] = in.r;
     ambientLightColour[1] = in.g;
     ambientLightColour[2] = in.b;
@@ -963,7 +975,7 @@ void Scene::setAmbientLightColor(geColor in) {
 }
 
 /* Validate values & strings */
-GLfloat Scene::validateOpenGLColour(GLfloat input) {
+GLdouble Scene::validateOpenGLColour(GLdouble input) {
     if (input < -1.0) {
         throw geException("Out of range color value!", true);
         return -1.0;
@@ -1228,13 +1240,13 @@ void Scene::display() {
     glutSwapBuffers();
 }
 
-void Scene::setViewRotate(GLfloat* input) {
+void Scene::setViewRotate(GLdouble* input) {
     for (unsigned int i = 0; i < 16; i++) {
         customCameraMatrix[i] = input[i];
     }
 }
 
-GLfloat* Scene::getViewProjection() {
+GLdouble* Scene::getViewProjection() {
     return this->customCameraMatrix;
 }
 

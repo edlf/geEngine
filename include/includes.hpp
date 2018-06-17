@@ -36,9 +36,9 @@
 #define STRING_CONSOLE_HEADER_SPACER "                          "
 
 /* GUI camera stuff, once again stolen from CGFlib (divided values by 2 for more accuracy) */
-#define MOUSE_ROTATE_FACTOR 0.25
-#define MOUSE_PAN_FACTOR 0.025
-#define MOUSE_ZOOM_FACTOR 0.25
+const double MOUSE_ROTATE_FACTOR =  0.25;
+const double MOUSE_PAN_FACTOR    = 0.025;
+const double MOUSE_ZOOM_FACTOR   =  0.25;
 
 #define MAX_DISPLAY_LISTS 64
 
@@ -66,7 +66,7 @@ extern "C"
 #include <GL/freeglut.h>
 #include <GL/glui.h>
 
-#include "geStructs.hpp"
+#include <types.hpp>
 #include "geException.hpp"
 
 /* Win32 Hacks */

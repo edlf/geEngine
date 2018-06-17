@@ -11,7 +11,7 @@ CameraInterface::CameraInterface(){
 
 }
 
-CameraInterface::CameraInterface(std::string& iId, GLfloat iNear, GLfloat iFar) {
+CameraInterface::CameraInterface(std::string& iId, GLdouble iNear, GLdouble iFar) {
     this->id = iId;
     this->geNear = iNear;
     this->geFar = iFar;
@@ -21,11 +21,11 @@ std::string CameraInterface::getID() {
     return this->id;
 }
 
-GLfloat CameraInterface::getNear() {
+GLdouble CameraInterface::getNear() {
     return this->geNear;
 }
 
-GLfloat CameraInterface::getFar() {
+GLdouble CameraInterface::getFar() {
     return this->geFar;
 }
 
@@ -36,21 +36,21 @@ void CameraInterface::updateProjectionMatrix(int width, int height) {
     glFrustum(-aspect * .04, aspect * .04, -.04, .04, .4, 500.0);
 }
 
-void CameraInterface::setPosition(gePoint in) {
+void CameraInterface::setPosition(xyzPointDouble in) {
     setX(in.x);
     setY(in.y);
     setZ(in.z);
 }
 
-void CameraInterface::setX(GLfloat x) {
+void CameraInterface::setX(GLdouble x) {
     this->position[0] = x;
 }
 
-void CameraInterface::setY(GLfloat y) {
+void CameraInterface::setY(GLdouble y) {
     this->position[1] = y;
 }
 
-void CameraInterface::setZ(GLfloat z) {
+void CameraInterface::setZ(GLdouble z) {
     this->position[2] = z;
 }
 
@@ -58,7 +58,7 @@ CameraInterface::~CameraInterface() {
 
 }
 
-OrthoCamera::OrthoCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom) :
+OrthoCamera::OrthoCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iLeft, GLdouble iRight, GLdouble iTop, GLdouble iBottom) :
         CameraInterface(iId, iNear, iFar) {
 
     this->left = iLeft;
@@ -75,21 +75,23 @@ OrthoCamera::~OrthoCamera() {
 
 }
 
-void OrthoCamera::rotateTo(int, float){
+void OrthoCamera::rotateTo(int, double) {
 
 }
 
-void OrthoCamera::rotate(int, float) {
-}
-
-void OrthoCamera::setRotation(int, float) {
-}
-
-void OrthoCamera::moveTo(int, float, float) {
+void OrthoCamera::rotate(int, double) {
 
 }
 
-void OrthoCamera::translate(int, float) {
+void OrthoCamera::setRotation(int, double) {
+
+}
+
+void OrthoCamera::moveTo(int, double, double) {
+
+}
+
+void OrthoCamera::translate(int, double) {
 
 }
 
@@ -111,7 +113,7 @@ PerspectiveCamera::PerspectiveCamera() {
     this->examineMode = true;
 }
 
-PerspectiveCamera::PerspectiveCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo) :
+PerspectiveCamera::PerspectiveCamera(std::string& iId, GLdouble iNear, GLdouble iFar, GLdouble iAngle, xyzPointDouble iFrom, xyzPointDouble iTo) :
         CameraInterface(iId, iNear, iFar) {
 
     this->angle = iAngle;
@@ -129,11 +131,11 @@ void PerspectiveCamera::applyView(double aspectRatio) {
     if (this->examineMode) {
         glFrustum(-aspectRatio * .04, aspectRatio * .04, -.04, .04, .1, 500.0);
 
-        glTranslatef(position[0], position[1], position[2]);
+        glTranslated(position[0], position[1], position[2]);
 
-        glRotatef(rotation[0], 1.f, 0.f, 0.f);
-        glRotatef(rotation[1], 0.f, 1.f, 0.f);
-        glRotatef(rotation[2], 0.f, 0.f, 1.f);
+        glRotated(rotation[0], 1.f, 0.f, 0.f);
+        glRotated(rotation[1], 0.f, 1.f, 0.f);
+        glRotated(rotation[2], 0.f, 0.f, 1.f);
 
     } else {
 
@@ -143,7 +145,7 @@ void PerspectiveCamera::applyView(double aspectRatio) {
     }
 }
 
-void PerspectiveCamera::rotateTo(int axis, float angle) {
+void PerspectiveCamera::rotateTo(int axis, double angle) {
     if (axis >= 0 && axis <= 2) {
         if (rotation[axis] < angle) {
             rotation[axis] += 0.5f;
@@ -151,19 +153,19 @@ void PerspectiveCamera::rotateTo(int axis, float angle) {
     }
 }
 
-void PerspectiveCamera::rotate(int axis, float angle) {
+void PerspectiveCamera::rotate(int axis, double angle) {
     if (axis >= 0 && axis <= 2) {
         rotation[axis] += angle;
     }
 }
 
-void PerspectiveCamera::setRotation(int axis, float angle) {
+void PerspectiveCamera::setRotation(int axis, double angle) {
     if (axis >= 0 && axis <= 2) {
         rotation[axis] = angle;
     }
 }
 
-void PerspectiveCamera::moveTo(int axis, float value, float increment) {
+void PerspectiveCamera::moveTo(int axis, double value, double increment) {
     if (axis >= 0 && axis <= 2) {
         if (position[axis] < value) {
             rotation[axis] += increment;
@@ -171,7 +173,7 @@ void PerspectiveCamera::moveTo(int axis, float value, float increment) {
     }
 }
 
-void PerspectiveCamera::translate(int axis, float value) {
+void PerspectiveCamera::translate(int axis, double value) {
     this->examineMode = true;
     ///< Moves the camera along _axis_ by _value_ units.
     if (axis >= 0 && axis <= 2) {

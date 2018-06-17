@@ -49,7 +49,7 @@ void Node::addTransform(geTransform* in) {
     transformList.push_back(in);
 }
 
-void Node::addPrimitive(Primitives::Base* in) {
+void Node::addPrimitive(Primitives::PrimitiveInterface* in) {
     this->primitiveVector.push_back(in);
 }
 
@@ -98,20 +98,20 @@ void Node::calculateNodeMatrix() {
     this->precalcDone = true;
 }
 
-void Node::setTransformationMatrix(GLfloat* in) {
+void Node::setTransformationMatrix(GLdouble* in) {
     for (unsigned int i = 0; i < 16; i++) {
         transformationsMatrix[i] = in[i];
     }
 }
 
-GLfloat* Node::multiplyMatrix(GLfloat* left, GLfloat* right) {
-    GLfloat* output = new GLfloat[16];
+GLdouble* Node::multiplyMatrix(GLdouble* left, GLdouble* right) {
+    GLdouble* output = new GLdouble[16];
 
     for (int i = 0; i < 4; i++) {
 
         for (int j = 0; j < 4; j++) {
 
-            GLfloat sum = 0.0;
+            GLdouble sum = 0.0;
 
             for (int k = 0; k < 4; k++) {
                 sum = sum + left[i * 4 + k] * right[k * 4 + j];
@@ -171,14 +171,14 @@ void Node::drawHelper() {
     }
 
     /* Apply node transform matrix */
-    glMultMatrixf(transformationsMatrix);
+    glMultMatrixd(transformationsMatrix);
 
     /* Apply apperance */
     appearanceStack.top()->apply();
 
     /* If there are primitives draw them */
     if (!this->primitiveVector.empty()) {
-        for (std::vector<Primitives::Base*>::iterator it = this->primitiveVector.begin(); it != this->primitiveVector.end(); it++) {
+        for (std::vector<Primitives::PrimitiveInterface*>::iterator it = this->primitiveVector.begin(); it != this->primitiveVector.end(); it++) {
             (*it)->draw(appearanceStack.top()->getTextureSWrap(), appearanceStack.top()->getTextureTWrap());
         }
     }
@@ -199,8 +199,8 @@ void Node::drawHelper() {
 }
 /**** geNode: runtime (end) ****/
 
-/* Prints a 4x4 matrix from a 1x16 GLfloat array */
-void Node::printMatrix16x1(GLfloat* in) {
+/* Prints a 4x4 matrix from a 1x16 GLdouble array */
+void Node::printMatrix16x1(GLdouble* in) {
     std::cout.precision(5);
     std::cout.setf(std::ios::fixed, std::ios::floatfield);
 
@@ -219,7 +219,6 @@ Node::~Node() {
 }
 
 /******************** GRAPH ********************/
-
 SceneGraph::SceneGraph(std::string& root) {
     this->rootID = root;
     this->rootNode = NULL;
@@ -266,6 +265,10 @@ SceneGraph::SceneGraph(std::string& root) {
     this->defaultRootAppearance = new Appearance(internalAppearanceName, emissive, ambient, diffuse, specular, shininess);
 
     this->firstRun = true;
+}
+
+SceneGraph::~SceneGraph(){
+
 }
 
 void SceneGraph::setRootNode(Node* root) {

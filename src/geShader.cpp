@@ -17,7 +17,7 @@ static char* textFileRead(const char *fileName) {
 
         if (file != NULL) {
             fseek(file, 0, SEEK_END);
-            int count = ftell(file);
+            size_t count = ftell(file);
             rewind(file);
 
             if (count > 0) {
@@ -25,9 +25,11 @@ static char* textFileRead(const char *fileName) {
                 count = fread(text, sizeof(char), count, file);
                 text[count] = '\0';
             }
+
             fclose(file);
         }
     }
+
     return text;
 }
 
@@ -38,6 +40,7 @@ static void validateShader(GLuint shader, const char* file = 0) {
     GLsizei length = 0;
 
     glGetShaderInfoLog(shader, BUFFER_SIZE, &length, buffer);
+
     if (length > 0) {
         std::cerr << "Shader " << shader << " (" << (file ? file : "") << ") compile error: " << buffer << std::endl;
     }
@@ -56,8 +59,10 @@ static void validateProgram(GLuint program) {
     }
 
     glValidateProgram(program);
+
     GLint status;
     glGetProgramiv(program, GL_VALIDATE_STATUS, &status);
+
     if (status == GL_FALSE) {
         std::cerr << "Error validating shader " << program << std::endl;
     }

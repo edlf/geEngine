@@ -18,12 +18,12 @@ namespace ge {
 class Appearance {
 private:
     std::string id;
-    GLfloat emissive[4];
+    GLdouble emissive[4];
     GLfloat ambient[4];
     GLfloat diffuse[4];
     GLfloat specular[4];
     GLfloat shininess;
-    GLfloat colour[4];
+    GLdouble colour[4];
 
     bool isTextured;
     std::string textureRef;
@@ -32,22 +32,23 @@ private:
     GLfloat sWrap, tWrap;
 
 public:
-    Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess);
-    Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t);
+    Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess);
+    Appearance(const std::string& iID, color iEmissive, color iAmbient, color iDiffuse, color iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t);
+    virtual ~Appearance();
 
     void apply();
 
-    void setEmissive(geColor input);
-    void setEmissive(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
-    void setAmbient(geColor input);
+    void setEmissive(color input);
+    void setEmissive(GLdouble iR, GLdouble iG, GLdouble iB, GLdouble iAlpha);
+    void setAmbient(color input);
     void setAmbient(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
-    void setDiffuse(geColor input);
+    void setDiffuse(color input);
     void setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
-    void setSpecular(geColor input);
+    void setSpecular(color input);
     void setSpecular(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
     void setShininess(GLfloat input);
-    void setColour(geColor input);
-    void setColour(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
+    void setColour(color input);
+    void setColour(GLdouble iR, GLdouble iG, GLdouble iB, GLdouble iAlpha);
 
     /* For already loaded textures */
     void setTexture(geTexture* input);
@@ -56,10 +57,8 @@ public:
     std::string getTextureReference();
     std::string getAppearanceID();
 
-    GLfloat getTextureSWrap();
-    GLfloat getTextureTWrap();
-
-    virtual ~Appearance();
+    GLdouble getTextureSWrap();
+    GLdouble getTextureTWrap();
 };
 
 } // namespace ge

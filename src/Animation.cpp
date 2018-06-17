@@ -57,11 +57,11 @@ geAnimation::geAnimation(const std::string& iId, float iSpan, unsigned int iType
     this->deltaTimeSingleMove = 0;
 }
 
-void geAnimation::insertPoint(gePoint in) {
+void geAnimation::insertPoint(xyzPointDouble in) {
     insertPoint(in.x, in.y, in.z);
 }
 
-void geAnimation::insertPoint(GLfloat ix, GLfloat iy, GLfloat iz) {
+void geAnimation::insertPoint(GLdouble ix, GLdouble iy, GLdouble iz) {
     /* Cheap way to set the first start point */
     if (numberOfControlPoints == 0) {
         currentSourcePoint.x = ix;
@@ -83,7 +83,7 @@ void geAnimation::insertPoint(GLfloat ix, GLfloat iy, GLfloat iz) {
         numberOfProcessedControlPoints = 2;
     }
 
-    gePoint temp;
+    xyzPointDouble temp;
     temp.x = ix;
     temp.y = iy;
     temp.z = iz;
@@ -164,11 +164,11 @@ void geAnimation::updateAnimation(unsigned long timePassed) {
 
 void geAnimation::applyAnimation() {
     /* Apply rotation */
-    glRotatef(angleX, 1, 0, 0);
-    glRotatef(angleZ, 0, 0, 1);
+    glRotated(angleX, 1, 0, 0);
+    glRotated(angleZ, 0, 0, 1);
 
     /* Translate to new position */
-    glTranslatef(x, y, z);
+    glTranslated(x, y, z);
 }
 
 geAnimation::~geAnimation() {

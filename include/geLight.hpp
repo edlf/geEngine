@@ -28,13 +28,13 @@ protected:
 public:
     /* Sets */
     void setLocation(GLfloat iX, GLfloat iY, GLfloat iZ);
-    void setLocation(gePoint input);
+    void setLocation(xyzPointFloat input);
     void setAmbient(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
-    void setAmbient(geColor input);
+    void setAmbient(color input);
     void setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
-    void setDiffuse(geColor input);
+    void setDiffuse(color input);
     void setSpecular(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha);
-    void setSpecular(geColor input);
+    void setSpecular(color input);
 
     void toggleEnable();
 
@@ -55,7 +55,7 @@ class geOmniLight: public geLight {
 protected:
 
 public:
-    geOmniLight(const std::string& lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular);
+    geOmniLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular);
 
     void draw();
     void update();
@@ -65,17 +65,17 @@ public:
 
 class geSpotLight: public geLight {
 protected:
-    GLfloat angle;
+    GLdouble angle;
     GLfloat exponent[1];
     GLfloat direction[4];
 
 public:
-    geSpotLight(const std::string& lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iAngle, GLfloat iExponent, gePoint iDirection);
+    geSpotLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular, GLfloat iAngle, GLfloat iExponent, xyzPointFloat iDirection);
 
-    void setAngle(GLfloat input);
+    void setAngle(GLdouble input);
     void setExponent(GLfloat input);
     void setDirection(GLfloat iX, GLfloat iY, GLfloat iZ);
-    void setDirection(gePoint input);
+    void setDirection(xyzPointFloat input);
 
     void draw();
     void update();

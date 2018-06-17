@@ -30,14 +30,14 @@ private:
     std::string name;
 
     /* Globals */
-    GLfloat backgroundColour[4];
+    GLclampf backgroundColour[4];
     std::string drawMode;
     int drawModeInt;
     std::string shadingMode;
     std::string cullFace;
     std::string cullOrder;
 
-    void setBackgroundColor(geColor in);
+    void setBackgroundColor(color in);
     void applyGlobals();
     /* End globals */
 
@@ -48,20 +48,20 @@ private:
 
     unsigned int numberOfCameras;
 
-    GLfloat* customCameraMatrix;
+    GLdouble* customCameraMatrix;
     void setInitialCamera();
-    void setViewRotate(GLfloat* input);
-    GLfloat* getViewProjection();
+    void setViewRotate(GLdouble* input);
+    GLdouble* getViewProjection();
 
     /* Lights */
     GLboolean lightingDoubleSided;
     GLboolean lightingLocal;
     GLboolean lightingEnable;
-    GLfloat ambientLightColour[4];
+    GLfloat   ambientLightColour[4];
     std::vector<geLight*> lightVector;
     unsigned int numberOfLights;
 
-    void setAmbientLightColor(geColor in);
+    void setAmbientLightColor(color in);
     void initLights();
 
     /* Textures */
@@ -128,17 +128,19 @@ private:
 
     /* XML Parse methods */
     std::string getStringFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    gePoint getPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
-    geColor getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    xyzPointDouble getDoublePointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    xyzPointFloat getFloatPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    color getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    double getDoubleFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
     float getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
     unsigned int getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
     bool getAttributeExistence(TiXmlElement* iElement, char const* iAttribute);
-    ge2dPoint get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    xyPointDouble get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
 
     /* End XML related methods */
 
     /* Sanity checks */
-    GLfloat validateOpenGLColour(GLfloat input);
+    GLdouble validateOpenGLColour(GLdouble input);
     bool validateBoolean(std::string&);
 
     /* Validate and set strings */
@@ -164,6 +166,7 @@ public:
 
     /* Constructor who receives an string with the file name to load the scene from. */
     Scene(std::string& fileName);
+    virtual ~Scene();
 
     /* Gets */
     GLboolean getLightingEnableStatus();
@@ -209,9 +212,6 @@ public:
 
     void tiltVehicleLeft();
     void tiltVehicleRight();
-
-    /*  */
-    virtual ~Scene();
 };
 
 }

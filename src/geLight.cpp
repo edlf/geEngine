@@ -8,7 +8,7 @@
 #include "geLight.hpp"
 
 namespace ge {
-geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular) {
+geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular) {
 
     this->id = lightID;
     this->openGLid = GL_LIGHT0 + openGLid;
@@ -22,8 +22,8 @@ geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable,
     gluQuadric = gluNewQuadric();
 }
 
-geSpotLight::geSpotLight(const std::string& lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iSpotAngle, GLfloat iSpotExponent,
-        gePoint iSpotDirection) {
+geSpotLight::geSpotLight(const std::string& lightID, int openGLid, bool iEnable, xyzPointFloat iLocation, color iAmbient, color iDiffuse, color iSpecular, GLfloat iSpotAngle, GLfloat iSpotExponent,
+        xyzPointFloat iSpotDirection) {
 
     this->id = lightID;
     this->openGLid = GL_LIGHT0 + openGLid;
@@ -49,7 +49,7 @@ void geLight::setLocation(GLfloat iX, GLfloat iY, GLfloat iZ) {
     this->location[3] = 1.0f;
 }
 
-void geLight::setLocation(gePoint input) {
+void geLight::setLocation(xyzPointFloat input) {
     setLocation(input.x, input.y, input.z);
 }
 
@@ -60,7 +60,7 @@ void geLight::setAmbient(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
     this->ambient[3] = iAlpha;
 }
 
-void geLight::setAmbient(geColor input) {
+void geLight::setAmbient(color input) {
     setAmbient(input.r, input.g, input.b, input.a);
 }
 
@@ -71,7 +71,7 @@ void geLight::setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
     this->diffuse[3] = iAlpha;
 }
 
-void geLight::setDiffuse(geColor input) {
+void geLight::setDiffuse(color input) {
     setDiffuse(input.r, input.g, input.b, input.a);
 }
 
@@ -82,12 +82,12 @@ void geLight::setSpecular(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
     this->specular[3] = iAlpha;
 }
 
-void geLight::setSpecular(geColor input) {
+void geLight::setSpecular(color input) {
     setSpecular(input.r, input.g, input.b, input.a);
 
 }
 
-void geSpotLight::setAngle(GLfloat input) {
+void geSpotLight::setAngle(GLdouble input) {
     this->angle = input;
 }
 
@@ -102,7 +102,7 @@ void geSpotLight::setDirection(GLfloat iX, GLfloat iY, GLfloat iZ) {
     this->direction[3] = 0.0f;
 }
 
-void geSpotLight::setDirection(gePoint input) {
+void geSpotLight::setDirection(xyzPointFloat input) {
     setDirection(input.x, input.y, input.z);
 }
 
