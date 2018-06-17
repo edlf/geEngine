@@ -10,8 +10,6 @@
 #include <Scene.hpp>
 #include "includes.hpp"
 
-using namespace std;
-
 namespace ge {
 
 class Application {
@@ -41,10 +39,10 @@ private:
 
 	static int lightEnableStatus[8];
 	static GLUI_Checkbox* lightcb[8];
-	static vector<string> lightIDs;
+	static std::vector<std::string> lightIDs;
 
 	static GLUI_Listbox *cameraListBox;
-	static vector<string> cameraIDs;
+	static std::vector<std::string> cameraIDs;
 	static int cameraListBoxStatus;
 
 	static int polygonModeStatus;

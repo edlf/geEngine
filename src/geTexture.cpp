@@ -8,7 +8,7 @@
 
 namespace ge {
 
-geTexture::geTexture(string xmlIdIn, string input) {
+geTexture::geTexture(std::string& xmlIdIn, std::string& input) {
     this->loaded = false;
     this->xmlId = xmlIdIn;
     this->fileName = input;
@@ -35,7 +35,7 @@ void geTexture::loadTexture() {
             this->loaded = true;
         }
 
-        string pathFileName = string(TEXTURE_FOLDER) + this->fileName;
+        std::string pathFileName = std::string(TEXTURE_FOLDER) + this->fileName;
 
         unsigned char *data = loadRGBImage(pathFileName.c_str(), &this->width, &this->height);
 
@@ -65,7 +65,7 @@ void geTexture::apply() {
     }
 }
 
-string geTexture::getXmlId() {
+std::string geTexture::getXmlId() {
     return this->xmlId;
 }
 

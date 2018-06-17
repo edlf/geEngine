@@ -8,8 +8,8 @@
 
 
 void PressEnterToExit() {
-    cout << "Press enter to continue..." << flush;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cout << "Press enter to continue..." << std::flush;
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 int main(int argc, char** argv) {
@@ -17,12 +17,12 @@ int main(int argc, char** argv) {
 
     if (argc == 1) {
         sceneFileName.append("default.yaf");
-        cout << "No scene defined, attempting to use [" << sceneFileName << "]." << endl;
+        std::cout << "No scene defined, attempting to use [" << sceneFileName << "]." << std::endl;
     } else if (argc == 2) {
         sceneFileName.append(argv[1]);
-        cout << "Attempting to use: [" << sceneFileName << "]." << endl;
+        std::cout << "Attempting to use: [" << sceneFileName << "]." << std::endl;
     } else {
-        cerr << "Too much arguments!" << endl;
+    	std::cerr << "Too much arguments!" << std::endl;
         PressEnterToExit();
         return -1;
     }

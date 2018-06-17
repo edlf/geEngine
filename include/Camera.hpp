@@ -9,21 +9,19 @@
 
 #include "includes.hpp"
 
-using namespace std;
-
 namespace ge {
 
 class CameraInterface {
 protected:
-    string id;
+    std::string id;
     GLfloat geNear, geFar;
     GLfloat position[3];
     GLfloat rotation[3];
 
 public:
     CameraInterface();
-    CameraInterface(string iid, GLfloat iNear, GLfloat iFar);
-    string getID();
+    CameraInterface(std::string& iid, GLfloat iNear, GLfloat iFar);
+    std::string getID();
 
     GLfloat getNear();
     GLfloat getFar();
@@ -50,7 +48,7 @@ private:
     GLfloat left, right, top, bottom;
 
 public:
-    OrthoCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom);
+    OrthoCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom);
 
     virtual void applyView(double aspectRatio);
     virtual ~OrthoCamera();
@@ -74,7 +72,7 @@ public:
     PerspectiveCamera();
 
     /* Regular camera for xml scene */
-    PerspectiveCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo);
+    PerspectiveCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo);
 
     virtual void applyView(double aspectRatio);
 

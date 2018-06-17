@@ -13,11 +13,11 @@ namespace ge {
 
 class geAnimation {
 protected:
-    string id;
+    std::string id;
     float span;
     unsigned int type;
 
-    vector<gePoint> controlPoints;
+    std::vector<gePoint> controlPoints;
     unsigned int numberOfControlPoints;
 
     unsigned long deltaTimeMillis;
@@ -48,13 +48,13 @@ protected:
     float deg2rad;
 
 public:
-    geAnimation(string iId, float iSpan, unsigned int iType);
+    geAnimation(const std::string& iId, float iSpan, unsigned int iType);
 
     void insertPoint(gePoint in);
     void insertPoint(GLfloat ix, GLfloat iy, GLfloat iz);
 
     unsigned long getDeltaTime();
-    string getID();
+    std::string getID();
 
     /* Receives the (approximated) time passed since last update */
     void updateAnimation(unsigned long timePassed);

@@ -8,11 +8,11 @@
 
 namespace ge {
 // Static members
-stack<Appearance*> Node::appearanceStack;
+std::stack<Appearance*> Node::appearanceStack;
 bool  Node::creatingDisplayList = false;
 GLint Node::displayListCount = 1;
 
-Node::Node(string in, bool displayList) {
+Node::Node(std::string& in, bool displayList) {
     this->ID = in;
     this->precalcDone = false;
     this->nodeAppearance = NULL;
@@ -53,7 +53,7 @@ void Node::addPrimitive(Primitives::Base* in) {
     this->primitiveVector.push_back(in);
 }
 
-void Node::addChildrenID(string in) {
+void Node::addChildrenID(std::string& in) {
     childrenIdVector.push_back(in);
 }
 
@@ -61,11 +61,11 @@ void Node::setAnimation(geAnimation* in) {
     this->nodeAnimation = in;
 }
 
-vector<string>& Node::getChildrenIDVector() {
+std::vector<std::string>& Node::getChildrenIDVector() {
     return this->childrenIdVector;
 }
 
-vector<Node*>& Node::getChildrenVector() {
+std::vector<Node*>& Node::getChildrenVector() {
     return this->childrenVector;
 }
 
@@ -77,7 +77,7 @@ Appearance* Node::getAppearance() {
     return this->nodeAppearance;
 }
 
-string Node::getNodeID() {
+std::string Node::getNodeID() {
     return this->ID;
 }
 
@@ -91,7 +91,7 @@ void Node::calculateNodeMatrix() {
         return;
     }
 
-    for (list<geTransform*>::iterator k = transformList.begin(); k != transformList.end(); k++) {
+    for (std::list<geTransform*>::iterator k = transformList.begin(); k != transformList.end(); k++) {
         setTransformationMatrix(multiplyMatrix((*k)->getTransformationMatrix(), transformationsMatrix));
     }
 
@@ -178,14 +178,14 @@ void Node::drawHelper() {
 
     /* If there are primitives draw them */
     if (!this->primitiveVector.empty()) {
-        for (vector<Primitives::Base*>::iterator it = this->primitiveVector.begin(); it != this->primitiveVector.end(); it++) {
+        for (std::vector<Primitives::Base*>::iterator it = this->primitiveVector.begin(); it != this->primitiveVector.end(); it++) {
             (*it)->draw(appearanceStack.top()->getTextureSWrap(), appearanceStack.top()->getTextureTWrap());
         }
     }
 
     /* Check if we have to go deeper */
     if (!childrenVector.empty()) {
-        for (vector<Node*>::iterator it = this->childrenVector.begin(); it != this->childrenVector.end(); it++) {
+        for (std::vector<Node*>::iterator it = this->childrenVector.begin(); it != this->childrenVector.end(); it++) {
             /* Call this method again but from the child node */
             (*it)->draw();
         }
@@ -201,14 +201,14 @@ void Node::drawHelper() {
 
 /* Prints a 4x4 matrix from a 1x16 GLfloat array */
 void Node::printMatrix16x1(GLfloat* in) {
-    cout.precision(5);
+    std::cout.precision(5);
     std::cout.setf(std::ios::fixed, std::ios::floatfield);
 
-    cout << "|" << in[0] << " " << in[1] << " " << in[2] << " " << in[3] << "|" << endl;
-    cout << "|" << in[4] << " " << in[5] << " " << in[6] << " " << in[7] << "|" << endl;
-    cout << "|" << in[8] << " " << in[9] << " " << in[10] << " " << in[11] << "|" << endl;
-    cout << "|" << in[12] << " " << in[13] << " " << in[14] << " " << in[15] << "|" << endl;
-    cout << endl;
+    std::cout << "|" << in[0] << " " << in[1] << " " << in[2] << " " << in[3] << "|" << std::endl;
+    std::cout << "|" << in[4] << " " << in[5] << " " << in[6] << " " << in[7] << "|" << std::endl;
+    std::cout << "|" << in[8] << " " << in[9] << " " << in[10] << " " << in[11] << "|" << std::endl;
+    std::cout << "|" << in[12] << " " << in[13] << " " << in[14] << " " << in[15] << "|" << std::endl;
+    std::cout << std::endl;
 
     std::cout.unsetf(std::ios::floatfield);
     std::cout.unsetf(std::ios::fixed);
@@ -220,7 +220,7 @@ Node::~Node() {
 
 /******************** GRAPH ********************/
 
-SceneGraph::SceneGraph(string root) {
+SceneGraph::SceneGraph(std::string& root) {
     this->rootID = root;
     this->rootNode = NULL;
 
@@ -262,7 +262,8 @@ SceneGraph::SceneGraph(string root) {
 
     this->shininess = 2;
 
-    this->defaultRootAppearance = new Appearance("_INTERNAL_ROOT_APPEARANCE", emissive, ambient, diffuse, specular, shininess);
+    const std::string internalAppearanceName = "_INTERNAL_ROOT_APPEARANCE";
+    this->defaultRootAppearance = new Appearance(internalAppearanceName, emissive, ambient, diffuse, specular, shininess);
 
     this->firstRun = true;
 }
@@ -279,7 +280,7 @@ void SceneGraph::importNodesPointerVector(std::vector<Node*>& inputNodes) {
     if (!inputNodes.empty()) {
 
         /* Find root node and then remove the pointer from the inputNodes vector */
-        for (vector<Node*>::iterator k = inputNodes.begin(); k != inputNodes.end();) {
+        for (std::vector<Node*>::iterator k = inputNodes.begin(); k != inputNodes.end();) {
             if (this->rootID == (*k)->getNodeID()) {
                 setRootNode((*k));
                 k = inputNodes.erase(k);
@@ -318,9 +319,9 @@ void SceneGraph::importNodesPointerVectorHelper(std::vector<Node*>& inputNodes, 
 
     if (!inputNodes.empty()) {
         /* Find children by ID then add pointer to vector */
-        for (vector<string>::iterator si = parent->getChildrenIDVector().begin(); si != parent->getChildrenIDVector().end(); si++) {
+        for (std::vector<std::string>::iterator si = parent->getChildrenIDVector().begin(); si != parent->getChildrenIDVector().end(); si++) {
 
-            for (vector<Node*>::iterator sp = inputNodes.begin(); sp != inputNodes.end(); sp++) {
+            for (std::vector<Node*>::iterator sp = inputNodes.begin(); sp != inputNodes.end(); sp++) {
                 if ((*sp)->getNodeID() == (*si)) {
                     /* Children matches */
                     parent->getChildrenVector().push_back(*sp);
@@ -332,7 +333,7 @@ void SceneGraph::importNodesPointerVectorHelper(std::vector<Node*>& inputNodes, 
         }
 
         /* Recursive search */
-        for (vector<Node*>::iterator it = parent->getChildrenVector().begin(); it != parent->getChildrenVector().end(); it++) {
+        for (std::vector<Node*>::iterator it = parent->getChildrenVector().begin(); it != parent->getChildrenVector().end(); it++) {
             importNodesPointerVectorHelper(inputNodes, *it);
         }
 

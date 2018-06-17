@@ -13,13 +13,11 @@
 #define MATERIAL_TYPE_COLOR 0
 #define MATERIAL_TYPE_MATERIAL 1
 
-using namespace std;
-
 namespace ge {
 
 class Appearance {
 private:
-    string id;
+    std::string id;
     GLfloat emissive[4];
     GLfloat ambient[4];
     GLfloat diffuse[4];
@@ -28,14 +26,14 @@ private:
     GLfloat colour[4];
 
     bool isTextured;
-    string textureRef;
+    std::string textureRef;
     geTexture* texture;
 
     GLfloat sWrap, tWrap;
 
 public:
-    Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess);
-    Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, string iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t);
+    Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess);
+    Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t);
 
     void apply();
 
@@ -55,8 +53,8 @@ public:
     void setTexture(geTexture* input);
     void setTextureWrap(GLfloat iS, GLfloat iT);
 
-    string getTextureReference();
-    string getAppearanceID();
+    std::string getTextureReference();
+    std::string getAppearanceID();
 
     GLfloat getTextureSWrap();
     GLfloat getTextureTWrap();

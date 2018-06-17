@@ -48,7 +48,7 @@
 #include <sstream>
 #define TIXML_STRING		std::string
 #else
-#include "tinystr.h"
+#include <tinystr.hpp>
 #define TIXML_STRING		TiXmlString
 #endif
 

@@ -147,7 +147,7 @@ class Patch: public Base {
         /* Point grid */
         GLfloat *grid;
 
-        vector<gePoint> points;
+        std::vector<gePoint> points;
 
     public:
         Patch (unsigned int iorder, unsigned int ipartsU, unsigned int ipartsV, unsigned int icompute);
@@ -207,7 +207,7 @@ class Vehicle: public Base {
 /* Water line */
 class WaterLine: public Base {
     protected:
-        string heightmap, texturemap, fragmentshader, vertexshader;
+		std::string heightmap, texturemap, fragmentshader, vertexshader;
 
         geTexture* heightmapTexture;
         geTexture* texture;
@@ -219,7 +219,7 @@ class WaterLine: public Base {
         GLfloat dT;
 
     public:
-        WaterLine (string hmap, string tmap, string fshader, string vshader);
+        WaterLine (std::string& hmap, std::string& tmap, std::string& fshader, std::string& vshader);
         void draw (GLfloat s, GLfloat t);
         void update (unsigned long timePassed);
 };

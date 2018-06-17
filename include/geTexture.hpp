@@ -12,9 +12,7 @@
 #include <iostream>
 #include <string>
 
-#include "imagetools.h"
-
-using namespace std;
+#include <imagetools.hpp>
 
 namespace ge {
 
@@ -23,13 +21,13 @@ private:
     // Attributes
     GLuint idOpenGL;
     int width, height;
-    string fileName;
-    string xmlId;
+    std::string fileName;
+    std::string xmlId;
 
     bool loaded;
 
 public:
-    geTexture(string xmlIdIn, string input);
+    geTexture(std::string& xmlIdIn, std::string& input);
 
     GLuint getIdOpenGL();
     int getWidth();
@@ -38,7 +36,7 @@ public:
     void loadTexture();
     void apply();
 
-    string getXmlId();
+    std::string getXmlId();
 
     virtual ~geTexture();
 };

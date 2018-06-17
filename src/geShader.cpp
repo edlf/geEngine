@@ -7,8 +7,6 @@
 #include "includes.hpp"
 #include "geShader.hpp"
 
-using namespace std;
-
 namespace ge {
 
 static char* textFileRead(const char *fileName) {
@@ -41,7 +39,7 @@ static void validateShader(GLuint shader, const char* file = 0) {
 
     glGetShaderInfoLog(shader, BUFFER_SIZE, &length, buffer);
     if (length > 0) {
-        cerr << "Shader " << shader << " (" << (file ? file : "") << ") compile error: " << buffer << endl;
+        std::cerr << "Shader " << shader << " (" << (file ? file : "") << ") compile error: " << buffer << std::endl;
     }
 }
 
@@ -54,14 +52,14 @@ static void validateProgram(GLuint program) {
     memset(buffer, 0, BUFFER_SIZE);
     glGetProgramInfoLog(program, BUFFER_SIZE, &length, buffer);
     if (length > 0) {
-        cerr << "Program " << program << " link error: " << buffer << endl;
+        std::cerr << "Program " << program << " link error: " << buffer << std::endl;
     }
 
     glValidateProgram(program);
     GLint status;
     glGetProgramiv(program, GL_VALIDATE_STATUS, &status);
     if (status == GL_FALSE) {
-        cerr << "Error validating shader " << program << endl;
+        std::cerr << "Error validating shader " << program << std::endl;
     }
 }
 
@@ -73,12 +71,12 @@ geShader::geShader(const char *vsFile, const char *fsFile) {
     const char* fsText = textFileRead(fsFile);
 
     if (vsText == NULL) {
-        cerr << "Problem reading vertex shader file: " << vsFile << endl;
+        std::cerr << "Problem reading vertex shader file: " << vsFile << std::endl;
         return;
     }
 
     if (fsText == NULL) {
-        cerr << "Problem reading fragment shader file: " << fsFile << endl;
+    	std::cerr << "Problem reading fragment shader file: " << fsFile << std::endl;
         return;
     }
 

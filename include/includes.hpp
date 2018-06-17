@@ -13,8 +13,6 @@
 //#define ENGINE_VERBOSE
 /* Remove the comment bellow to see white spheres on light sources */
 //#define LIGHT_SPHERE_ENABLED
-/* Remove the comment bellow to use freeglut */
-#define USE_FREEGLUT
 
 /* OpenGL light max */
 #define MAX_LIGHTS 8
@@ -61,20 +59,11 @@
 #include <stack>
 
 /* OpenGL includes */
-/* glew */
 extern "C"
 {
 #include <GL/glew.h>
 }
-
-/* glut or even better freeGlut */
-#ifdef USE_FREEGLUT
 #include <GL/freeglut.h>
-#else
-#include <GL/glut.h>
-#endif
-
-/* GLUI toolkit */
 #include <GL/glui.h>
 
 #include "geStructs.hpp"

@@ -4,15 +4,13 @@
  *
  * Appearance class methods.
  */
-extern "C" {
-#include "imagetools.h"
-}
-
 #include <iostream>
+
+#include <imagetools.hpp>
 #include <Appearance.hpp>
 
 namespace ge {
-Appearance::Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess) {
+Appearance::Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess) {
     this->id = iID;
 
     setEmissive(iEmissive);
@@ -31,7 +29,7 @@ Appearance::Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor 
     this->tWrap = -1;
 }
 
-Appearance::Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, string iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t) {
+Appearance::Appearance(const std::string& iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, const std::string& iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t) {
     this->id = iID;
 
     setEmissive(iEmissive);
@@ -144,11 +142,11 @@ void Appearance::setTextureWrap(GLfloat iS, GLfloat iT) {
     this->tWrap = iT;
 }
 
-string Appearance::getTextureReference() {
+std::string Appearance::getTextureReference() {
     return this->textureRef;
 }
 
-string Appearance::getAppearanceID() {
+std::string Appearance::getAppearanceID() {
     return this->id;
 }
 

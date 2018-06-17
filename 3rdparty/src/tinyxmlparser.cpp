@@ -25,7 +25,7 @@
 #include <ctype.h>
 #include <stddef.h>
 
-#include "tinyxml.h"
+#include <tinyxml.hpp>
 
 //#define DEBUG_PARSER
 #if defined( DEBUG_PARSER )

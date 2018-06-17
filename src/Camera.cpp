@@ -11,13 +11,13 @@ CameraInterface::CameraInterface(){
 
 }
 
-CameraInterface::CameraInterface(string iId, GLfloat iNear, GLfloat iFar) {
+CameraInterface::CameraInterface(std::string& iId, GLfloat iNear, GLfloat iFar) {
     this->id = iId;
     this->geNear = iNear;
     this->geFar = iFar;
 }
 
-string CameraInterface::getID() {
+std::string CameraInterface::getID() {
     return this->id;
 }
 
@@ -58,7 +58,7 @@ CameraInterface::~CameraInterface() {
 
 }
 
-OrthoCamera::OrthoCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom) :
+OrthoCamera::OrthoCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom) :
         CameraInterface(iId, iNear, iFar) {
 
     this->left = iLeft;
@@ -111,7 +111,7 @@ PerspectiveCamera::PerspectiveCamera() {
     this->examineMode = true;
 }
 
-PerspectiveCamera::PerspectiveCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo) :
+PerspectiveCamera::PerspectiveCamera(std::string& iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo) :
         CameraInterface(iId, iNear, iFar) {
 
     this->angle = iAngle;

@@ -780,20 +780,22 @@ Vehicle::~Vehicle () {
 }
 
 /* Water Line primitive */
-WaterLine::WaterLine (string hmap, string tmap, string fshader, string vshader) {
+WaterLine::WaterLine (std::string& hmap, std::string& tmap, std::string& fshader, std::string& vshader) {
     /* Plane */
     this->plane = new Plane(100);
 
     /* Append the shader folder */
     this->heightmap = hmap;
     this->texturemap = tmap;
-    this->fragmentshader = string (SHADER_FOLDER) + fshader;
-    this->vertexshader = string (SHADER_FOLDER) + vshader;
+    this->fragmentshader = std::string (SHADER_FOLDER) + fshader;
+    this->vertexshader = std::string (SHADER_FOLDER) + vshader;
 
     /* Do not create shader object before openGL is initialized */
     this->waterShader = NULL;
-    this->heightmapTexture = new geTexture (string ("INTERNAL_heightMap"), this->heightmap);
-    this->texture = new geTexture (string ("INTERNAL_textureMap"), this->texturemap);
+    std::string heightMapTextureName = "INTERNAL_heightMap";
+    this->heightmapTexture = new geTexture (heightMapTextureName, this->heightmap);
+    std::string textureName = "INTERNAL_textureMap";
+    this->texture = new geTexture (textureName, this->texturemap);
 
     this->dT = 0;
     this->deltaTimeLoc = 0;

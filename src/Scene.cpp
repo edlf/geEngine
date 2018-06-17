@@ -7,7 +7,7 @@
 #include <Scene.hpp>
 
 namespace ge {
-Scene::Scene(string fileName) {
+Scene::Scene(std::string& fileName) {
     currentCameraPointer = NULL;
 
     parseAndLoadXml(fileName);
@@ -19,7 +19,7 @@ Scene::Scene(string fileName) {
     externalGuiCamera = new PerspectiveCamera();
 }
 
-void Scene::parseAndLoadXml(string fileName) {
+void Scene::parseAndLoadXml(std::string& fileName) {
     xmlGlobalsLoaded = false;
     xmlCamerasLoaded = false;
     xmlLightsLoaded = false;
@@ -127,16 +127,16 @@ void Scene::xmlLoadGlobals() {
     geColor bgColor = getColorFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_BACKGROUND, Xml::ATTRIBUTE_BACKGROUND_ERROR);
     setBackgroundColor(bgColor);
 
-    string drawMode = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_DRAWMODE, Xml::ATTRIBUTE_DRAWMODE_ERROR);
+    std::string drawMode = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_DRAWMODE, Xml::ATTRIBUTE_DRAWMODE_ERROR);
     setDrawMode(drawMode);
 
-    string shadingMode = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_SHADING, Xml::ATTRIBUTE_SHADING_ERROR);
+    std::string shadingMode = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_SHADING, Xml::ATTRIBUTE_SHADING_ERROR);
     setShadingMode(shadingMode);
 
-    string cullFace = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_CULLFACE, Xml::ATTRIBUTE_CULLFACE_ERROR);
+    std::string cullFace = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_CULLFACE, Xml::ATTRIBUTE_CULLFACE_ERROR);
     setCullFace(cullFace);
 
-    string cullOrder = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_CULLORDER, Xml::ATTRIBUTE_CULLORDER_ERROR);
+    std::string cullOrder = getStringFromElementAttribute(xmlGlobalsElement, Xml::ATTRIBUTE_CULLORDER, Xml::ATTRIBUTE_CULLORDER_ERROR);
     setCullOrder(cullOrder);
 
     xmlGlobalsLoaded = true;
@@ -165,7 +165,7 @@ void Scene::xmlLoadCameras() {
 
         /* Camera is perspective */
         if (strcmp(xmlCameraElement->Value(), Xml::SECTION_CAMERA_PERSPECTIVE) == 0) {
-            string cameraId;
+        	std::string cameraId;
             float nearIn, farIn, angle;
             gePoint pos, target;
 
@@ -183,7 +183,7 @@ void Scene::xmlLoadCameras() {
 
         /* Camera is ortho */
         if (strcmp(xmlCameraElement->Value(), Xml::SECTION_CAMERA_ORTHO) == 0) {
-            string cameraId;
+        	std::string cameraId;
             float nearIn, farIn, left, right, top, bottom;
 
             cameraId = getStringFromElementAttribute(xmlCameraElement, Xml::ATTRIBUTE_ID, Xml::SECTION_CAMERA_ID_ERROR);
@@ -220,13 +220,13 @@ void Scene::xmlLoadLighting() {
     unsigned int numberOfOmniLights = 0, numberOfSpotLights = 0;
     this->numberOfLights = 0;
 
-    string lightingDS = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED, Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED_ERROR);
+    std::string lightingDS = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED, Xml::ATTRIBUTE_LIGHTING_DOUBLESIDED_ERROR);
     lightingDoubleSided = validateBoolean(lightingDS);
 
-    string lightingL = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_LOCAL, Xml::ATTRIBUTE_LIGHTING_LOCAL_ERROR);
+    std::string lightingL = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_LOCAL, Xml::ATTRIBUTE_LIGHTING_LOCAL_ERROR);
     lightingLocal = validateBoolean(lightingL);
 
-    string lightingE = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_ENABLED, Xml::ATTRIBUTE_LIGHTING_ENABLED_ERROR);
+    std::string lightingE = getStringFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_ENABLED, Xml::ATTRIBUTE_LIGHTING_ENABLED_ERROR);
     lightingEnable = validateBoolean(lightingE);
 
     geColor ambientC = getColorFromElementAttribute(xmlLightingElement, Xml::ATTRIBUTE_LIGHTING_AMBIENT, Xml::ATTRIBUTE_LIGHTING_G_AMBIENT_ERROR);
@@ -244,14 +244,14 @@ void Scene::xmlLoadLighting() {
 
         /* Omni light */
         if (strcmp(xmlLightElement->Value(), Xml::SECTION_LIGHTING_OMNI) == 0) {
-            string lightId;
+        	std::string lightId;
             bool lightEnable;
             gePoint location;
             geColor ambient, diffuse, specular;
 
             lightId = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
 
-            string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
+            std::string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
             lightEnable = validateBoolean(enabled);
 
             location = getPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
@@ -265,7 +265,7 @@ void Scene::xmlLoadLighting() {
 
         /* Spot light */
         if (strcmp(xmlLightElement->Value(), Xml::SECTION_LIGHTING_SPOT) == 0) {
-            string lightId;
+        	std::string lightId;
             bool lightEnable;
             float angle, exponent;
             gePoint location, direction;
@@ -273,7 +273,7 @@ void Scene::xmlLoadLighting() {
 
             lightId = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ID, Xml::SECTION_LIGHTING_ID_ERROR);
 
-            string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
+            std::string enabled = getStringFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_ENABLED, Xml::SECTION_LIGHTING_ENABLED_ERROR);
             lightEnable = validateBoolean(enabled);
 
             location = getPointFromElementAttribute(xmlLightElement, Xml::ATTRIBUTE_LIGHTING_LOCATION, Xml::ATTRIBUTE_LIGHTING_LOCATION_ERROR);
@@ -292,7 +292,7 @@ void Scene::xmlLoadLighting() {
         xmlLightElement = xmlLightElement->NextSiblingElement();
 
         if (this->numberOfLights == MAX_LIGHTS) {
-            cout << "XML: Lighting: Light limit reached, ignoring lights." << endl;
+        	std::cout << "XML: Lighting: Light limit reached, ignoring lights." << std::endl;
             break;
         }
     }
@@ -320,7 +320,7 @@ void Scene::xmlLoadTextures() {
             texturesLastRun = true;
         }
 
-        string textureId, textureFileName;
+        std::string textureId, textureFileName;
         textureId = getStringFromElementAttribute(xmlTextureElement, Xml::ATTRIBUTE_ID, Xml::SECTION_TEXTURE_ID_ERROR);
         textureFileName = getStringFromElementAttribute(xmlTextureElement, Xml::ATTRIBUTE_FILE, Xml::SECTION_TEXTURE_FILE_ERROR);
 
@@ -350,7 +350,7 @@ void Scene::xmlLoadAppearances() {
             appearanceLastRun = true;
         }
 
-        string appearanceId, textureId;
+        std::string appearanceId, textureId;
         float shininess, texlength_s, texlength_t;
         geColor emissive, ambient, diffuse, specular;
         bool hasTexture;
@@ -395,7 +395,7 @@ void Scene::xmlLoadGraph() {
     }
 
     /* Root ID */
-    string rootId;
+    std::string rootId;
     rootId = getStringFromElementAttribute(xmlGraphElement, Xml::ATTRIBUTE_GRAPH_ROOTID, Xml::ATTRIBUTE_GRAPH_ROOTID_ERROR);
 
     /* Create geGraph object */
@@ -416,7 +416,7 @@ void Scene::xmlLoadGraph() {
             nodeLastRun = true;
         }
 
-        string nodeId;
+        std::string nodeId;
 
         /* Id */
         nodeId = getStringFromElementAttribute(xmlNodeElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_ID_ERROR);
@@ -426,7 +426,7 @@ void Scene::xmlLoadGraph() {
         bool displayListAttribute = getAttributeExistence(xmlNodeElement, Xml::ATTRIBUTE_NODE_DISPLAYLIST);
 
         if (displayListAttribute) {
-            string displayListTemp;
+        	std::string displayListTemp;
             displayListTemp = getStringFromElementAttribute(xmlNodeElement, Xml::ATTRIBUTE_NODE_DISPLAYLIST, Xml::ATTRIBUTE_NODE_DISPLAYLIST_ERROR);
             displayList = validateBoolean(displayListTemp);
         } else {
@@ -463,7 +463,7 @@ void Scene::xmlLoadGraph() {
             }
 
             if (strcmp(xmlTransformElement->Value(), Xml::SECTION_TRANSFORM_ROTATE) == 0) {
-                string axis;
+            	std::string axis;
                 int axisInt;
                 float angle;
 
@@ -506,7 +506,7 @@ void Scene::xmlLoadGraph() {
         if (xmlAppearancerefElement == NULL) {
 
         } else {
-            string appearanceId;
+        	std::string appearanceId;
             /* Id */
             appearanceId = getStringFromElementAttribute(xmlAppearancerefElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_APPEARANCE_ID_ERROR);
 
@@ -520,7 +520,7 @@ void Scene::xmlLoadGraph() {
 
         } else {
             /* Id */
-            string animationId;
+        	std::string animationId;
             animationId = getStringFromElementAttribute(xmlAnimationrefElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_ANIMATION_ID_ERROR);
 
             temporaryNode->setAnimation(getAnimationByString(animationId));
@@ -717,7 +717,7 @@ void Scene::xmlLoadGraph() {
 
             /* Water line */
             if (strcmp(xmlChildrenElement->Value(), Xml::SECTION_PRIMITIVE_WATERLINE) == 0) {
-                string hmap, tmap, fshader, vshader;
+            	std::string hmap, tmap, fshader, vshader;
 
                 hmap = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_HEIGHTMAP, Xml::ATTRIBUTE_PRIMITIVE_WL_HEIGHTMAP_ERROR);
                 tmap = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_PRIMITIVE_TEXTUREMAP, Xml::ATTRIBUTE_PRIMITIVE_WL_TEXTUREMAP_ERROR);
@@ -738,7 +738,7 @@ void Scene::xmlLoadGraph() {
 
             /* Noderef */
             if (strcmp(xmlChildrenElement->Value(), Xml::REFERENCE_NODE) == 0) {
-                string nodeReferenceId;
+            	std::string nodeReferenceId;
                 nodeReferenceId = getStringFromElementAttribute(xmlChildrenElement, Xml::ATTRIBUTE_ID, Xml::SECTION_GRAPH_CHILDREN_ID_ERROR);
 
                 /* Set reference id */
@@ -785,7 +785,7 @@ void Scene::xmlLoadAnimations() {
             animationsLastRun = true;
         }
 
-        string animationId, animationType;
+        std::string animationId, animationType;
         float animationSpan;
         unsigned int animationTypeNumber;
 
@@ -858,19 +858,19 @@ TiXmlElement *Scene::findChildByAttribute(TiXmlElement *parent, const char * att
     return child;
 }
 
-string Scene::getStringFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error) {
-    string output;
+std::string Scene::getStringFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
+	std::string output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
     if (valString) {
-        output = string(valString);
+        output = std::string(valString);
     } else {
         throw geException(Error, true, iElement->Row());
     }
     return output;
 }
 
-gePoint Scene::getPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error) {
+gePoint Scene::getPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
     gePoint output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -883,7 +883,7 @@ gePoint Scene::getPointFromElementAttribute(TiXmlElement* iElement, char const* 
     return output;
 }
 
-geColor Scene::getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error) {
+geColor Scene::getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
     geColor output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -896,7 +896,7 @@ geColor Scene::getColorFromElementAttribute(TiXmlElement* iElement, char const* 
     return output;
 }
 
-float Scene::getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error) {
+float Scene::getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
     float output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -909,7 +909,7 @@ float Scene::getFloatFromElementAttribute(TiXmlElement* iElement, char const* iA
     return output;
 }
 
-unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error) {
+unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
     unsigned int output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -932,7 +932,7 @@ bool Scene::getAttributeExistence(TiXmlElement* iElement, char const* iAttribute
     }
 }
 
-ge2dPoint Scene::get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error) {
+ge2dPoint Scene::get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error) {
     ge2dPoint output;
     char * valString = (char *) iElement->Attribute(iAttribute);
 
@@ -977,7 +977,7 @@ GLfloat Scene::validateOpenGLColour(GLfloat input) {
     return input;
 }
 
-bool Scene::validateBoolean(string input) {
+bool Scene::validateBoolean(std::string& input) {
     if (input == Xml::ATTRIBUTE_VALUE_TRUE) {
         return true;
     }
@@ -990,7 +990,7 @@ bool Scene::validateBoolean(string input) {
     return false;
 }
 
-void Scene::setDrawMode(string input) {
+void Scene::setDrawMode(std::string& input) {
     if ((input == Xml::ATTRIBUTE_VALUE_DRAWMODE_FILL) || (input == Xml::ATTRIBUTE_VALUE_DRAWMODE_LINE) || (input == Xml::ATTRIBUTE_VALUE_DRAWMODE_POINT)) {
         this->drawMode = input;
 
@@ -999,7 +999,7 @@ void Scene::setDrawMode(string input) {
     }
 }
 
-void Scene::setShadingMode(string input) {
+void Scene::setShadingMode(std::string& input) {
     if ((input == Xml::ATTRIBUTE_VALUE_SHADING_FLAT) || (input == Xml::ATTRIBUTE_VALUE_SHADING_GOURAUD)) {
         this->shadingMode = input;
     } else {
@@ -1007,7 +1007,7 @@ void Scene::setShadingMode(string input) {
     }
 }
 
-void Scene::setCullFace(string input) {
+void Scene::setCullFace(std::string& input) {
     if ((input == Xml::ATTRIBUTE_VALUE_CULLFACE_NONE) || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_BACK) || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_FRONT) || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_BOTH)) {
         this->cullFace = input;
     } else {
@@ -1015,7 +1015,7 @@ void Scene::setCullFace(string input) {
     }
 }
 
-void Scene::setCullOrder(string input) {
+void Scene::setCullOrder(std::string& input) {
     if ((input == Xml::ATTRIBUTE_VALUE_CULLORDER_CCW) || (input == Xml::ATTRIBUTE_VALUE_CULLORDER_CW)) {
         this->cullOrder = input;
     } else {
@@ -1097,21 +1097,21 @@ GLboolean Scene::getLightingEnableStatus() {
 
 void Scene::init() {
 #ifdef ENGINE_VERBOSE
-    cout << "Setting up globals" << endl;
+	std::cout << "Setting up globals" << std::endl;
 #endif
     applyGlobals();
 #ifdef ENGINE_VERBOSE
-    cout << "Setting up lights" << endl;
+    std::cout << "Setting up lights" << std::endl;
 #endif
     initLights();
 
 #ifdef ENGINE_VERBOSE
-    cout << "Setting up textures" << endl;
+    std::cout << "Setting up textures" << std::endl;
 #endif
     initTextures();
 
 #ifdef ENGINE_VERBOSE
-    cout << "Assigning textures to respective appearances" << endl;
+    std::cout << "Assigning textures to respective appearances" << std::endl;
 #endif
     initAppearanceTextures();
 
@@ -1132,7 +1132,7 @@ void Scene::initLights() {
     if (!this->lightVector.empty ()) {
         for (std::vector<geLight*>::iterator it = lightVector.begin (); it != this->lightVector.end (); it++) {
             if ((*it)->getLightEnableStatus ()) {
-                cout << "Light enabled: [" << (*it)->getID () << "]" << endl;
+            	std::cout << "Light enabled: [" << (*it)->getID () << "]" << std::endl;
             }
         }
     }
@@ -1151,7 +1151,7 @@ void Scene::initAppearanceTextures() {
     if (!this->textureVector.empty() && this->xmlAppearancesLoaded && this->xmlTexturesLoaded) {
         for (std::vector<Appearance*>::iterator it = appearanceVector.begin(); it != this->appearanceVector.end(); it++) {
 
-            string apperanceRef = (*it)->getTextureReference();
+        	std::string apperanceRef = (*it)->getTextureReference();
 
             for (std::vector<geTexture*>::iterator jt = textureVector.begin(); jt != this->textureVector.end(); jt++) {
                 if ((*jt)->getXmlId() == apperanceRef) {
@@ -1175,7 +1175,7 @@ void Scene::setInitialCamera() {
         throw geException("Current camera pointer is not NULL!", true);
     }
 
-    vector<CameraInterface*>::iterator cameraIt;
+    std::vector<CameraInterface*>::iterator cameraIt;
 
     cameraIt = cameraVector.begin();
     while (cameraIt != cameraVector.end()) {
@@ -1241,14 +1241,14 @@ GLfloat* Scene::getViewProjection() {
 void Scene::update(unsigned long millis) {
     /* Call the animations update */
     if (!this->animationsVector.empty()) {
-        for (vector<geAnimation*>::iterator it = this->animationsVector.begin(); it != this->animationsVector.end(); ++it) {
+        for (std::vector<geAnimation*>::iterator it = this->animationsVector.begin(); it != this->animationsVector.end(); ++it) {
             (*it)->updateAnimation(millis);
         }
     }
 
     /* Call the shader update */
     if (!this->waterLineVector.empty()) {
-        for (vector<Primitives::WaterLine*>::iterator it = this->waterLineVector.begin(); it != this->waterLineVector.end(); ++it) {
+        for (std::vector<Primitives::WaterLine*>::iterator it = this->waterLineVector.begin(); it != this->waterLineVector.end(); ++it) {
             (*it)->update(millis);
         }
     }
@@ -1257,7 +1257,7 @@ void Scene::update(unsigned long millis) {
 void Scene::activateCamera(unsigned int i) {
     if (i < this->cameraVector.size()) {
         currentCameraPointer = this->cameraVector.at(i);
-        cout << ".";
+        std::cout << ".";
         // CGFapplication::activeApp->forceRefresh();
     } else {
         throw geException("Invalid camera chosen.", true);
@@ -1270,11 +1270,11 @@ void Scene::setCurrentWindowSize(int windowX, int windowY) {
     this->aspectRatio = (double) windowX / (double) windowY;
 }
 
-Appearance* Scene::getAppearanceByString(string in) {
+Appearance* Scene::getAppearanceByString(std::string& in) {
     if (this->xmlAppearancesLoaded) {
 
         if (!this->appearanceVector.empty()) {
-            for (vector<Appearance*>::iterator it = this->appearanceVector.begin(); it != this->appearanceVector.end(); ++it) {
+            for (std::vector<Appearance*>::iterator it = this->appearanceVector.begin(); it != this->appearanceVector.end(); ++it) {
                 if ((*it)->getAppearanceID() == in) {
                     return *it;
                 }
@@ -1292,11 +1292,11 @@ Appearance* Scene::getAppearanceByString(string in) {
     }
 }
 
-geAnimation* Scene::getAnimationByString(string in) {
+geAnimation* Scene::getAnimationByString(std::string& in) {
     if (this->xmlAnimationsLoaded) {
 
         if (!this->animationsVector.empty()) {
-            for (vector<geAnimation*>::iterator it = this->animationsVector.begin(); it != this->animationsVector.end(); ++it) {
+            for (std::vector<geAnimation*>::iterator it = this->animationsVector.begin(); it != this->animationsVector.end(); ++it) {
                 if ((*it)->getID() == in) {
                     return *it;
                 }
@@ -1319,7 +1319,7 @@ void Scene::changeCameraToExernal() {
 }
 
 void Scene::changeCameraToSceneDefault() {
-    vector<CameraInterface*>::iterator cameraIt;
+	std::vector<CameraInterface*>::iterator cameraIt;
     cameraIt = cameraVector.begin();
     while (cameraIt != cameraVector.end()) {
         if ((*cameraIt)->getID() == this->initialCamera) {
@@ -1375,7 +1375,7 @@ void Scene::enableLight(unsigned int number) {
     lightVector[number]->enable();
 }
 
-string Scene::getLightID(unsigned int number) {
+std::string Scene::getLightID(unsigned int number) {
     return this->lightVector[number]->getID();
 }
 
@@ -1387,7 +1387,7 @@ void Scene::resetUserCamera() {
     externalGuiCamera->resetCamera();
 }
 
-string Scene::getCameraID(unsigned int number) {
+std::string Scene::getCameraID(unsigned int number) {
     return this->cameraVector[number]->getID();
 }
 
@@ -1407,7 +1407,7 @@ unsigned int Scene::getCurrentCamera() {
 
 void Scene::moveVehicleUp() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveUp();
         }
     }
@@ -1415,7 +1415,7 @@ void Scene::moveVehicleUp() {
 
 void Scene::moveVehicleDown() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveDown();
         }
     }
@@ -1423,7 +1423,7 @@ void Scene::moveVehicleDown() {
 
 void Scene::moveVehicleFront() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveFront();
         }
     }
@@ -1431,7 +1431,7 @@ void Scene::moveVehicleFront() {
 
 void Scene::moveVehicleBack() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveBack();
         }
     }
@@ -1439,7 +1439,7 @@ void Scene::moveVehicleBack() {
 
 void Scene::moveVehicleLeft() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveLeft();
         }
     }
@@ -1447,7 +1447,7 @@ void Scene::moveVehicleLeft() {
 
 void Scene::moveVehicleRight() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->moveRight();
         }
     }
@@ -1455,7 +1455,7 @@ void Scene::moveVehicleRight() {
 
 void Scene::tiltVehicleLeft() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->tiltLeft();
         }
     }
@@ -1463,7 +1463,7 @@ void Scene::tiltVehicleLeft() {
 
 void Scene::tiltVehicleRight() {
     if (!this->sceneVehicles.empty()) {
-        for (vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
+        for (std::vector<Primitives::Vehicle*>::iterator i = sceneVehicles.begin(); i != sceneVehicles.end(); i++) {
             (*i)->tiltRight();
         }
     }

@@ -4,7 +4,6 @@
  * Entry point and user interface methods.
  */
 #include <Application.hpp>
-#include <functional>
 
 namespace ge {
 /* Input args */
@@ -27,16 +26,16 @@ unsigned int Application::numberOfCameraComboBoxEntries;
 
 int Application::lightEnableStatus[8];
 GLUI_Checkbox* Application::lightcb[8];
-vector<string> Application::lightIDs;
+std::vector<std::string> Application::lightIDs;
 
 GLUI_Listbox* Application::cameraListBox;
-vector<string> Application::cameraIDs;
+std::vector<std::string> Application::cameraIDs;
 int Application::cameraListBoxStatus;
 
 int Application::polygonModeStatus;
 
 /* Scene Pointer */
-Scene* Application::scene;
+ge::Scene* Application::scene;
 
 /* State and control variables to handle mouse interaction */
 int  Application::displacementX;
@@ -57,7 +56,7 @@ Application::Application(int argCount, char** args, std::string& sceneFileName){
 	this->sceneFile = sceneFileName;
 
 	try {
-		scene = new Scene(sceneFile);
+		scene = new ge::Scene(sceneFile);
 	} catch (geException& e) {
 	    e.printerErrorMessage();
 	}
@@ -67,7 +66,7 @@ Application::Application(int argCount, char** args, std::string& sceneFileName){
 	geInitialize();
 
 	/* RTFM */
-	cout << "Check readme file for instructions." << endl;
+	std::cout << "Check readme file for instructions." << std::endl;
 
 	glutMainLoop();
 }
@@ -79,7 +78,7 @@ Application::~Application(){
 /* Call snapshot function and tell user about it */
 void Application::snapshot() {
     takeSnapshot(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-    cout << "Snapshot taken." << endl;
+    std::cout << "Snapshot taken." << std::endl;
 }
 
 /* Toggle a light */
@@ -365,7 +364,7 @@ void Application::geInitialize() {
 
     /* Check if scene has a valid pointer */
     if (scene == NULL) {
-        cerr << "Null scene pointer. You got bugs to fix!" << endl;
+        std::cerr << "Null scene pointer. You got bugs to fix!" << std::endl;
         exit(-1);
     }
 

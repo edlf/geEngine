@@ -14,11 +14,10 @@
 #include <SceneGraph.hpp>
 #include <xmlDefinitions.hpp>
 #include "includes.hpp"
-#include "tinyxml.h"
+
+#include <tinyxml.hpp>
 
 #include "geLight.hpp"
-
-using namespace std;
 
 namespace ge {
 
@@ -28,24 +27,24 @@ private:
     int windowSizeX, windowSizeY;
     double aspectRatio;
 
-    string name;
+    std::string name;
 
     /* Globals */
     GLfloat backgroundColour[4];
-    string drawMode;
+    std::string drawMode;
     int drawModeInt;
-    string shadingMode;
-    string cullFace;
-    string cullOrder;
+    std::string shadingMode;
+    std::string cullFace;
+    std::string cullOrder;
 
     void setBackgroundColor(geColor in);
     void applyGlobals();
     /* End globals */
 
     /* Cameras */
-    string initialCamera;
+    std::string initialCamera;
     CameraInterface* currentCameraPointer;
-    vector<CameraInterface*> cameraVector;
+    std::vector<CameraInterface*> cameraVector;
 
     unsigned int numberOfCameras;
 
@@ -59,34 +58,34 @@ private:
     GLboolean lightingLocal;
     GLboolean lightingEnable;
     GLfloat ambientLightColour[4];
-    vector<geLight*> lightVector;
+    std::vector<geLight*> lightVector;
     unsigned int numberOfLights;
 
     void setAmbientLightColor(geColor in);
     void initLights();
 
     /* Textures */
-    vector<geTexture*> textureVector;
+    std::vector<geTexture*> textureVector;
     void initTextures();
 
     /* Appearances */
-    vector<Appearance*> appearanceVector;
-    Appearance* getAppearanceByString(string in);
+    std::vector<Appearance*> appearanceVector;
+    Appearance* getAppearanceByString(std::string& in);
     void initAppearanceTextures();
 
     /* Graph */
     SceneGraph* graph;
-    vector<Node*> unprocessedNodes;
+    std::vector<Node*> unprocessedNodes;
 
     /* Animations */
-    vector<geAnimation*> animationsVector;
-    geAnimation* getAnimationByString(string in);
+    std::vector<geAnimation*> animationsVector;
+    geAnimation* getAnimationByString(std::string& in);
 
     /* Shader */
-    vector<Primitives::WaterLine*> waterLineVector;
+    std::vector<Primitives::WaterLine*> waterLineVector;
 
     /* Internal variables and methods for xml parsing */
-    void parseAndLoadXml(string fileName);
+    void parseAndLoadXml(std::string& fileName);
 
     char* xmlFileName;
     TiXmlDocument* doc;
@@ -128,25 +127,25 @@ private:
     TiXmlElement* xmlAnimationsElement;
 
     /* XML Parse methods */
-    string getStringFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error);
-    gePoint getPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error);
-    geColor getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error);
-    float getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error);
-    unsigned int getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error);
+    std::string getStringFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    gePoint getPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    geColor getColorFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    float getFloatFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
+    unsigned int getUnsignedIntFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
     bool getAttributeExistence(TiXmlElement* iElement, char const* iAttribute);
-    ge2dPoint get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, string Error);
+    ge2dPoint get2DdPointFromElementAttribute(TiXmlElement* iElement, char const* iAttribute, const std::string& Error);
 
     /* End XML related methods */
 
     /* Sanity checks */
     GLfloat validateOpenGLColour(GLfloat input);
-    bool validateBoolean(string input);
+    bool validateBoolean(std::string&);
 
     /* Validate and set strings */
-    void setDrawMode(string input);
-    void setShadingMode(string input);
-    void setCullFace(string input);
-    void setCullOrder(string input);
+    void setDrawMode(std::string&);
+    void setShadingMode(std::string&);
+    void setCullFace(std::string&);
+    void setCullOrder(std::string&);
 
     /* Internal display functions */
     void displayLights();
@@ -158,13 +157,13 @@ private:
     unsigned long lastUpdate;
 
     /* Vehicle pointer */
-    vector<Primitives::Vehicle*> sceneVehicles;
+    std::vector<Primitives::Vehicle*> sceneVehicles;
 
 public:
     PerspectiveCamera* externalGuiCamera;
 
     /* Constructor who receives an string with the file name to load the scene from. */
-    Scene(string fileName);
+    Scene(std::string& fileName);
 
     /* Gets */
     GLboolean getLightingEnableStatus();
@@ -184,11 +183,11 @@ public:
     bool getLightStatus(unsigned int number);
     void disableLight(unsigned int number);
     void enableLight(unsigned int number);
-    string getLightID(unsigned int number);
+    std::string getLightID(unsigned int number);
 
     unsigned int getNumberOfCameras();
     void resetUserCamera();
-    string getCameraID(unsigned int number);
+    std::string getCameraID(unsigned int number);
     void setCamera(unsigned int number);
     unsigned int getCurrentCamera();
 

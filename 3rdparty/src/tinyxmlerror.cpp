@@ -22,7 +22,7 @@
  distribution.
  */
 
-#include "tinyxml.h"
+#include <tinyxml.hpp>
 
 // The goal of the seperate error file is to make the first
 // step towards localization. tinyxml (currently) only supports

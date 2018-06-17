@@ -1,3 +1,5 @@
+#include "imagetools.hpp"
+
 #include <time.h>
 
 #include <stdlib.h>
@@ -9,7 +11,7 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.c"
 
-unsigned char * reverseImage(unsigned char* data, int width, int height, int channels) {
+unsigned char * reverseImage(unsigned char* data, const int width, const int height, const int channels) {
 
     int rowWidth = width * channels;
     unsigned char* result = (unsigned char*) malloc(height * rowWidth);
@@ -21,7 +23,7 @@ unsigned char * reverseImage(unsigned char* data, int width, int height, int cha
 
 }
 
-void takeSnapshot(int width, int height) {
+void takeSnapshot(const int width, const int height) {
 
     time_t ltime;
     struct tm *Tm;
@@ -51,10 +53,10 @@ void takeSnapshot(int width, int height) {
     free(result);
 }
 
-unsigned char *loadRGBImage(char const *filename, int *w, int *h) {
+unsigned char *loadRGBImage(const std::string& fileName, int *w, int *h) {
     int nChannels;
     unsigned char *result;
-    unsigned char *img = stbi_load(filename, w, h, &nChannels, 3);
+    unsigned char *img = stbi_load(fileName.c_str(), w, h, &nChannels, 3);
     if (img) {
         result = reverseImage(img, *w, *h, 3);
         stbi_image_free(img);

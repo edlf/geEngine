@@ -8,13 +8,11 @@
 
 #include "includes.hpp"
 
-using namespace std;
-
 namespace ge {
 
 class geLight {
 protected:
-    string id;
+    std::string id;
     int openGLid;
     bool enabled;
 
@@ -42,12 +40,10 @@ public:
 
     /* Gets */
     bool getLightEnableStatus();
-    string getID();
+    std::string getID();
 
-    virtual void draw() {
-    } ///< Draws a visible representation of the light (a sphere). It forces an update() of the light.
-    virtual void update() {
-    } ///< Updates the position and direction of the corresponding OpenGL's light. Has to be called after any camera transformations, so that the light is transformed in the proper referential.
+    virtual void draw() = 0;
+    virtual void update() = 0;
     void enable();
     void disable();
 
@@ -59,7 +55,7 @@ class geOmniLight: public geLight {
 protected:
 
 public:
-    geOmniLight(string lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular);
+    geOmniLight(const std::string& lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular);
 
     void draw();
     void update();
@@ -74,7 +70,7 @@ protected:
     GLfloat direction[4];
 
 public:
-    geSpotLight(string lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iAngle, GLfloat iExponent, gePoint iDirection);
+    geSpotLight(const std::string& lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iAngle, GLfloat iExponent, gePoint iDirection);
 
     void setAngle(GLfloat input);
     void setExponent(GLfloat input);

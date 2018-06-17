@@ -14,34 +14,32 @@
 #include "geTransform.hpp"
 #include "geTexture.hpp"
 
-using namespace std;
-
 namespace ge {
 
 class Node {
 protected:
     /* Node related */
-    string ID;
+    std::string ID;
     bool precalcDone;
 
     bool useDisplayList;
     bool displayListCreated;
     GLint displayListID;
 
-    vector<string> childrenIdVector;
-    vector<Node*> childrenVector;
-    list<geTransform*> transformList;
+    std::vector<std::string> childrenIdVector;
+    std::vector<Node*> childrenVector;
+    std::list<geTransform*> transformList;
 
     /* OpenGL related */
     /* The transformationsMatrix only includes current node transforms */
     GLfloat transformationsMatrix[16]; /* Ma */
 
-    vector<GLfloat*> transformationMatrixVector;
+    std::vector<GLfloat*> transformationMatrixVector;
 
     Appearance* nodeAppearance;
     geAnimation* nodeAnimation;
 
-    vector<Primitives::Base*> primitiveVector;
+    std::vector<Primitives::Base*> primitiveVector;
 
     void setTransformationMatrix(GLfloat* in);
 
@@ -50,7 +48,7 @@ protected:
 
     /* Graph related */
     /* Appearance stack */
-    static stack<Appearance*> appearanceStack;
+    static std::stack<Appearance*> appearanceStack;
 
     /* Creating display List (Avoid creating display lists inside of display lists) */
     static bool creatingDisplayList;
@@ -61,22 +59,22 @@ protected:
     void printMatrix16x1(GLfloat* in);
 public:
     /* Constructor */
-    Node(string in, bool displayList);
+    Node(std::string& in, bool displayList);
 
     /* Input */
     void addTransform(geTransform* in);
     void setAppearance(Appearance* in);
     void addPrimitive(Primitives::Base* in);
-    void addChildrenID(string in);
+    void addChildrenID(std::string& in);
     void setAnimation(geAnimation* in);
-    vector<string>& getChildrenIDVector();
-    vector<Node*>& getChildrenVector();
+    std::vector<std::string>& getChildrenIDVector();
+    std::vector<Node*>& getChildrenVector();
 
     /* Precalc */
     void calculateNodeMatrix();
 
     /* Output */
-    string getNodeID();
+    std::string getNodeID();
     Appearance* getAppearance();
     unsigned int getNodeDepth();
 
@@ -89,7 +87,7 @@ public:
 
 class SceneGraph {
 private:
-    string rootID;
+    std::string rootID;
     Node* rootNode;
 
     /* Internal */
@@ -105,7 +103,7 @@ private:
     bool firstRun;
 
 public:
-    SceneGraph(string root);
+    SceneGraph(std::string& root);
 
     void importNodesPointerVector(std::vector<Node*>& inputNodes);
     void importNodesPointerVectorHelper(std::vector<Node*>& unprocessedNodes, Node* parent);

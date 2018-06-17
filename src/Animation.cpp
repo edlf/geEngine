@@ -21,7 +21,7 @@ void geAnimation::updateAngles() {
     angleZ = asin(dZ / dY) * deg2rad;
 }
 
-geAnimation::geAnimation(string iId, float iSpan, unsigned int iType) {
+geAnimation::geAnimation(const std::string& iId, float iSpan, unsigned int iType) {
     if (iType != 1) {
         throw geException("Bug: Invalid type fed into geAnimation!", true);
     }
@@ -106,7 +106,7 @@ unsigned long geAnimation::getDeltaTime() {
     return this->deltaTimeMillis;
 }
 
-string geAnimation::getID() {
+std::string geAnimation::getID() {
     return this->id;
 }
 
