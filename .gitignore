@@ -12,6 +12,10 @@
 *.la
 *.a
 
+# Generated makefiles
+Default/makefile
+*.mk
+
 # Output
 *.d
 geEngine
