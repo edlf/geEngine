@@ -4,61 +4,61 @@
  * Camera class methods.
  */
 
-#include "geCamera.hpp"
+#include <Camera.hpp>
 
-geCamera::geCamera(string iId, GLfloat iNear, GLfloat iFar) {
+CameraInterface::CameraInterface(){
+
+}
+
+CameraInterface::CameraInterface(string iId, GLfloat iNear, GLfloat iFar) {
     this->id = iId;
     this->geNear = iNear;
     this->geFar = iFar;
 }
 
-string geCamera::getID() {
+string CameraInterface::getID() {
     return this->id;
 }
 
-GLfloat geCamera::getNear() {
+GLfloat CameraInterface::getNear() {
     return this->geNear;
 }
 
-GLfloat geCamera::getFar() {
+GLfloat CameraInterface::getFar() {
     return this->geFar;
 }
 
-void geCamera::applyView(double aspectRatio) {
-    /* Empty function, look at ortho or perspective cameras */
-}
-
-void geCamera::updateProjectionMatrix(int width, int height) {
+void CameraInterface::updateProjectionMatrix(int width, int height) {
     float aspect = (float) width / (float) height;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glFrustum(-aspect * .04, aspect * .04, -.04, .04, .4, 500.0);
 }
 
-void geCamera::setPosition(gePoint in) {
+void CameraInterface::setPosition(gePoint in) {
     setX(in.x);
     setY(in.y);
     setZ(in.z);
 }
 
-void geCamera::setX(GLfloat x) {
+void CameraInterface::setX(GLfloat x) {
     this->position[0] = x;
 }
 
-void geCamera::setY(GLfloat y) {
+void CameraInterface::setY(GLfloat y) {
     this->position[1] = y;
 }
 
-void geCamera::setZ(GLfloat z) {
+void CameraInterface::setZ(GLfloat z) {
     this->position[2] = z;
 }
 
-geCamera::~geCamera() {
+CameraInterface::~CameraInterface() {
 
 }
 
-geCameraOrtho::geCameraOrtho(string iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom) :
-        geCamera(iId, iNear, iFar) {
+OrthoCamera::OrthoCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom) :
+        CameraInterface(iId, iNear, iFar) {
 
     this->left = iLeft;
     this->right = iRight;
@@ -66,15 +66,33 @@ geCameraOrtho::geCameraOrtho(string iId, GLfloat iNear, GLfloat iFar, GLfloat iL
     this->bottom = iBottom;
 }
 
-void geCameraOrtho::applyView(double aspectRatio) {
+void OrthoCamera::applyView(double) {
     glOrtho(this->left, this->right, this->bottom, this->top, this->geNear, this->geFar);
 }
 
-geCameraOrtho::~geCameraOrtho() {
+OrthoCamera::~OrthoCamera() {
 
 }
 
-geCameraPerspective::geCameraPerspective() {
+void OrthoCamera::rotateTo(int, float){
+
+}
+
+void OrthoCamera::rotate(int, float) {
+}
+
+void OrthoCamera::setRotation(int, float) {
+}
+
+void OrthoCamera::moveTo(int, float, float) {
+
+}
+
+void OrthoCamera::translate(int, float) {
+
+}
+
+PerspectiveCamera::PerspectiveCamera() {
     angle = 0;
 
     position[0] = 0;
@@ -92,8 +110,8 @@ geCameraPerspective::geCameraPerspective() {
     this->examineMode = true;
 }
 
-geCameraPerspective::geCameraPerspective(string iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo) :
-        geCamera(iId, iNear, iFar) {
+PerspectiveCamera::PerspectiveCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo) :
+        CameraInterface(iId, iNear, iFar) {
 
     this->angle = iAngle;
     this->from[0] = iFrom.x;
@@ -106,7 +124,7 @@ geCameraPerspective::geCameraPerspective(string iId, GLfloat iNear, GLfloat iFar
     this->examineMode = false;
 }
 
-void geCameraPerspective::applyView(double aspectRatio) {
+void PerspectiveCamera::applyView(double aspectRatio) {
     if (this->examineMode) {
         glFrustum(-aspectRatio * .04, aspectRatio * .04, -.04, .04, .1, 500.0);
 
@@ -124,7 +142,7 @@ void geCameraPerspective::applyView(double aspectRatio) {
     }
 }
 
-void geCameraPerspective::rotateTo(int axis, float angle) {
+void PerspectiveCamera::rotateTo(int axis, float angle) {
     if (axis >= 0 && axis <= 2) {
         if (rotation[axis] < angle) {
             rotation[axis] += 0.5f;
@@ -132,19 +150,19 @@ void geCameraPerspective::rotateTo(int axis, float angle) {
     }
 }
 
-void geCameraPerspective::rotate(int axis, float angle) {
+void PerspectiveCamera::rotate(int axis, float angle) {
     if (axis >= 0 && axis <= 2) {
         rotation[axis] += angle;
     }
 }
 
-void geCameraPerspective::setRotation(int axis, float angle) {
+void PerspectiveCamera::setRotation(int axis, float angle) {
     if (axis >= 0 && axis <= 2) {
         rotation[axis] = angle;
     }
 }
 
-void geCameraPerspective::moveTo(int axis, float value, float increment) {
+void PerspectiveCamera::moveTo(int axis, float value, float increment) {
     if (axis >= 0 && axis <= 2) {
         if (position[axis] < value) {
             rotation[axis] += increment;
@@ -152,7 +170,7 @@ void geCameraPerspective::moveTo(int axis, float value, float increment) {
     }
 }
 
-void geCameraPerspective::translate(int axis, float value) {
+void PerspectiveCamera::translate(int axis, float value) {
     this->examineMode = true;
     ///< Moves the camera along _axis_ by _value_ units.
     if (axis >= 0 && axis <= 2) {
@@ -160,7 +178,7 @@ void geCameraPerspective::translate(int axis, float value) {
     }
 }
 
-void geCameraPerspective::resetCamera() {
+void PerspectiveCamera::resetCamera() {
     angle = 0;
 
     position[0] = 0;
@@ -176,6 +194,6 @@ void geCameraPerspective::resetCamera() {
     to[2] = 0;
 }
 
-geCameraPerspective::~geCameraPerspective() {
+PerspectiveCamera::~PerspectiveCamera() {
 
 }

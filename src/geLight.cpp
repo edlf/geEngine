@@ -4,8 +4,8 @@
  * Light class methods.
  */
 
+#include <Primitives.hpp>
 #include "geLight.hpp"
-#include "gePrimitive.hpp"
 
 geOmniLight::geOmniLight(string lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular) {
 

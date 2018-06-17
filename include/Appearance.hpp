@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class geAppearance {
+class Appearance {
 private:
     string id;
     GLfloat emissive[4];
@@ -32,8 +32,8 @@ private:
     GLfloat sWrap, tWrap;
 
 public:
-    geAppearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess);
-    geAppearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, string iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t);
+    Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess);
+    Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess, string iTextureRef, GLfloat iTexlength_s, GLfloat iTexlength_t);
 
     void apply();
 
@@ -59,7 +59,7 @@ public:
     GLfloat getTextureSWrap();
     GLfloat getTextureTWrap();
 
-    virtual ~geAppearance();
+    virtual ~Appearance();
 };
 
 #endif

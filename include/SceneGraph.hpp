@@ -7,16 +7,16 @@
 #ifndef GEGRAPH_HPP_
 #define GEGRAPH_HPP_
 
+#include <Animation.hpp>
+#include <Appearance.hpp>
+#include <Primitives.hpp>
 #include "includes.hpp"
-#include "gePrimitive.hpp"
 #include "geTransform.hpp"
-#include "geAppearance.hpp"
 #include "geTexture.hpp"
-#include "geAnimation.hpp"
 
 using namespace std;
 
-class geNode {
+class Node {
 protected:
     /* Node related */
     string ID;
@@ -27,7 +27,7 @@ protected:
     GLint displayListID;
 
     vector<string> childrenIdVector;
-    vector<geNode*> childrenVector;
+    vector<Node*> childrenVector;
     list<geTransform*> transformList;
 
     /* OpenGL related */
@@ -36,10 +36,10 @@ protected:
 
     vector<GLfloat*> transformationMatrixVector;
 
-    geAppearance* nodeAppearance;
+    Appearance* nodeAppearance;
     geAnimation* nodeAnimation;
 
-    vector<gePrimitive*> primitiveVector;
+    vector<Primitives::Base*> primitiveVector;
 
     void setTransformationMatrix(GLfloat* in);
 
@@ -48,7 +48,7 @@ protected:
 
     /* Graph related */
     /* Appearance stack */
-    static stack<geAppearance*> appearanceStack;
+    static stack<Appearance*> appearanceStack;
 
     /* Creating display List (Avoid creating display lists inside of display lists) */
     static bool creatingDisplayList;
@@ -59,54 +59,54 @@ protected:
     void printMatrix16x1(GLfloat* in);
 public:
     /* Constructor */
-    geNode(string in, bool displayList);
+    Node(string in, bool displayList);
 
     /* Input */
     void addTransform(geTransform* in);
-    void setAppearance(geAppearance* in);
-    void addPrimitive(gePrimitive* in);
+    void setAppearance(Appearance* in);
+    void addPrimitive(Primitives::Base* in);
     void addChildrenID(string in);
     void setAnimation(geAnimation* in);
     vector<string>& getChildrenIDVector();
-    vector<geNode*>& getChildrenVector();
+    vector<Node*>& getChildrenVector();
 
     /* Precalc */
     void calculateNodeMatrix();
 
     /* Output */
     string getNodeID();
-    geAppearance* getAppearance();
+    Appearance* getAppearance();
     unsigned int getNodeDepth();
 
     /* Runtime (Draw method) */
     void draw();
     void drawHelper();
 
-    ~geNode();
+    ~Node();
 };
 
-class geGraph {
+class SceneGraph {
 private:
     string rootID;
-    geNode* rootNode;
+    Node* rootNode;
 
     /* Internal */
-    void setRootNode(geNode* root);
+    void setRootNode(Node* root);
 
     GLfloat identityMatrix[16];
 
     /* Default appearance values */
     GLfloat shininess;
     geColor emissive, ambient, diffuse, specular;
-    geAppearance* defaultRootAppearance;
+    Appearance* defaultRootAppearance;
 
     bool firstRun;
 
 public:
-    geGraph(string root);
+    SceneGraph(string root);
 
-    void importNodesPointerVector(std::vector<geNode*>& inputNodes);
-    void importNodesPointerVectorHelper(std::vector<geNode*>& unprocessedNodes, geNode* parent);
+    void importNodesPointerVector(std::vector<Node*>& inputNodes);
+    void importNodesPointerVectorHelper(std::vector<Node*>& unprocessedNodes, Node* parent);
 
     /* Recursive draw function */
     void draw();

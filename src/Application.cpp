@@ -3,25 +3,87 @@
  *
  * Entry point and user interface methods.
  */
+#include <Application.hpp>
+#include <functional>
 
-#include "geApp.hpp"
 
-string convertUIntToStr(unsigned int i) {
-    string s;
-    stringstream out;
-    out << i;
-    s = out.str();
-    return s;
+/* Input args */
+int     Application::argCount;
+char**  Application::arguments;
+
+std::string Application::sceneFile;
+
+/* glui window variables */
+int Application::mainWindow;
+GLUI* Application::gluiSubWindow;
+int Application::keyModifiers;
+bool Application::panelVisibility;
+
+unsigned int Application::width, Application::height;
+unsigned int Application::mousePosX, Application::mousePosY;
+
+unsigned int Application::numberOfLightCheckboxes;
+unsigned int Application::numberOfCameraComboBoxEntries;
+
+int Application::lightEnableStatus[8];
+GLUI_Checkbox* Application::lightcb[8];
+vector<string> Application::lightIDs;
+
+GLUI_Listbox* Application::cameraListBox;
+vector<string> Application::cameraIDs;
+int Application::cameraListBoxStatus;
+
+int Application::polygonModeStatus;
+
+/* Scene Pointer */
+Scene* Application::scene;
+
+/* State and control variables to handle mouse interaction */
+int  Application::displacementX;
+int  Application::displacementY;
+bool Application::pressingMouseLeft;
+bool Application::pressingMouseMiddle;
+bool Application::pressingMouseRight;
+int  Application::prev_X;
+int  Application::prev_Y;
+
+/* Picking buffer */
+GLuint Application::selectBuf[PICKING_BUFFER_SIZE];
+
+Application::Application(int argCount, char** args, std::string& sceneFileName){
+	this->argCount = argCount;
+	this->arguments = args;
+
+	this->sceneFile = sceneFileName;
+
+	try {
+		scene = new Scene(sceneFile);
+	} catch (geException& e) {
+	    e.printerErrorMessage();
+	}
+
+	glutConfig(argCount, arguments);
+
+	geInitialize();
+
+	/* RTFM */
+	cout << "Check readme file for instructions." << endl;
+
+	glutMainLoop();
+}
+
+Application::~Application(){
+
 }
 
 /* Call snapshot function and tell user about it */
-void snapshot() {
+void Application::snapshot() {
     takeSnapshot(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
     cout << "Snapshot taken." << endl;
 }
 
 /* Toggle a light */
-void toggleLight(unsigned int i) {
+void Application::toggleLight(unsigned int i) {
     if (lightEnableStatus[i] == 1) {
         scene->enableLight(i);
     } else {
@@ -30,7 +92,7 @@ void toggleLight(unsigned int i) {
 }
 
 /* Call function for GLUI */
-void callBack(int control) {
+void Application::callBack(int control) {
     /* Call back IDs
      * 1xx Draw Mode
      * 2xx Lights
@@ -111,11 +173,11 @@ void callBack(int control) {
 }
 
 /* Calls scene display function. */
-void display(void) {
+void Application::display(void) {
     scene->display();
 }
 
-void processMouse(int button, int state, int x, int y) {
+void Application::processMouse(int button, int state, int x, int y) {
     prev_X = x;
     prev_Y = y;
 
@@ -140,9 +202,9 @@ void processMouse(int button, int state, int x, int y) {
     glutPostRedisplay();
 }
 
-void processMouseMoved(int x, int y) {
-    displacementX = x - prev_X;
-    displacementY = y - prev_Y;
+void Application::processMouseMoved(int x, int y) {
+    displacementX = x - static_cast<int>(prev_X);
+    displacementY = y - static_cast<int>(prev_Y);
 
     if (pressingMouseLeft && keyModifiers == 0) {
         scene->externalGuiCamera->rotate(0, displacementY * MOUSE_ROTATE_FACTOR);
@@ -167,7 +229,7 @@ void processMouseMoved(int x, int y) {
     glutPostRedisplay();
 }
 
-void processPassiveMouseMoved(int x, int y) {
+void Application::processPassiveMouseMoved(int x, int y) {
     /* Store mouse pos */
     mousePosX = x;
     mousePosY = y;
@@ -176,14 +238,14 @@ void processPassiveMouseMoved(int x, int y) {
     glutPostRedisplay();
 }
 
-void reshape(int w, int h) {
+void Application::reshape(int w, int h) {
     width = w;
     height = h;
     scene->setCurrentWindowSize(width, height);
     glutPostRedisplay();
 }
 
-void keyboard(unsigned char key, int x, int y) {
+void Application::keyboard(unsigned char key, int x, int y) {
     /* Store mouse pos */
     mousePosX = x;
     mousePosY = y;
@@ -235,7 +297,7 @@ void keyboard(unsigned char key, int x, int y) {
     }
 }
 
-void specialKeyboard(int key, int x, int y) {
+void Application::specialKeyboard(int key, int x, int y) {
     /* Store mouse pos */
     mousePosX = x;
     mousePosY = y;
@@ -265,8 +327,8 @@ void specialKeyboard(int key, int x, int y) {
     }
 }
 
-void glutIdle(void) {
-    /* According to the GLUT specification, the current window is 
+void Application::glutIdle(void) {
+    /* According to the GLUT specification, the current window is
      undefined during an idle callback.  So we need to explicitly change
      it if necessary */
     if (glutGetWindow() != mainWindow) {
@@ -276,16 +338,17 @@ void glutIdle(void) {
     glutPostRedisplay();
 }
 
-void geUpdate(int value) {
+void Application::geUpdate(int value) {
     /* Call the scene update method */
     scene->update(value);
 
     /* Redraw and activate timer again */
     glutPostRedisplay();
+
     glutTimerFunc(GLUT_UPDATE_MS, geUpdate, GLUT_UPDATE_MS);
 }
 
-void geInitialize() {
+void Application::geInitialize() {
     /* Initialize glew */
     glewInit();
 
@@ -387,12 +450,8 @@ void geInitialize() {
     glutTimerFunc(GLUT_UPDATE_MS, geUpdate, GLUT_UPDATE_MS);
 }
 
-void geTerminate() {
-    cout << "Exiting.." << endl;
-}
-
 /* Picking */
-void performPicking(int x, int y) {
+void Application::performPicking(int x, int y) {
     // Sets the buffer to be used for selection and activate selection mode
     glSelectBuffer (PICKING_BUFFER_SIZE, selectBuf);
     glRenderMode(GL_SELECT);
@@ -441,7 +500,7 @@ void performPicking(int x, int y) {
     processHits(hits, selectBuf);
 }
 
-void processHits(GLint hits, GLuint buffer[]) {
+void Application::processHits(GLint hits, GLuint buffer[]) {
     GLuint *ptr = buffer;
     GLuint mindepth = 0xFFFFFFFF;
     GLuint *selected=NULL;
@@ -467,15 +526,17 @@ void processHits(GLint hits, GLuint buffer[]) {
         // this should be replaced by code handling the picked object's ID's (stored in "selected"),
         // possibly invoking a method on the scene class and passing "selected" and "nselected"
         printf("Picked ID's: ");
-        for (int i=0; i<nselected; i++)
-            printf("%d ",selected[i]);
+        for (unsigned int i = 0; i < nselected; ++i) {
+        	printf("%d ",selected[i]);
+        }
         printf("\n");
     }
-    else
-        printf("Nothing selected while picking \n");
+    else {
+    	printf("Nothing selected while picking \n");
+    }
 }
 
-void glutConfig(int argc, char** argv) {
+void Application::glutConfig(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     width  = WINDOW_SIZE_X;
@@ -499,46 +560,3 @@ void glutConfig(int argc, char** argv) {
     gluiSubWindow = GLUI_Master.create_glui_subwindow(mainWindow, GLUI_SUBWINDOW_LEFT);
     gluiSubWindow->set_main_gfx_window(mainWindow);
 }
-
-void PressEnterToExit() {
-    cout << "Press enter to continue..." << flush;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    exit(-1);
-}
-
-/* Main */
-
-int main(int argc, char** argv) {
-    string sceneFileName;
-
-    if (argc == 1) {
-        sceneFileName.append("default.yaf");
-        cout << "No scene defined, attempting to use [" << sceneFileName << "]." << endl;
-    } else if (argc == 2) {
-        sceneFileName.append(argv[1]);
-        cout << "Attempting to use: [" << sceneFileName << "]." << endl;
-    } else {
-        cerr << "Too much arguments!" << endl;
-        PressEnterToExit();
-    }
-
-    try {
-        scene = new geScene(sceneFileName);
-    } catch (geException& e) {
-        e.printerErrorMessage();
-        PressEnterToExit();
-    }
-
-    glutConfig(argc, argv);
-
-    geInitialize();
-
-    /* RTFM */
-    cout << "Check readme file for instructions." << endl;
-
-    glutMainLoop();
-    geTerminate();
-
-    return 0;
-}
-

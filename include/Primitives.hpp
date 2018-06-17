@@ -1,7 +1,7 @@
 /*
  * Eduardo Fernandes
  *
- * Primitive class.
+ * Primitives
  */
 
 #ifndef GEPRIMITIVE_HPP_
@@ -11,7 +11,9 @@
 #include "geTexture.hpp"
 #include "geShader.hpp"
 
-class gePrimitive {
+namespace Primitives {
+
+class Base {
     protected:
         float normal [3];
         void fghCircleTable (double **sint, double **cost, const int n);
@@ -19,38 +21,37 @@ class gePrimitive {
         void NormalizeVector (float vector [3]);
 
     public:
-        virtual void draw (GLfloat s, GLfloat t);
-        virtual ~gePrimitive ();
+        virtual void draw (GLfloat s, GLfloat t) = 0;
+        virtual ~Base ();
 };
 
-/* Rectangle class */
-class geRectangle: public gePrimitive {
+class Rectangle: public Base {
     private:
         GLfloat x1, y1, x2, y2;
         GLfloat normal [3];
         //unsigned int _numDivisions, dx, dy;
 
     public:
-        geRectangle (ge2dPoint pt1, ge2dPoint pt2);
-        geRectangle (GLfloat inX0, GLfloat inY0, GLfloat inX1, GLfloat inY1);
+        Rectangle (ge2dPoint pt1, ge2dPoint pt2);
+        Rectangle (GLfloat inX0, GLfloat inY0, GLfloat inX1, GLfloat inY1);
 
         void draw (GLfloat s, GLfloat t);
 };
 
 /* Triangle class. Assumes that you don't repeat points. Incomplete */
-class geTriangle: public gePrimitive {
+class Triangle: public Base {
     private:
         GLfloat point1 [3], point2 [3], point3 [3];
 
     public:
-        geTriangle (GLfloat inX1, GLfloat inY1, GLfloat inZ1, GLfloat inX2, GLfloat inY2, GLfloat inZ2, GLfloat inX3, GLfloat inY3, GLfloat inZ3);
-        geTriangle (gePoint pt1, gePoint pt2, gePoint pt3);
+        Triangle (GLfloat inX1, GLfloat inY1, GLfloat inZ1, GLfloat inX2, GLfloat inY2, GLfloat inZ2, GLfloat inX3, GLfloat inY3, GLfloat inZ3);
+        Triangle (gePoint pt1, gePoint pt2, gePoint pt3);
 
         void draw (GLfloat s, GLfloat t);
 };
 
 /* Cylinder */
-class geCylinder: public gePrimitive {
+class Cylinder: public Base {
     private:
         GLint slices, stacks;
         GLfloat baseRadius, topRadius, height;
@@ -70,17 +71,14 @@ class geCylinder: public gePrimitive {
         GLfloat deltaRadius, deltaAngle;
 
     public:
-        geCylinder (GLfloat iBase, GLfloat iTop, GLfloat iHeight, unsigned int iSlices, unsigned int iStacks);
+        Cylinder (GLfloat iBase, GLfloat iTop, GLfloat iHeight, unsigned int iSlices, unsigned int iStacks);
+        ~Cylinder ();
 
-        void draw (GLfloat s, GLfloat t);
-
-        void drawCircle (GLfloat radius);
-
-        ~geCylinder ();
+        virtual void draw (GLfloat s, GLfloat t);
+        virtual void drawCircle (GLfloat radius);
 };
 
-/* Sphere */
-class geSphere: public gePrimitive {
+class Sphere: public Base {
     private:
         int slices, stacks;
         GLdouble radius;
@@ -89,15 +87,13 @@ class geSphere: public gePrimitive {
         double *sint2, *cost2;
 
     public:
-        geSphere (GLfloat iRadius, int iSlices, int iStacks);
+        Sphere (GLfloat iRadius, int iSlices, int iStacks);
+        ~Sphere ();
 
         void draw (GLfloat s, GLfloat t);
-
-        ~geSphere ();
 };
 
-/* Torus */
-class geTorus: public gePrimitive {
+class Torus: public Base {
     private:
         int slices, loops;
         GLdouble inner, outer;
@@ -106,11 +102,10 @@ class geTorus: public gePrimitive {
         double *vertex, *normal;
 
     public:
-        geTorus (GLdouble iInner, GLdouble iOuter, int iSlices, int iLoops);
+        Torus (GLdouble iInner, GLdouble iOuter, int iSlices, int iLoops);
+        ~Torus ();
 
         void draw (GLfloat s, GLfloat t);
-
-        ~geTorus ();
 };
 
 /* New primitives */
@@ -123,7 +118,7 @@ static GLfloat texturePoints [4] [2] = { {0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.
 
 /* Plane 1x1 */
 /* More complex 4nd order initial grid.  16 points (4 by 4). */
-class gePlane: public gePrimitive {
+class Plane: public Base {
     protected:
         unsigned int partsPerAxis;
 
@@ -132,15 +127,15 @@ class gePlane: public gePrimitive {
         int evaluatorOrder;
 
     public:
-        gePlane (unsigned int parts);
+        Plane (unsigned int parts);
 
         void draw (GLfloat s, GLfloat t);
 
-        virtual ~gePlane ();
+        virtual ~Plane ();
 };
 
 /* Patch */
-class gePatch: public gePrimitive {
+class Patch: public Base {
     private:
         unsigned int order, partsU, partsV, compute;
         unsigned int numberOfPoints;
@@ -154,7 +149,7 @@ class gePatch: public gePrimitive {
         vector<gePoint> points;
 
     public:
-        gePatch (unsigned int iorder, unsigned int ipartsU, unsigned int ipartsV, unsigned int icompute);
+        Patch (unsigned int iorder, unsigned int ipartsU, unsigned int ipartsV, unsigned int icompute);
 
         unsigned int getNumberOfPoints ();
 
@@ -163,19 +158,18 @@ class gePatch: public gePrimitive {
 
         void draw (GLfloat s, GLfloat t);
 
-        virtual ~gePatch ();
+        virtual ~Patch ();
 };
 
 #define tiltFactor 1.5
 
-/* Flying vehicle */
-class geVehicle: public gePrimitive {
+class Vehicle: public Base {
     private:
-        geCylinder* topHub;
-        geCylinder* topBody;
-        geCylinder* bottomBody;
+        Cylinder* topHub;
+        Cylinder* topBody;
+        Cylinder* bottomBody;
 
-        gePatch* evaluatorDemo;
+        Patch* evaluatorDemo;
 
         float position;
         float direction;
@@ -190,7 +184,7 @@ class geVehicle: public gePrimitive {
         float deg2rad;
 
     public:
-        geVehicle ();
+        Vehicle ();
         void draw (GLfloat s, GLfloat t);
 
         /* Vehicle control */
@@ -206,11 +200,11 @@ class geVehicle: public gePrimitive {
         void tiltLeft ();
         void tiltRight ();
 
-        ~geVehicle ();
+        ~Vehicle ();
 };
 
 /* Water line */
-class geWaterLine: public gePrimitive {
+class WaterLine: public Base {
     protected:
         string heightmap, texturemap, fragmentshader, vertexshader;
 
@@ -218,15 +212,17 @@ class geWaterLine: public gePrimitive {
         geTexture* texture;
         geShader* waterShader;
 
-        gePlane* plane;
+        Plane* plane;
 
         GLint deltaTimeLoc, baseImageLoc, heightImageLoc;
         GLfloat dT;
 
     public:
-        geWaterLine (string hmap, string tmap, string fshader, string vshader);
+        WaterLine (string hmap, string tmap, string fshader, string vshader);
         void draw (GLfloat s, GLfloat t);
         void update (unsigned long timePassed);
 };
+
+} // namespace Primitives
 
 #endif /* GEPRIMITIVE_HPP_ */

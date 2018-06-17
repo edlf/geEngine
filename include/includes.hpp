@@ -62,7 +62,10 @@
 
 /* OpenGL includes */
 /* glew */
+extern "C"
+{
 #include <GL/glew.h>
+}
 
 /* glut or even better freeGlut */
 #ifdef USE_FREEGLUT

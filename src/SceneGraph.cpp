@@ -4,14 +4,14 @@
  * Scene graph methods.
  */
 
-#include "geGraph.hpp"
+#include <SceneGraph.hpp>
 
 /* Can't be in the header file, why? I don't know */
-stack<geAppearance*> geNode::appearanceStack;
-bool geNode::creatingDisplayList = false;
-GLint geNode::displayListCount = 1;
+stack<Appearance*> Node::appearanceStack;
+bool Node::creatingDisplayList = false;
+GLint Node::displayListCount = 1;
 
-geNode::geNode(string in, bool displayList) {
+Node::Node(string in, bool displayList) {
     this->ID = in;
     this->precalcDone = false;
     this->nodeAppearance = NULL;
@@ -44,43 +44,43 @@ geNode::geNode(string in, bool displayList) {
     this->nodeAnimation = NULL;
 }
 
-void geNode::addTransform(geTransform* in) {
+void Node::addTransform(geTransform* in) {
     transformList.push_back(in);
 }
 
-void geNode::addPrimitive(gePrimitive* in) {
+void Node::addPrimitive(Primitives::Base* in) {
     this->primitiveVector.push_back(in);
 }
 
-void geNode::addChildrenID(string in) {
+void Node::addChildrenID(string in) {
     childrenIdVector.push_back(in);
 }
 
-void geNode::setAnimation(geAnimation* in) {
+void Node::setAnimation(geAnimation* in) {
     this->nodeAnimation = in;
 }
 
-vector<string>& geNode::getChildrenIDVector() {
+vector<string>& Node::getChildrenIDVector() {
     return this->childrenIdVector;
 }
 
-vector<geNode*>& geNode::getChildrenVector() {
+vector<Node*>& Node::getChildrenVector() {
     return this->childrenVector;
 }
 
-void geNode::setAppearance(geAppearance* in) {
+void Node::setAppearance(Appearance* in) {
     this->nodeAppearance = in;
 }
 
-geAppearance* geNode::getAppearance() {
+Appearance* Node::getAppearance() {
     return this->nodeAppearance;
 }
 
-string geNode::getNodeID() {
+string Node::getNodeID() {
     return this->ID;
 }
 
-void geNode::calculateNodeMatrix() {
+void Node::calculateNodeMatrix() {
     if (precalcDone) {
         return;
     }
@@ -97,13 +97,13 @@ void geNode::calculateNodeMatrix() {
     this->precalcDone = true;
 }
 
-void geNode::setTransformationMatrix(GLfloat* in) {
+void Node::setTransformationMatrix(GLfloat* in) {
     for (unsigned int i = 0; i < 16; i++) {
         transformationsMatrix[i] = in[i];
     }
 }
 
-GLfloat* geNode::multiplyMatrix(GLfloat* left, GLfloat* right) {
+GLfloat* Node::multiplyMatrix(GLfloat* left, GLfloat* right) {
     GLfloat* output = new GLfloat[16];
 
     for (int i = 0; i < 4; i++) {
@@ -124,7 +124,7 @@ GLfloat* geNode::multiplyMatrix(GLfloat* left, GLfloat* right) {
 }
 
 /**** geNode: runtime ****/
-void geNode::draw() {
+void Node::draw() {
     /* Display List limits NOT respected */
 
     /*
@@ -156,7 +156,7 @@ void geNode::draw() {
     }
 }
 
-void geNode::drawHelper() {
+void Node::drawHelper() {
     /* Push the stacks */
     glPushMatrix();
     /* If node has an appearance push it to the stack */
@@ -177,14 +177,14 @@ void geNode::drawHelper() {
 
     /* If there are primitives draw them */
     if (!this->primitiveVector.empty()) {
-        for (vector<gePrimitive*>::iterator it = this->primitiveVector.begin(); it != this->primitiveVector.end(); it++) {
+        for (vector<Primitives::Base*>::iterator it = this->primitiveVector.begin(); it != this->primitiveVector.end(); it++) {
             (*it)->draw(appearanceStack.top()->getTextureSWrap(), appearanceStack.top()->getTextureTWrap());
         }
     }
 
     /* Check if we have to go deeper */
     if (!childrenVector.empty()) {
-        for (vector<geNode*>::iterator it = this->childrenVector.begin(); it != this->childrenVector.end(); it++) {
+        for (vector<Node*>::iterator it = this->childrenVector.begin(); it != this->childrenVector.end(); it++) {
             /* Call this method again but from the child node */
             (*it)->draw();
         }
@@ -199,7 +199,7 @@ void geNode::drawHelper() {
 /**** geNode: runtime (end) ****/
 
 /* Prints a 4x4 matrix from a 1x16 GLfloat array */
-void geNode::printMatrix16x1(GLfloat* in) {
+void Node::printMatrix16x1(GLfloat* in) {
     cout.precision(5);
     std::cout.setf(std::ios::fixed, std::ios::floatfield);
 
@@ -213,13 +213,13 @@ void geNode::printMatrix16x1(GLfloat* in) {
     std::cout.unsetf(std::ios::fixed);
 }
 
-geNode::~geNode() {
+Node::~Node() {
 
 }
 
 /******************** GRAPH ********************/
 
-geGraph::geGraph(string root) {
+SceneGraph::SceneGraph(string root) {
     this->rootID = root;
     this->rootNode = NULL;
 
@@ -261,12 +261,12 @@ geGraph::geGraph(string root) {
 
     this->shininess = 2;
 
-    this->defaultRootAppearance = new geAppearance("_INTERNAL_ROOT_APPEARANCE", emissive, ambient, diffuse, specular, shininess);
+    this->defaultRootAppearance = new Appearance("_INTERNAL_ROOT_APPEARANCE", emissive, ambient, diffuse, specular, shininess);
 
     this->firstRun = true;
 }
 
-void geGraph::setRootNode(geNode* root) {
+void SceneGraph::setRootNode(Node* root) {
     if (this->rootNode == NULL && root != NULL && (root->getNodeID() == this->rootID)) {
         this->rootNode = root;
     } else {
@@ -274,11 +274,11 @@ void geGraph::setRootNode(geNode* root) {
     }
 }
 
-void geGraph::importNodesPointerVector(std::vector<geNode*>& inputNodes) {
+void SceneGraph::importNodesPointerVector(std::vector<Node*>& inputNodes) {
     if (!inputNodes.empty()) {
 
         /* Find root node and then remove the pointer from the inputNodes vector */
-        for (vector<geNode*>::iterator k = inputNodes.begin(); k != inputNodes.end();) {
+        for (vector<Node*>::iterator k = inputNodes.begin(); k != inputNodes.end();) {
             if (this->rootID == (*k)->getNodeID()) {
                 setRootNode((*k));
                 k = inputNodes.erase(k);
@@ -307,7 +307,7 @@ void geGraph::importNodesPointerVector(std::vector<geNode*>& inputNodes) {
     }
 }
 
-void geGraph::importNodesPointerVectorHelper(std::vector<geNode*>& inputNodes, geNode* parent) {
+void SceneGraph::importNodesPointerVectorHelper(std::vector<Node*>& inputNodes, Node* parent) {
     parent->calculateNodeMatrix();
 
     /* Current node has no children so bail out */
@@ -319,7 +319,7 @@ void geGraph::importNodesPointerVectorHelper(std::vector<geNode*>& inputNodes, g
         /* Find children by ID then add pointer to vector */
         for (vector<string>::iterator si = parent->getChildrenIDVector().begin(); si != parent->getChildrenIDVector().end(); si++) {
 
-            for (vector<geNode*>::iterator sp = inputNodes.begin(); sp != inputNodes.end(); sp++) {
+            for (vector<Node*>::iterator sp = inputNodes.begin(); sp != inputNodes.end(); sp++) {
                 if ((*sp)->getNodeID() == (*si)) {
                     /* Children matches */
                     parent->getChildrenVector().push_back(*sp);
@@ -331,7 +331,7 @@ void geGraph::importNodesPointerVectorHelper(std::vector<geNode*>& inputNodes, g
         }
 
         /* Recursive search */
-        for (vector<geNode*>::iterator it = parent->getChildrenVector().begin(); it != parent->getChildrenVector().end(); it++) {
+        for (vector<Node*>::iterator it = parent->getChildrenVector().begin(); it != parent->getChildrenVector().end(); it++) {
             importNodesPointerVectorHelper(inputNodes, *it);
         }
 
@@ -341,7 +341,7 @@ void geGraph::importNodesPointerVectorHelper(std::vector<geNode*>& inputNodes, g
 
 }
 
-void geGraph::draw() {
+void SceneGraph::draw() {
     if (this->firstRun) {
         glGenLists(MAX_DISPLAY_LISTS);
         this->firstRun = false;

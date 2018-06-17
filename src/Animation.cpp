@@ -4,7 +4,7 @@
  * Animation class methods.
  */
 
-#include "geAnimation.hpp"
+#include <Animation.hpp>
 
 void geAnimation::updateDeltas() {
     if (deltaTimeSingleMove > 0) {

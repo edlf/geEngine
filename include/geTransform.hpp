@@ -18,15 +18,10 @@ public:
     geTransform(int number) {
         transformNumber = number;
     }
+    ~geTransform() {}
 
-    virtual GLfloat* getTransformationMatrix() {
-        throw geException("Bug: getTransformationMatrix must be overridden.", true);
-    }
-
-    virtual void apply() {
-    }
-    virtual ~geTransform() {
-    }
+    virtual GLfloat* getTransformationMatrix() = 0;
+    virtual void apply() = 0;
 };
 
 class geTransformTranslate: public geTransform {

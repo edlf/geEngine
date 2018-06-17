@@ -7,21 +7,20 @@
 #ifndef GELSCENE_HPP_
 #define GELSCENE_HPP_
 
+#include <Animation.hpp>
+#include <Appearance.hpp>
+#include <Camera.hpp>
+#include <Primitives.hpp>
+#include <SceneGraph.hpp>
+#include <xmlDefinitions.hpp>
 #include "includes.hpp"
-#include "geXmlDefs.hpp"
-
 #include "tinyxml.h"
 
-#include "geCamera.hpp"
 #include "geLight.hpp"
-#include "geAppearance.hpp"
-#include "gePrimitive.hpp"
-#include "geGraph.hpp"
-#include "geAnimation.hpp"
 
 using namespace std;
 
-class geScene {
+class Scene {
 private:
     /* Glut window size */
     int windowSizeX, windowSizeY;
@@ -43,8 +42,8 @@ private:
 
     /* Cameras */
     string initialCamera;
-    geCamera* currentCameraPointer;
-    vector<geCamera*> cameraVector;
+    CameraInterface* currentCameraPointer;
+    vector<CameraInterface*> cameraVector;
 
     unsigned int numberOfCameras;
 
@@ -69,20 +68,20 @@ private:
     void initTextures();
 
     /* Appearances */
-    vector<geAppearance*> appearanceVector;
-    geAppearance* getAppearanceByString(string in);
+    vector<Appearance*> appearanceVector;
+    Appearance* getAppearanceByString(string in);
     void initAppearanceTextures();
 
     /* Graph */
-    geGraph* graph;
-    vector<geNode*> unprocessedNodes;
+    SceneGraph* graph;
+    vector<Node*> unprocessedNodes;
 
     /* Animations */
     vector<geAnimation*> animationsVector;
     geAnimation* getAnimationByString(string in);
 
     /* Shader */
-    vector<geWaterLine*> waterLineVector;
+    vector<Primitives::WaterLine*> waterLineVector;
 
     /* Internal variables and methods for xml parsing */
     void parseAndLoadXml(string fileName);
@@ -157,13 +156,13 @@ private:
     unsigned long lastUpdate;
 
     /* Vehicle pointer */
-    vector<geVehicle*> sceneVehicles;
+    vector<Primitives::Vehicle*> sceneVehicles;
 
 public:
-    geCameraPerspective* externalGuiCamera;
+    PerspectiveCamera* externalGuiCamera;
 
     /* Constructor who receives an string with the file name to load the scene from. */
-    geScene(string fileName);
+    Scene(string fileName);
 
     /* Gets */
     GLboolean getLightingEnableStatus();
@@ -211,7 +210,7 @@ public:
     void tiltVehicleRight();
 
     /*  */
-    virtual ~geScene();
+    virtual ~Scene();
 };
 
 #endif

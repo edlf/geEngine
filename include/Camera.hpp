@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class geCamera {
+class CameraInterface {
 protected:
     string id;
     GLfloat geNear, geFar;
@@ -19,16 +19,14 @@ protected:
     GLfloat rotation[3];
 
 public:
-    geCamera() {
-    }
-    geCamera(string iid, GLfloat iNear, GLfloat iFar);
+    CameraInterface();
+    CameraInterface(string iid, GLfloat iNear, GLfloat iFar);
     string getID();
 
     GLfloat getNear();
     GLfloat getFar();
 
-    /* applyView must be overridden, else nothing will happen */
-    virtual void applyView(double aspectRatio);
+    virtual void applyView(double aspectRatio) = 0;
     virtual void updateProjectionMatrix(int width, int height);
 
     void setPosition(gePoint in);
@@ -36,32 +34,33 @@ public:
     void setY(GLfloat y);
     void setZ(GLfloat z);
 
-    virtual void rotateTo(int axis, float angle) {
-    }
-    virtual void rotate(int axis, float angle) {
-    }
-    virtual void setRotation(int axis, float angle) {
-    }
-    virtual void moveTo(int axis, float value, float increment) {
-    }
-    virtual void translate(int axis, float value) {
-    }
+    virtual void rotateTo(int axis, float angle) = 0;
+    virtual void rotate(int axis, float angle) = 0;
+    virtual void setRotation(int axis, float angle) = 0;
+    virtual void moveTo(int axis, float value, float increment) = 0;
+    virtual void translate(int axis, float value) = 0;
 
-    virtual ~geCamera();
+    virtual ~CameraInterface();
 };
 
-class geCameraOrtho: public geCamera {
+class OrthoCamera: public CameraInterface {
 private:
     GLfloat left, right, top, bottom;
 
 public:
-    geCameraOrtho(string iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom);
+    OrthoCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iLeft, GLfloat iRight, GLfloat iTop, GLfloat iBottom);
 
     virtual void applyView(double aspectRatio);
-    virtual ~geCameraOrtho();
+    virtual ~OrthoCamera();
+
+    virtual void rotateTo(int, float);
+    virtual void rotate(int, float);
+    virtual void setRotation(int, float);
+    virtual void moveTo(int, float, float);
+    virtual void translate(int, float);
 };
 
-class geCameraPerspective: public geCamera {
+class PerspectiveCamera: public CameraInterface {
 private:
     GLfloat angle;
     GLfloat from[3], to[3];
@@ -70,10 +69,10 @@ private:
 
 public:
     /* Special camera for GUI */
-    geCameraPerspective();
+    PerspectiveCamera();
 
     /* Regular camera for xml scene */
-    geCameraPerspective(string iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo);
+    PerspectiveCamera(string iId, GLfloat iNear, GLfloat iFar, GLfloat iAngle, gePoint iFrom, gePoint iTo);
 
     virtual void applyView(double aspectRatio);
 
@@ -85,7 +84,7 @@ public:
 
     void resetCamera();
 
-    virtual ~geCameraPerspective();
+    virtual ~PerspectiveCamera();
 };
 
 #endif
