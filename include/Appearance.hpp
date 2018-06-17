@@ -15,6 +15,8 @@
 
 using namespace std;
 
+namespace ge {
+
 class Appearance {
 private:
     string id;
@@ -61,5 +63,7 @@ public:
 
     virtual ~Appearance();
 };
+
+} // namespace ge
 
 #endif

@@ -16,6 +16,8 @@
 
 using namespace std;
 
+namespace ge {
+
 class geTexture {
 private:
     // Attributes
@@ -40,5 +42,7 @@ public:
 
     virtual ~geTexture();
 };
+
+}
 
 #endif

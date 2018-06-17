@@ -6,7 +6,7 @@
 #include <Application.hpp>
 #include <functional>
 
-
+namespace ge {
 /* Input args */
 int     Application::argCount;
 char**  Application::arguments;
@@ -559,4 +559,5 @@ void Application::glutConfig(int argc, char** argv) {
     /* Left division controls */
     gluiSubWindow = GLUI_Master.create_glui_subwindow(mainWindow, GLUI_SUBWINDOW_LEFT);
     gluiSubWindow->set_main_gfx_window(mainWindow);
+}
 }

@@ -6,6 +6,7 @@
 
 #include <Scene.hpp>
 
+namespace ge {
 Scene::Scene(string fileName) {
     currentCameraPointer = NULL;
 
@@ -1476,4 +1477,6 @@ Scene::~Scene() {
     if (doc != NULL) {
         delete (doc);
     }
+}
+
 }

@@ -8,6 +8,7 @@
 #ifndef XMLDEFS_HPP_
 #define XMLDEFS_HPP_
 
+namespace ge {
 namespace Xml {
 
 // DOCUMENT TYPE
@@ -277,5 +278,6 @@ const char* const ATTRIBUTE_ANIMATION_Y_ERROR                 = "Animation: Erro
 const char* const ATTRIBUTE_ANIMATION_Z_ERROR                 = "Animation: Error while reading the z value.";
 
 } // namespace xml
+}
 
 #endif /* Header guard */

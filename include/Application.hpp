@@ -12,6 +12,8 @@
 
 using namespace std;
 
+namespace ge {
+
 class Application {
 
 public:
@@ -87,5 +89,7 @@ private:
 
 	static void toggleLight(unsigned int);
 };
+
+}
 
 #endif /* GEAPP_HPP_ */

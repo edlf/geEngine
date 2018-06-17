@@ -9,6 +9,7 @@
 
 #include "includes.hpp"
 
+namespace ge {
 class geTransform {
 protected:
     int transformNumber;
@@ -284,5 +285,6 @@ public:
     }
 
 };
+}
 
 #endif /* GETRANSFORM_HPP_ */

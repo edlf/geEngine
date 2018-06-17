@@ -11,6 +11,7 @@ extern "C" {
 #include <iostream>
 #include <Appearance.hpp>
 
+namespace ge {
 Appearance::Appearance(string iID, geColor iEmissive, geColor iAmbient, geColor iDiffuse, geColor iSpecular, GLfloat iShininess) {
     this->id = iID;
 
@@ -161,4 +162,5 @@ GLfloat Appearance::getTextureTWrap() {
 
 Appearance::~Appearance() {
 
+}
 }

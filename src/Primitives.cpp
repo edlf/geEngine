@@ -6,6 +6,7 @@
 
 #include <Primitives.hpp>
 
+namespace ge {
 namespace Primitives {
 
 /* Copy from GLUT
@@ -847,3 +848,4 @@ void WaterLine::update(unsigned long timePassed) {
 }
 
 } // namespace Primitives
+}

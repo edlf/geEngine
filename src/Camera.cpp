@@ -6,6 +6,7 @@
 
 #include <Camera.hpp>
 
+namespace ge {
 CameraInterface::CameraInterface(){
 
 }
@@ -195,5 +196,7 @@ void PerspectiveCamera::resetCamera() {
 }
 
 PerspectiveCamera::~PerspectiveCamera() {
+
+}
 
 }

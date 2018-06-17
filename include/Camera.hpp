@@ -11,6 +11,8 @@
 
 using namespace std;
 
+namespace ge {
+
 class CameraInterface {
 protected:
     string id;
@@ -86,5 +88,7 @@ public:
 
     virtual ~PerspectiveCamera();
 };
+
+}
 
 #endif

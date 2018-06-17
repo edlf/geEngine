@@ -16,6 +16,8 @@
 
 using namespace std;
 
+namespace ge {
+
 class Node {
 protected:
     /* Node related */
@@ -111,5 +113,7 @@ public:
     /* Recursive draw function */
     void draw();
 };
+
+} //namespace ge
 
 #endif /* GEGRAPH_HPP_ */

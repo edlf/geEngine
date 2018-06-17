@@ -3,10 +3,14 @@
  *
  * Light class.
  */
+#ifndef LIGHTS_HPP_
+#define LIGHTS_HPP_
 
 #include "includes.hpp"
 
 using namespace std;
+
+namespace ge {
 
 class geLight {
 protected:
@@ -82,3 +86,6 @@ public:
     virtual ~geSpotLight() {
     }
 };
+
+}
+#endif

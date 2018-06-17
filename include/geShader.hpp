@@ -7,6 +7,8 @@
 #ifndef GESHADER_HPP
 #define GESHADER_HPP
 
+namespace ge {
+
 class geShader {
 private:
     GLuint ID;
@@ -30,5 +32,7 @@ public:
 
     unsigned int getId();
 };
+
+}
 
 #endif

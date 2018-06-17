@@ -7,6 +7,7 @@
 #include <Primitives.hpp>
 #include "geLight.hpp"
 
+namespace ge {
 geOmniLight::geOmniLight(string lightID, int openGLid, bool iEnable, gePoint iLocation, geColor iAmbient, geColor iDiffuse, geColor iSpecular) {
 
     this->id = lightID;
@@ -182,3 +183,4 @@ void geLight::disable() {
     update();
 }
 
+}

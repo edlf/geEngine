@@ -11,6 +11,7 @@
 #include "geTexture.hpp"
 #include "geShader.hpp"
 
+namespace ge {
 namespace Primitives {
 
 class Base {
@@ -224,5 +225,6 @@ class WaterLine: public Base {
 };
 
 } // namespace Primitives
+}
 
 #endif /* GEPRIMITIVE_HPP_ */

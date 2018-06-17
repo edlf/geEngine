@@ -6,6 +6,7 @@
 
 #include <Animation.hpp>
 
+namespace ge {
 void geAnimation::updateDeltas() {
     if (deltaTimeSingleMove > 0) {
         dX = abs(currentDestionationPoint.x - currentSourcePoint.x) / deltaTimeSingleMove;
@@ -174,3 +175,4 @@ geAnimation::~geAnimation() {
 
 }
 
+}

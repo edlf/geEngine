@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    Application application(argc, argv, sceneFileName);
+    ge::Application application(argc, argv, sceneFileName);
 
     return 0;
 }

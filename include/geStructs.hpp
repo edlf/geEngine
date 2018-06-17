@@ -7,6 +7,8 @@
 #ifndef GESTRUCTS_HPP_
 #define GESTRUCTS_HPP_
 
+namespace ge {
+
 struct gePoint {
     float x, y, z;
 };
@@ -18,5 +20,7 @@ struct ge2dPoint {
 struct geColor {
     float r, g, b, a;
 };
+
+}
 
 #endif /* GESTRUCTS_HPP_ */

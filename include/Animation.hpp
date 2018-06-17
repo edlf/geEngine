@@ -9,6 +9,8 @@
 
 #include "includes.hpp"
 
+namespace ge {
+
 class geAnimation {
 protected:
     string id;
@@ -60,5 +62,7 @@ public:
 
     ~geAnimation();
 };
+
+} //namespace ge
 
 #endif /* GEANIMATION_HPP_ */

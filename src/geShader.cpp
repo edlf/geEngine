@@ -9,6 +9,8 @@
 
 using namespace std;
 
+namespace ge {
+
 static char* textFileRead(const char *fileName) {
     char* text = NULL;
 
@@ -122,4 +124,6 @@ void geShader::update(float time) {
     if (timeloc != -1) {
         glUniform1f(timeloc, (float) time);
     }
+}
+
 }

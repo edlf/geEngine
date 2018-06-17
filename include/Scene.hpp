@@ -20,6 +20,8 @@
 
 using namespace std;
 
+namespace ge {
+
 class Scene {
 private:
     /* Glut window size */
@@ -213,4 +215,5 @@ public:
     virtual ~Scene();
 };
 
+}
 #endif

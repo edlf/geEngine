@@ -6,9 +6,10 @@
 
 #include <SceneGraph.hpp>
 
-/* Can't be in the header file, why? I don't know */
+namespace ge {
+// Static members
 stack<Appearance*> Node::appearanceStack;
-bool Node::creatingDisplayList = false;
+bool  Node::creatingDisplayList = false;
 GLint Node::displayListCount = 1;
 
 Node::Node(string in, bool displayList) {
@@ -350,4 +351,5 @@ void SceneGraph::draw() {
     glPushMatrix();
     this->rootNode->draw();
     glPopMatrix();
+}
 }

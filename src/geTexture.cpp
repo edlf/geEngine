@@ -6,6 +6,8 @@
 
 #include "geTexture.hpp"
 
+namespace ge {
+
 geTexture::geTexture(string xmlIdIn, string input) {
     this->loaded = false;
     this->xmlId = xmlIdIn;
@@ -68,5 +70,7 @@ string geTexture::getXmlId() {
 }
 
 geTexture::~geTexture() {
+
+}
 
 }

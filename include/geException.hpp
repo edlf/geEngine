@@ -12,6 +12,8 @@
 
 using namespace std;
 
+namespace ge {
+
 class geException {
 private:
     string errorMessage;
@@ -57,5 +59,7 @@ public:
         cerr << "Exception caught: " << errorMessage.c_str() << endl;
     }
 };
+
+}
 
 #endif
