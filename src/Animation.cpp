@@ -9,12 +9,13 @@
 namespace ge {
 void Animation::updateDeltas() {
     if (deltaTimeSingleMove > 0) {
+        double divisor = static_cast<double>(deltaTimeSingleMove);
         dX = abs(currentDestionationPoint.x - currentSourcePoint.x)
-                / deltaTimeSingleMove;
+                / divisor;
         dY = abs(currentDestionationPoint.y - currentSourcePoint.y)
-                / deltaTimeSingleMove;
+                / divisor;
         dZ = abs(currentDestionationPoint.z - currentSourcePoint.z)
-                / deltaTimeSingleMove;
+                / divisor;
     }
 }
 
@@ -52,7 +53,7 @@ Animation::Animation(const std::string& iId, float iSpan,
     this->dY = 0;
     this->dZ = 0;
 
-    this->spanMilliseconds = this->span * 1000;
+    this->spanMilliseconds = static_cast<unsigned long>(this->span * 1000);
     this->totalTimePassed = 0;
 
     /* Change this after receiving the second point */

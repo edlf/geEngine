@@ -9,12 +9,11 @@ Libraries
 =======
 Included with project, not modified:
 
-tinyxml 2.6.2  (www.sourceforge.net/projects/tinyxml)
-
 stbi    1.31   (Sean Barrett @ http://nothings.org/)
 
-
 Not included with project:
+
+tinyXml
 
 Glui
 

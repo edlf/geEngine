@@ -57,7 +57,9 @@
                                 								
                                 <option id="gnu.cpp.compiler.option.warnings.wconversion.1339022533" name="Implicit conversion warnings (-Wconversion)" superClass="gnu.cpp.compiler.option.warnings.wconversion" useByScannerDiscovery="false" value="true" valueType="boolean"/>
                                 								
-                                <option id="gnu.cpp.compiler.option.other.other.1003567431" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -std=c++17" valueType="string"/>
+                                <option id="gnu.cpp.compiler.option.other.other.1003567431" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -std=c++17" valueType="string"/>
+                                								
+                                <option id="gnu.cpp.compiler.option.dialect.std.1318386537" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
                                 								
                                 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1297243554" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
                                 							
@@ -98,6 +100,8 @@
                                     <listOptionValue builtIn="false" value="glut"/>
                                     									
                                     <listOptionValue builtIn="false" value="glui"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="tinyxml"/>
                                     								
                                 </option>
                                 								
@@ -189,9 +193,9 @@
                                 								
                                 <option id="gnu.cpp.compiler.option.warnings.wconversion.2077217963" name="Implicit conversion warnings (-Wconversion)" superClass="gnu.cpp.compiler.option.warnings.wconversion" useByScannerDiscovery="false" value="true" valueType="boolean"/>
                                 								
-                                <option id="gnu.cpp.compiler.option.dialect.std.167828052" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
+                                <option id="gnu.cpp.compiler.option.dialect.std.167828052" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
                                 								
-                                <option id="gnu.cpp.compiler.option.other.other.123024168" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -std=c++17" valueType="string"/>
+                                <option id="gnu.cpp.compiler.option.other.other.123024168" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -std=c++17" valueType="string"/>
                                 								
                                 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1665502285" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
                                 							
@@ -232,6 +236,8 @@
                                     <listOptionValue builtIn="false" value="glut"/>
                                     									
                                     <listOptionValue builtIn="false" value="glui"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="tinyxml"/>
                                     								
                                 </option>
                                 								

@@ -16,7 +16,8 @@
 #include <xmlDefinitions.hpp>
 #include "includes.hpp"
 
-#include <tinyxml.hpp>
+#define TIXML_USE_STL
+#include <tinyxml.h>
 
 
 namespace ge {
@@ -90,7 +91,7 @@ private:
     char* xmlFileName;
     TiXmlDocument* doc;
 
-    void xmlLoadFile(char *filename);
+    void xmlLoadFile(const std::string& filename);
 
     void xmlCheckDocumentType();
 
@@ -129,22 +130,22 @@ private:
 
     /* XML Parse methods */
     std::string getStringFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
+            const std::string& iAttribute, const std::string& Error);
     xyzPointDouble getDoublePointFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
+            const std::string& iAttribute, const std::string& Error);
     xyzPointFloat getFloatPointFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
+            const std::string& iAttribute, const std::string& Error);
     color getColorFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
+            const std::string& iAttribute, const std::string& Error);
     double getDoubleFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
+            const std::string& iAttribute, const std::string& Error);
     float getFloatFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
+            const std::string& iAttribute, const std::string& Error);
     unsigned int getUnsignedIntFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
-    bool getAttributeExistence(TiXmlElement* iElement, char const* iAttribute);
+            const std::string& iAttribute, const std::string& Error);
+    bool getAttributeExistence(TiXmlElement* iElement, const std::string& iAttribute);
     xyPointDouble get2DdPointFromElementAttribute(TiXmlElement* iElement,
-            char const* iAttribute, const std::string& Error);
+            const std::string& iAttribute, const std::string& Error);
 
     /* End XML related methods */
 

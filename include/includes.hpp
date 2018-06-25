@@ -25,9 +25,6 @@
 #define WINDOW_INITIALPOS_X 50
 #define WINDOW_INITIALPOS_Y 50
 
-// #define GLEW_STATIC
-// #define FREEGLUT_STATIC
-
 #define STRING_CONSOLE_LINE          "-------------------------------------------------------------------------------"
 #define STRING_CONSOLE_HEADER_SPACER "                          "
 
