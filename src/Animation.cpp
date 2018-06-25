@@ -6,7 +6,11 @@
 
 #include <Animation.hpp>
 
+#include <cmath>
+
+
 namespace ge {
+
 void Animation::updateDeltas() {
     if (deltaTimeSingleMove > 0) {
         double divisor = static_cast<double>(deltaTimeSingleMove);

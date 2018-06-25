@@ -7,6 +7,9 @@
 #include <SceneGraph.hpp>
 
 namespace ge {
+
+const unsigned int MAX_DISPLAY_LISTS = 64;
+
 // Static members
 std::stack<Appearance*> Node::appearanceStack;
 bool Node::creatingDisplayList = false;

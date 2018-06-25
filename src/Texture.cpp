@@ -8,6 +8,8 @@
 
 namespace ge {
 
+const std::string TextureFolder = "textures/";
+
 Texture::Texture(std::string& xmlIdIn, std::string& input) {
     this->loaded = false;
     this->xmlId = xmlIdIn;
@@ -35,7 +37,7 @@ void Texture::loadTexture() {
             this->loaded = true;
         }
 
-        std::string pathFileName = std::string(TEXTURE_FOLDER) + this->fileName;
+        std::string pathFileName = TextureFolder + this->fileName;
 
         unsigned char *data = loadRGBImage(pathFileName.c_str(), &this->width,
                 &this->height);

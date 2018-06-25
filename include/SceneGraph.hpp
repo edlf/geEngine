@@ -14,6 +14,9 @@
 #include <Transform.hpp>
 #include "includes.hpp"
 
+#include <list>
+#include <stack>
+
 namespace ge {
 
 class Node {

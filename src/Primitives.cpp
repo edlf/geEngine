@@ -6,8 +6,12 @@
 
 #include <Primitives.hpp>
 
+#include <cmath>
+
 namespace ge {
 namespace Primitives {
+
+const std::string ShaderFolder = "shaders/";
 
 /* Copy from GLUT
  * Compute lookup table of cos and sin values forming a circle
@@ -841,8 +845,8 @@ WaterLine::WaterLine(std::string& hmap, std::string& tmap, std::string& fshader,
     /* Append the shader folder */
     this->heightmap = hmap;
     this->texturemap = tmap;
-    this->fragmentshader = std::string(SHADER_FOLDER) + fshader;
-    this->vertexshader = std::string(SHADER_FOLDER) + vshader;
+    this->fragmentshader = ShaderFolder + fshader;
+    this->vertexshader = ShaderFolder + vshader;
 
     /* Do not create shader object before openGL is initialized */
     this->waterShader = nullptr;

@@ -12,6 +12,17 @@
 
 namespace ge {
 
+namespace Defaults {
+const unsigned int InitialWindowSizeX = 800;
+const unsigned int InitialWindowSizeY = 600;
+const unsigned int InitialWindowPosX = 50;
+const unsigned int InitialWindowPosY = 50;
+
+const double MouseRotateFactor= 0.25;
+const double MousePanFactor = 0.025;
+const double MouseZoomFactor = 0.25;
+}
+
 class Application {
 
 public:

@@ -61,6 +61,8 @@
                                 								
                                 <option id="gnu.cpp.compiler.option.dialect.std.1318386537" name="Language standard" superClass="gnu.cpp.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.cpp.compiler.dialect.default" valueType="enumerated"/>
                                 								
+                                <option id="gnu.cpp.compiler.option.warnings.pedantic.1253223195" superClass="gnu.cpp.compiler.option.warnings.pedantic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+                                								
                                 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1297243554" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
                                 							
                             </tool>
@@ -80,6 +82,8 @@
                                 <option id="gnu.c.compiler.option.warnings.toerrors.1558443038" name="Warnings as errors (-Werror)" superClass="gnu.c.compiler.option.warnings.toerrors" useByScannerDiscovery="false" value="false" valueType="boolean"/>
                                 								
                                 <option id="gnu.c.compiler.option.warnings.wconversion.1108968580" name="Implicit conversion warnings (-Wconversion)" superClass="gnu.c.compiler.option.warnings.wconversion" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+                                								
+                                <option id="gnu.c.compiler.option.warnings.pedantic.1633784230" superClass="gnu.c.compiler.option.warnings.pedantic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
                                 								
                                 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1799005882" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
                                 							

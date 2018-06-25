@@ -8,6 +8,7 @@
 #define GETRANSFORM_HPP_
 
 #include "includes.hpp"
+#include <cmath>
 
 namespace ge {
 

@@ -6,6 +6,9 @@
 #include <Application.hpp>
 
 namespace ge {
+
+const std::string TitleBar = "geEngine v0.8";
+
 /* Input args */
 int Application::argCount;
 char** Application::arguments;
@@ -208,20 +211,20 @@ void Application::processMouseMoved(int x, int y) {
 
     if (pressingMouseLeft && keyModifiers == 0) {
         scene->externalGuiCamera->rotate(0,
-                static_cast<GLdouble>(displacementY) * MOUSE_ROTATE_FACTOR);
+                static_cast<GLdouble>(displacementY) * ge::Defaults::MouseRotateFactor);
         scene->externalGuiCamera->rotate(1,
-                static_cast<GLdouble>(displacementX) * MOUSE_ROTATE_FACTOR);
+                static_cast<GLdouble>(displacementX) * ge::Defaults::MouseRotateFactor);
 
     } else if (pressingMouseRight && keyModifiers == 0) {
         scene->externalGuiCamera->translate(0,
-                static_cast<GLdouble>(displacementX) * MOUSE_PAN_FACTOR);
+                static_cast<GLdouble>(displacementX) * ge::Defaults::MousePanFactor);
         scene->externalGuiCamera->translate(1,
-                static_cast<GLdouble>(-displacementY) * MOUSE_PAN_FACTOR);
+                static_cast<GLdouble>(-displacementY) * ge::Defaults::MousePanFactor);
 
     } else if (pressingMouseMiddle
             || (pressingMouseLeft && (keyModifiers & GLUT_ACTIVE_CTRL))) {
         scene->externalGuiCamera->translate(2,
-                static_cast<GLdouble>(displacementY) * MOUSE_ZOOM_FACTOR);
+                static_cast<GLdouble>(displacementY) * ge::Defaults::MouseZoomFactor);
     }
 
     prev_X = x;
@@ -549,11 +552,11 @@ void Application::processHits(GLint hits, GLuint buffer[]) {
 void Application::glutConfig(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    width = WINDOW_SIZE_X;
-    height = WINDOW_SIZE_Y;
+    width = ge::Defaults::InitialWindowSizeX;
+    height = ge::Defaults::InitialWindowSizeY;
     glutInitWindowSize(width, height);
-    glutInitWindowPosition(WINDOW_INITIALPOS_X, WINDOW_INITIALPOS_Y);
-    mainWindow = glutCreateWindow(APP_NAME_VERSION);
+    glutInitWindowPosition(ge::Defaults::InitialWindowPosX, ge::Defaults::InitialWindowPosY);
+    mainWindow = glutCreateWindow(TitleBar.c_str());
 
     glutDisplayFunc(display);
 
