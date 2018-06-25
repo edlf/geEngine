@@ -45,7 +45,7 @@ Node::Node(std::string& in, bool displayList) {
     this->nodeAnimation = nullptr;
 }
 
-void Node::addTransform(geTransform* in) {
+void Node::addTransform(Transform* in) {
     transformList.push_back(in);
 }
 
@@ -57,7 +57,7 @@ void Node::addChildrenID(std::string& in) {
     childrenIdVector.push_back(in);
 }
 
-void Node::setAnimation(geAnimation* in) {
+void Node::setAnimation(Animation* in) {
     this->nodeAnimation = in;
 }
 
@@ -280,7 +280,7 @@ void SceneGraph::setRootNode(Node* root) {
             && (root->getNodeID() == this->rootID)) {
         this->rootNode = root;
     } else {
-        throw geException("Null pointer, root already set or rootID mismatch.",
+        throw Exception("Null pointer, root already set or rootID mismatch.",
                 true);
     }
 }
@@ -301,7 +301,7 @@ void SceneGraph::importNodesPointerVector(std::vector<Node*>& inputNodes) {
 
         /* Check if we got a rootNode, if so start a recursive search for children */
         if (rootNode == nullptr) {
-            throw geException("Root node not found!", true);
+            throw Exception("Root node not found!", true);
         }
 
         /* Check if root node has apperance */
@@ -315,7 +315,7 @@ void SceneGraph::importNodesPointerVector(std::vector<Node*>& inputNodes) {
         inputNodes.clear();
 
     } else {
-        throw geException("No nodes to process received.", true);
+        throw Exception("No nodes to process received.", true);
     }
 }
 

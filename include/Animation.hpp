@@ -11,7 +11,7 @@
 
 namespace ge {
 
-class geAnimation {
+class Animation {
 protected:
     std::string id;
     float span;
@@ -48,8 +48,8 @@ protected:
     GLdouble deg2rad;
 
 public:
-    geAnimation(const std::string& iId, float iSpan, unsigned int iType);
-    virtual ~geAnimation();
+    Animation(const std::string& iId, float iSpan, unsigned int iType);
+    virtual ~Animation();
 
     void insertPoint(xyzPointDouble in);
     void insertPoint(GLdouble ix, GLdouble iy, GLdouble iz);
@@ -64,4 +64,4 @@ public:
 
 } //namespace ge
 
-#endif /* GEANIMATION_HPP_ */
+#endif /* ANIMATION_HPP_ */

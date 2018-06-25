@@ -16,7 +16,7 @@
 
 namespace ge {
 
-class geTexture {
+class Texture {
 private:
     // Attributes
     GLuint idOpenGL;
@@ -27,7 +27,8 @@ private:
     bool loaded;
 
 public:
-    geTexture(std::string& xmlIdIn, std::string& input);
+    Texture(std::string& xmlIdIn, std::string& input);
+    virtual ~Texture();
 
     GLuint getIdOpenGL();
     int getWidth();
@@ -37,8 +38,6 @@ public:
     void apply();
 
     std::string getXmlId();
-
-    virtual ~geTexture();
 };
 
 }

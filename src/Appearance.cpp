@@ -138,7 +138,7 @@ void Appearance::setShininess(GLfloat input) {
     // this->materialType = MATERIAL_TYPE_MATERIAL;
 }
 
-void Appearance::setTexture(geTexture* input) {
+void Appearance::setTexture(Texture* input) {
     if (input != nullptr) {
         this->isTextured = true;
         this->texture = input;

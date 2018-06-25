@@ -10,6 +10,7 @@
 #include <Animation.hpp>
 #include <Appearance.hpp>
 #include <Camera.hpp>
+#include <Light.hpp>
 #include <Primitives.hpp>
 #include <SceneGraph.hpp>
 #include <xmlDefinitions.hpp>
@@ -17,7 +18,6 @@
 
 #include <tinyxml.hpp>
 
-#include "geLight.hpp"
 
 namespace ge {
 
@@ -58,14 +58,14 @@ private:
     GLboolean lightingLocal;
     GLboolean lightingEnable;
     GLfloat ambientLightColour[4];
-    std::vector<geLight*> lightVector;
+    std::vector<Light*> lightVector;
     unsigned int numberOfLights;
 
     void setAmbientLightColor(color in);
     void initLights();
 
     /* Textures */
-    std::vector<geTexture*> textureVector;
+    std::vector<Texture*> textureVector;
     void initTextures();
 
     /* Appearances */
@@ -78,8 +78,8 @@ private:
     std::vector<Node*> unprocessedNodes;
 
     /* Animations */
-    std::vector<geAnimation*> animationsVector;
-    geAnimation* getAnimationByString(std::string& in);
+    std::vector<Animation*> animationsVector;
+    Animation* getAnimationByString(std::string& in);
 
     /* Shader */
     std::vector<Primitives::WaterLine*> waterLineVector;

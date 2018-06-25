@@ -60,7 +60,7 @@ void Scene::parseAndLoadXml(std::string& fileName) {
 
     if (!(xmlGlobalsLoaded && xmlCamerasLoaded && xmlLightsLoaded
             && xmlTexturesLoaded && xmlAppearancesLoaded && xmlGraphLoaded)) {
-        throw geException("Something went wrong with the XML parsing.", true);
+        throw Exception("Something went wrong with the XML parsing.", true);
     }
 }
 
@@ -69,7 +69,7 @@ void Scene::xmlLoadFile(char *filename) {
     bool loadOkay = doc->LoadFile();
 
     if (!loadOkay) {
-        throw geException("Error while loading scene xml file.");
+        throw Exception("Error while loading scene xml file.");
     }
 }
 
@@ -77,7 +77,7 @@ void Scene::xmlCheckDocumentType() {
     xmlRootElement = doc->FirstChildElement(Xml::DOCUMENT_TYPE);
 
     if (xmlRootElement == nullptr) {
-        throw geException("No correct root element found!", true);
+        throw Exception("No correct root element found!", true);
     }
 }
 
@@ -98,34 +98,34 @@ void Scene::xmlCheckMainElements() {
     /* Check if all required nodes exist */
 
     if (xmlGlobalsElement == nullptr) {
-        throw geException("Globals element not found.");
+        throw Exception("Globals element not found.");
     }
 
     if (xmlCamerasElement == nullptr) {
-        throw geException("Cameras element not found.");
+        throw Exception("Cameras element not found.");
     }
 
     if (xmlLightingElement == nullptr) {
-        throw geException("Lighting element not found.");
+        throw Exception("Lighting element not found.");
     }
 
     if (xmlTexturesElement == nullptr) {
-        throw geException("Textures element not found.");
+        throw Exception("Textures element not found.");
     }
 
     if (xmlAppearancesElement == nullptr) {
-        throw geException("Appearances element not found.");
+        throw Exception("Appearances element not found.");
     }
 
     if (xmlGraphElement == nullptr) {
-        throw geException("Graph element not found.");
+        throw Exception("Graph element not found.");
     }
 }
 
 /* Load and set globals from XML */
 void Scene::xmlLoadGlobals() {
     if (xmlGlobalsLoaded) {
-        throw geException(Xml::SECTION_GLOBALS_ERROR, true);
+        throw Exception(Xml::SECTION_GLOBALS_ERROR, true);
     }
 
     color bgColor = getColorFromElementAttribute(xmlGlobalsElement,
@@ -154,7 +154,7 @@ void Scene::xmlLoadGlobals() {
 /* Load and set cameras from XML */
 void Scene::xmlLoadCameras() {
     if (xmlCamerasLoaded) {
-        throw geException("XML: Cameras have already been loaded!", true);
+        throw Exception("XML: Cameras have already been loaded!", true);
     }
 
     int numberOfPerspectiveCameras = 0, numberOfOrthoCameras = 0;
@@ -241,7 +241,7 @@ void Scene::xmlLoadCameras() {
     numberOfCameras = numberOfOrthoCameras + numberOfPerspectiveCameras;
 
     if (numberOfCameras < 1) {
-        throw geException("XML: Cameras: No camera found.", true);
+        throw Exception("XML: Cameras: No camera found.", true);
     }
 
     xmlCamerasLoaded = true;
@@ -250,7 +250,7 @@ void Scene::xmlLoadCameras() {
 /* Load and set lighting from XML */
 void Scene::xmlLoadLighting() {
     if (xmlLightsLoaded) {
-        throw geException("Lights have already been loaded!", true);
+        throw Exception("Lights have already been loaded!", true);
     }
 
     unsigned int numberOfOmniLights = 0, numberOfSpotLights = 0;
@@ -313,7 +313,7 @@ void Scene::xmlLoadLighting() {
                     Xml::ATTRIBUTE_LIGHTING_SPECULAR_ERROR);
 
             lightVector.push_back(
-                    new geOmniLight(lightId, numberOfLights, lightEnable,
+                    new OmniLight(lightId, numberOfLights, lightEnable,
                             location, ambient, diffuse, specular));
             numberOfOmniLights++;
         }
@@ -357,7 +357,7 @@ void Scene::xmlLoadLighting() {
                     Xml::ATTRIBUTE_LIGHTING_DIRECTION_ERROR);
 
             lightVector.push_back(
-                    new geSpotLight(lightId, numberOfLights, lightEnable,
+                    new SpotLight(lightId, numberOfLights, lightEnable,
                             location, ambient, diffuse, specular, angle,
                             exponent, direction));
 
@@ -374,7 +374,7 @@ void Scene::xmlLoadLighting() {
     }
 
     if (numberOfLights < 1) {
-        throw geException("XML: Lighting: No lights found!", true);
+        throw Exception("XML: Lighting: No lights found!", true);
     }
 
     xmlLightsLoaded = true;
@@ -383,7 +383,7 @@ void Scene::xmlLoadLighting() {
 /* Load textures information from XML */
 void Scene::xmlLoadTextures() {
     if (xmlTexturesLoaded) {
-        throw geException("Textures have already been loaded!", true);
+        throw Exception("Textures have already been loaded!", true);
     }
 
     /* Get textures first child */
@@ -403,7 +403,7 @@ void Scene::xmlLoadTextures() {
                 Xml::ATTRIBUTE_FILE, Xml::SECTION_TEXTURE_FILE_ERROR);
 
         /* Create texture object here. */
-        textureVector.push_back(new geTexture(textureId, textureFileName));
+        textureVector.push_back(new Texture(textureId, textureFileName));
 
         xmlTextureElement = xmlTextureElement->NextSiblingElement();
     }
@@ -414,7 +414,7 @@ void Scene::xmlLoadTextures() {
 /* Load appearances from XML */
 void Scene::xmlLoadAppearances() {
     if (xmlAppearancesLoaded) {
-        throw geException("Appearances have already been loaded!", true);
+        throw Exception("Appearances have already been loaded!", true);
     }
 
     int numberOfAppearances = 0;
@@ -482,7 +482,7 @@ void Scene::xmlLoadAppearances() {
     }
 
     if (numberOfAppearances < 1) {
-        throw geException("No appearances found!", true);
+        throw Exception("No appearances found!", true);
     }
 
     xmlAppearancesLoaded = true;
@@ -491,7 +491,7 @@ void Scene::xmlLoadAppearances() {
 /* Load the scene graph from XML */
 void Scene::xmlLoadGraph() {
     if (xmlGraphLoaded) {
-        throw geException("Graph has already been loaded!", true);
+        throw Exception("Graph has already been loaded!", true);
     }
 
     /* Root ID */
@@ -507,7 +507,7 @@ void Scene::xmlLoadGraph() {
     TiXmlElement* xmlNodeElement = xmlGraphElement->FirstChildElement();
 
     if (xmlGraphElement == nullptr) {
-        throw geException("Graph: Error while reading graph node.", true);
+        throw Exception("Graph: Error while reading graph node.", true);
     }
 
     bool nodeLastRun = false;
@@ -547,7 +547,7 @@ void Scene::xmlLoadGraph() {
         TiXmlElement* xmlTransformsElement = xmlNodeElement->FirstChildElement(
                 Xml::BLOCK_TRANSFORMS);
         if (xmlTransformsElement == nullptr) {
-            throw geException("Node: No transform block found.", true,
+            throw Exception("Node: No transform block found.", true,
                     xmlNodeElement->Row());
         }
 
@@ -570,7 +570,7 @@ void Scene::xmlLoadGraph() {
                         Xml::ATTRIBUTE_TRANSFORM_FACTOR_ERROR);
 
                 temporaryNode->addTransform(
-                        new geTransformScale(scaleFactor, numberOfTransforms));
+                        new TransformScale(scaleFactor, numberOfTransforms));
                 numberOfTransforms++;
             }
 
@@ -592,7 +592,7 @@ void Scene::xmlLoadGraph() {
                 } else if (axis == "z") {
                     axisInt = 2;
                 } else {
-                    throw geException(
+                    throw Exception(
                             "Transform: Invalid string in transform axis.",
                             true, xmlTransformElement->Row());
                 }
@@ -602,7 +602,7 @@ void Scene::xmlLoadGraph() {
                         Xml::ATTRIBUTE_ANGLE, Xml::ATTRIBUTE_ANGLE_ERROR);
 
                 temporaryNode->addTransform(
-                        new geTransformRotate(axisInt, angle,
+                        new TransformRotate(axisInt, angle,
                                 numberOfTransforms));
                 numberOfTransforms++;
             }
@@ -616,7 +616,7 @@ void Scene::xmlLoadGraph() {
                         Xml::ATTRIBUTE_TRANSFORM_TO_ERROR);
 
                 temporaryNode->addTransform(
-                        new geTransformTranslate(translate,
+                        new TransformTranslate(translate,
                                 numberOfTransforms));
                 numberOfTransforms++;
             }
@@ -663,7 +663,7 @@ void Scene::xmlLoadGraph() {
         TiXmlElement* xmlChildrensElement = xmlNodeElement->FirstChildElement(
                 Xml::BLOCK_CHILDREN);
         if (xmlChildrensElement == nullptr) {
-            throw geException("Node: No children block found.", true,
+            throw Exception("Node: No children block found.", true,
                     xmlNodeElement->Row());
         }
 
@@ -888,14 +888,14 @@ void Scene::xmlLoadGraph() {
                         xmlPatchPointElement =
                                 xmlPatchPointElement->NextSiblingElement();
                     } else {
-                        throw geException("Patch: Invalid child found.", true);
+                        throw Exception("Patch: Invalid child found.", true);
                     }
                 }
 
                 if (readPoints == numberOfPoints) {
 
                 } else {
-                    throw geException(
+                    throw Exception(
                             "Patch: Number of read points is invalid.", true);
                 }
 
@@ -979,7 +979,7 @@ void Scene::xmlLoadGraph() {
     }
 
     if (numberOfGraphNodes < 1) {
-        throw geException("Node: No nodes found.", true, xmlNodeElement->Row());
+        throw Exception("Node: No nodes found.", true, xmlNodeElement->Row());
     }
 
     graph->importNodesPointerVector(unprocessedNodes);
@@ -990,7 +990,7 @@ void Scene::xmlLoadGraph() {
 /* Load animations from XML */
 void Scene::xmlLoadAnimations() {
     if (xmlAnimationsLoaded) {
-        throw geException("Animations have already been loaded!", true);
+        throw Exception("Animations have already been loaded!", true);
     }
 
     int numberOfAnimations = 0;
@@ -1023,13 +1023,13 @@ void Scene::xmlLoadAnimations() {
         if (animationType == Xml::VALUE_ANIMATION_LINEAR) {
             animationTypeNumber = 1;
         } else {
-            throw geException("Animations: Invalid animation type string.",
+            throw Exception("Animations: Invalid animation type string.",
                     true, xmlAnimationElement->Row());
         }
 
         /* Create animation object here. (So that we can add control points later) */
-        geAnimation* temporaryAnimation;
-        temporaryAnimation = new geAnimation(animationId, animationSpan,
+        Animation* temporaryAnimation;
+        temporaryAnimation = new Animation(animationId, animationSpan,
                 animationTypeNumber);
 
         animationsVector.push_back(temporaryAnimation);
@@ -1070,7 +1070,7 @@ void Scene::xmlLoadAnimations() {
                 xmlAnimationPointElement =
                         xmlAnimationPointElement->NextSiblingElement();
             } else {
-                throw geException("Animation: Invalid child found.", true);
+                throw Exception("Animation: Invalid child found.", true);
             }
         }
 
@@ -1107,7 +1107,7 @@ std::string Scene::getStringFromElementAttribute(TiXmlElement* iElement,
         return std::string(valString);
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 xyzPointDouble Scene::getDoublePointFromElementAttribute(TiXmlElement* iElement,
@@ -1121,7 +1121,7 @@ xyzPointDouble Scene::getDoublePointFromElementAttribute(TiXmlElement* iElement,
         return output;
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 xyzPointFloat Scene::getFloatPointFromElementAttribute(TiXmlElement* iElement,
@@ -1135,7 +1135,7 @@ xyzPointFloat Scene::getFloatPointFromElementAttribute(TiXmlElement* iElement,
         return output;
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 color Scene::getColorFromElementAttribute(TiXmlElement* iElement,
@@ -1149,7 +1149,7 @@ color Scene::getColorFromElementAttribute(TiXmlElement* iElement,
         return output;
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 double Scene::getDoubleFromElementAttribute(TiXmlElement* iElement,
@@ -1161,7 +1161,7 @@ double Scene::getDoubleFromElementAttribute(TiXmlElement* iElement,
         return output;
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 float Scene::getFloatFromElementAttribute(TiXmlElement* iElement,
@@ -1173,7 +1173,7 @@ float Scene::getFloatFromElementAttribute(TiXmlElement* iElement,
         return output;
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement,
@@ -1185,7 +1185,7 @@ unsigned int Scene::getUnsignedIntFromElementAttribute(TiXmlElement* iElement,
         return output;
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 bool Scene::getAttributeExistence(TiXmlElement* iElement,
@@ -1208,7 +1208,7 @@ xyPointDouble Scene::get2DdPointFromElementAttribute(TiXmlElement* iElement,
         return output;
     }
 
-    throw geException(Error, true, iElement->Row());
+    throw Exception(Error, true, iElement->Row());
 }
 
 /* End XML functions */
@@ -1231,12 +1231,12 @@ void Scene::setAmbientLightColor(color in) {
 /* Validate values & strings */
 GLdouble Scene::validateOpenGLColour(GLdouble input) {
     if (input < -1.0) {
-        throw geException("Out of range color value!", true);
+        throw Exception("Out of range color value!", true);
         return -1.0;
     }
 
     if (input > 1.0) {
-        throw geException("Out of range color value!", true);
+        throw Exception("Out of range color value!", true);
         return 1.0;
     }
 
@@ -1252,7 +1252,7 @@ bool Scene::validateBoolean(std::string& input) {
         return false;
     }
 
-    throw geException("Invalid boolean value!", true);
+    throw Exception("Invalid boolean value!", true);
     return false;
 }
 
@@ -1263,7 +1263,7 @@ void Scene::setDrawMode(std::string& input) {
         this->drawMode = input;
 
     } else {
-        throw geException("Draw mode string not recognized!", true);
+        throw Exception("Draw mode string not recognized!", true);
     }
 }
 
@@ -1272,7 +1272,7 @@ void Scene::setShadingMode(std::string& input) {
             || (input == Xml::ATTRIBUTE_VALUE_SHADING_GOURAUD)) {
         this->shadingMode = input;
     } else {
-        throw geException("Shading mode string not recognized!", true);
+        throw Exception("Shading mode string not recognized!", true);
     }
 }
 
@@ -1283,7 +1283,7 @@ void Scene::setCullFace(std::string& input) {
             || (input == Xml::ATTRIBUTE_VALUE_CULLFACE_BOTH)) {
         this->cullFace = input;
     } else {
-        throw geException("Cull face string not recognized!", true);
+        throw Exception("Cull face string not recognized!", true);
     }
 }
 
@@ -1292,7 +1292,7 @@ void Scene::setCullOrder(std::string& input) {
             || (input == Xml::ATTRIBUTE_VALUE_CULLORDER_CW)) {
         this->cullOrder = input;
     } else {
-        throw geException("Cull order string not recognized!", true);
+        throw Exception("Cull order string not recognized!", true);
     }
 }
 /* End validate values & strings */
@@ -1404,7 +1404,7 @@ void Scene::initLights() {
 
 #ifdef ENGINE_VERBOSE
     if (!this->lightVector.empty ()) {
-        for (std::vector<geLight*>::iterator it = lightVector.begin (); it != this->lightVector.end (); it++) {
+        for (std::vector<Light*>::iterator it = lightVector.begin (); it != this->lightVector.end (); it++) {
             if ((*it)->getLightEnableStatus ()) {
                 std::cout << "Light enabled: [" << (*it)->getID () << "]" << std::endl;
             }
@@ -1415,7 +1415,7 @@ void Scene::initLights() {
 
 /* Initialize textures (throws a fatal geException if texture file doesn't exist) */
 void Scene::initTextures() {
-    for (std::vector<geTexture*>::iterator jt = textureVector.begin();
+    for (std::vector<Texture*>::iterator jt = textureVector.begin();
             jt != this->textureVector.end(); jt++) {
         (*jt)->loadTexture();
     }
@@ -1430,7 +1430,7 @@ void Scene::initAppearanceTextures() {
 
             std::string apperanceRef = (*it)->getTextureReference();
 
-            for (std::vector<geTexture*>::iterator jt = textureVector.begin();
+            for (std::vector<Texture*>::iterator jt = textureVector.begin();
                     jt != this->textureVector.end(); jt++) {
                 if ((*jt)->getXmlId() == apperanceRef) {
                     (*it)->setTexture(*jt);
@@ -1446,11 +1446,11 @@ void Scene::initAppearanceTextures() {
 /* Search initial camera and set current camera pointer to it */
 void Scene::setInitialCamera() {
     if (cameraVector.empty()) {
-        throw geException("Camera vector is empty!", true);
+        throw Exception("Camera vector is empty!", true);
     }
 
     if (currentCameraPointer != nullptr) {
-        throw geException("Current camera pointer is not NULL!", true);
+        throw Exception("Current camera pointer is not NULL!", true);
     }
 
     std::vector<CameraInterface*>::iterator cameraIt;
@@ -1465,14 +1465,14 @@ void Scene::setInitialCamera() {
     }
 
     if (currentCameraPointer == nullptr) {
-        throw geException("Initial camera not found!", true);
+        throw Exception("Initial camera not found!", true);
     }
 }
 
 /* Draw lights (each light pushes and pops a matrix) */
 void Scene::displayLights() {
     if (!this->lightVector.empty()) {
-        for (std::vector<geLight*>::iterator it = lightVector.begin();
+        for (std::vector<Light*>::iterator it = lightVector.begin();
                 it != this->lightVector.end(); it++) {
             if ((*it)->getLightEnableStatus()) {
                 (*it)->draw();
@@ -1486,7 +1486,7 @@ void Scene::applyCameraView() {
     if (this->currentCameraPointer != nullptr) {
         this->currentCameraPointer->applyView(this->aspectRatio);
     } else {
-        throw geException("The current camera pointer is NULL.", true);
+        throw Exception("The current camera pointer is NULL.", true);
     }
 }
 
@@ -1520,7 +1520,7 @@ GLdouble* Scene::getViewProjection() {
 void Scene::update(unsigned long millis) {
     /* Call the animations update */
     if (!this->animationsVector.empty()) {
-        for (std::vector<geAnimation*>::iterator it =
+        for (std::vector<Animation*>::iterator it =
                 this->animationsVector.begin();
                 it != this->animationsVector.end(); ++it) {
             (*it)->updateAnimation(millis);
@@ -1543,7 +1543,7 @@ void Scene::activateCamera(unsigned int i) {
         std::cout << ".";
         // CGFapplication::activeApp->forceRefresh();
     } else {
-        throw geException("Invalid camera chosen.", true);
+        throw Exception("Invalid camera chosen.", true);
     }
 }
 
@@ -1565,27 +1565,27 @@ Appearance* Scene::getAppearanceByString(std::string& in) {
                 }
             }
 
-            throw geException(
+            throw Exception(
                     "XML: Reference to a non existing appearance [" + in + "].",
                     true);
 
         } else {
-            throw geException("Bug: appearances vector is empty!", true);
+            throw Exception("Bug: appearances vector is empty!", true);
         }
 
     } else {
-        throw geException(
+        throw Exception(
                 "Bug: Attempting to find an apperance without appearances being loaded.",
                 true);
         return nullptr;
     }
 }
 
-geAnimation* Scene::getAnimationByString(std::string& in) {
+Animation* Scene::getAnimationByString(std::string& in) {
     if (this->xmlAnimationsLoaded) {
 
         if (!this->animationsVector.empty()) {
-            for (std::vector<geAnimation*>::iterator it =
+            for (std::vector<Animation*>::iterator it =
                     this->animationsVector.begin();
                     it != this->animationsVector.end(); ++it) {
                 if ((*it)->getID() == in) {
@@ -1593,18 +1593,18 @@ geAnimation* Scene::getAnimationByString(std::string& in) {
                 }
             }
 
-            throw geException(
+            throw Exception(
                     "XML: Reference to a non existing animation [" + in + "].",
                     true);
 
         } else {
-            throw geException(
+            throw Exception(
                     "XML: Reference to an animation, but no animation exists!",
                     true);
         }
 
     } else {
-        throw geException(
+        throw Exception(
                 "Bug: Attempting to find an animation without animations being loaded.",
                 true);
         return nullptr;

@@ -58,7 +58,7 @@ Application::Application(int argCount, char** args,
 
     try {
         scene = new ge::Scene(sceneFile);
-    } catch (geException& e) {
+    } catch (Exception& e) {
         e.printerErrorMessage();
     }
 

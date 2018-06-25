@@ -10,9 +10,9 @@
 #include <Animation.hpp>
 #include <Appearance.hpp>
 #include <Primitives.hpp>
+#include <Texture.hpp>
+#include <Transform.hpp>
 #include "includes.hpp"
-#include "geTransform.hpp"
-#include "geTexture.hpp"
 
 namespace ge {
 
@@ -28,7 +28,7 @@ protected:
 
     std::vector<std::string> childrenIdVector;
     std::vector<Node*> childrenVector;
-    std::list<geTransform*> transformList;
+    std::list<Transform*> transformList;
 
     /* OpenGL related */
     /* The transformationsMatrix only includes current node transforms */
@@ -37,7 +37,7 @@ protected:
     std::vector<GLdouble*> transformationMatrixVector;
 
     Appearance* nodeAppearance;
-    geAnimation* nodeAnimation;
+    Animation* nodeAnimation;
 
     std::vector<Primitives::PrimitiveInterface*> primitiveVector;
 
@@ -64,11 +64,11 @@ public:
     virtual ~Node();
 
     /* Input */
-    void addTransform(geTransform* in);
+    void addTransform(Transform* in);
     void setAppearance(Appearance* in);
     void addPrimitive(Primitives::PrimitiveInterface* in);
     void addChildrenID(std::string& in);
-    void setAnimation(geAnimation* in);
+    void setAnimation(Animation* in);
     std::vector<std::string>& getChildrenIDVector();
     std::vector<Node*>& getChildrenVector();
 

@@ -7,8 +7,8 @@
 #ifndef GEAPPEARANCE_HPP_
 #define GEAPPEARANCE_HPP_
 
+#include <Texture.hpp>
 #include "includes.hpp"
-#include "geTexture.hpp"
 
 #define MATERIAL_TYPE_COLOR 0
 #define MATERIAL_TYPE_MATERIAL 1
@@ -27,7 +27,7 @@ private:
 
     bool isTextured;
     std::string textureRef;
-    geTexture* texture;
+    Texture* texture;
 
     GLfloat sWrap, tWrap;
 
@@ -55,7 +55,7 @@ public:
     void setColour(GLdouble iR, GLdouble iG, GLdouble iB, GLdouble iAlpha);
 
     /* For already loaded textures */
-    void setTexture(geTexture* input);
+    void setTexture(Texture* input);
     void setTextureWrap(GLfloat iS, GLfloat iT);
 
     std::string getTextureReference();

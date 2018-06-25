@@ -12,7 +12,7 @@
 
 namespace ge {
 
-class geException {
+class Exception {
 private:
     std::string errorMessage;
 
@@ -22,15 +22,15 @@ private:
     }
 
 public:
-    geException() {
+    Exception() {
         errorMessage = "Unknown error.";
     }
 
-    geException(std::string str) {
+    Exception(std::string str) {
         errorMessage = str;
     }
 
-    geException(std::string str, bool fatal) {
+    Exception(std::string str, bool fatal) {
         errorMessage = str;
 
         if (fatal) {
@@ -42,7 +42,7 @@ public:
 
     }
 
-    geException(std::string str, bool fatal, int line) {
+    Exception(std::string str, bool fatal, int line) {
         errorMessage = str;
 
         if (fatal) {

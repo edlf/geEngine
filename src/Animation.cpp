@@ -7,7 +7,7 @@
 #include <Animation.hpp>
 
 namespace ge {
-void geAnimation::updateDeltas() {
+void Animation::updateDeltas() {
     if (deltaTimeSingleMove > 0) {
         dX = abs(currentDestionationPoint.x - currentSourcePoint.x)
                 / deltaTimeSingleMove;
@@ -18,16 +18,16 @@ void geAnimation::updateDeltas() {
     }
 }
 
-void geAnimation::updateAngles() {
+void Animation::updateAngles() {
     /* Must fix angles */
     angleX = acos(dX / dY) * deg2rad;
     angleZ = asin(dZ / dY) * deg2rad;
 }
 
-geAnimation::geAnimation(const std::string& iId, float iSpan,
+Animation::Animation(const std::string& iId, float iSpan,
         unsigned int iType) {
     if (iType != 1) {
-        throw geException("Bug: Invalid type fed into geAnimation!", true);
+        throw Exception("Bug: Invalid type fed into Animation!", true);
     }
 
     this->deg2rad = M_PI / 180.0;
@@ -61,11 +61,11 @@ geAnimation::geAnimation(const std::string& iId, float iSpan,
     this->deltaTimeSingleMove = 0;
 }
 
-void geAnimation::insertPoint(xyzPointDouble in) {
+void Animation::insertPoint(xyzPointDouble in) {
     insertPoint(in.x, in.y, in.z);
 }
 
-void geAnimation::insertPoint(GLdouble ix, GLdouble iy, GLdouble iz) {
+void Animation::insertPoint(GLdouble ix, GLdouble iy, GLdouble iz) {
     /* Cheap way to set the first start point */
     if (numberOfControlPoints == 0) {
         currentSourcePoint.x = ix;
@@ -104,20 +104,20 @@ void geAnimation::insertPoint(GLdouble ix, GLdouble iy, GLdouble iz) {
                 * 1000 / GLUT_UPDATE_MS);
 
     } else {
-        throw geException("Bug: Division by zero on inserPoint at geAnimation.",
+        throw Exception("Bug: Division by zero on inserPoint at Animation.",
                 true);
     }
 }
 
-unsigned long geAnimation::getDeltaTime() {
+unsigned long Animation::getDeltaTime() {
     return this->deltaTimeMillis;
 }
 
-std::string geAnimation::getID() {
+std::string Animation::getID() {
     return this->id;
 }
 
-void geAnimation::updateAnimation(unsigned long timePassed) {
+void Animation::updateAnimation(unsigned long timePassed) {
     /* Check if the animation has ended */
     if (hasEnded) {
         return;
@@ -170,7 +170,7 @@ void geAnimation::updateAnimation(unsigned long timePassed) {
     }
 }
 
-void geAnimation::applyAnimation() {
+void Animation::applyAnimation() {
     /* Apply rotation */
     glRotated(angleX, 1, 0, 0);
     glRotated(angleZ, 0, 0, 1);
@@ -179,7 +179,7 @@ void geAnimation::applyAnimation() {
     glTranslated(x, y, z);
 }
 
-geAnimation::~geAnimation() {
+Animation::~Animation() {
 
 }
 

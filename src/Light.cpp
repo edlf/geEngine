@@ -4,11 +4,12 @@
  * Light class methods.
  */
 
+#include <Light.hpp>
 #include <Primitives.hpp>
-#include "geLight.hpp"
 
 namespace ge {
-geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable,
+
+OmniLight::OmniLight(const std::string& lightID, int openGLid, bool iEnable,
         xyzPointFloat iLocation, color iAmbient, color iDiffuse,
         color iSpecular) {
 
@@ -24,7 +25,7 @@ geOmniLight::geOmniLight(const std::string& lightID, int openGLid, bool iEnable,
     gluQuadric = gluNewQuadric();
 }
 
-geSpotLight::geSpotLight(const std::string& lightID, int openGLid, bool iEnable,
+SpotLight::SpotLight(const std::string& lightID, int openGLid, bool iEnable,
         xyzPointFloat iLocation, color iAmbient, color iDiffuse,
         color iSpecular, GLfloat iSpotAngle, GLfloat iSpotExponent,
         xyzPointFloat iSpotDirection) {
@@ -46,106 +47,106 @@ geSpotLight::geSpotLight(const std::string& lightID, int openGLid, bool iEnable,
 }
 
 /* Sets */
-void geLight::setLocation(GLfloat iX, GLfloat iY, GLfloat iZ) {
+void Light::setLocation(GLfloat iX, GLfloat iY, GLfloat iZ) {
     this->location[0] = iX;
     this->location[1] = iY;
     this->location[2] = iZ;
     this->location[3] = 1.0f;
 }
 
-void geLight::setLocation(xyzPointFloat input) {
+void Light::setLocation(xyzPointFloat input) {
     setLocation(input.x, input.y, input.z);
 }
 
-void geLight::setAmbient(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Light::setAmbient(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
     this->ambient[0] = iR;
     this->ambient[1] = iG;
     this->ambient[2] = iB;
     this->ambient[3] = iAlpha;
 }
 
-void geLight::setAmbient(color input) {
+void Light::setAmbient(color input) {
     setAmbient(input.r, input.g, input.b, input.a);
 }
 
-void geLight::setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Light::setDiffuse(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
     this->diffuse[0] = iR;
     this->diffuse[1] = iG;
     this->diffuse[2] = iB;
     this->diffuse[3] = iAlpha;
 }
 
-void geLight::setDiffuse(color input) {
+void Light::setDiffuse(color input) {
     setDiffuse(input.r, input.g, input.b, input.a);
 }
 
-void geLight::setSpecular(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
+void Light::setSpecular(GLfloat iR, GLfloat iG, GLfloat iB, GLfloat iAlpha) {
     this->specular[0] = iR;
     this->specular[1] = iG;
     this->specular[2] = iB;
     this->specular[3] = iAlpha;
 }
 
-void geLight::setSpecular(color input) {
+void Light::setSpecular(color input) {
     setSpecular(input.r, input.g, input.b, input.a);
 
 }
 
-void geSpotLight::setAngle(GLdouble input) {
+void SpotLight::setAngle(GLdouble input) {
     this->angle = input;
 }
 
-void geSpotLight::setExponent(GLfloat input) {
+void SpotLight::setExponent(GLfloat input) {
     this->exponent[0] = input;
 }
 
-void geSpotLight::setDirection(GLfloat iX, GLfloat iY, GLfloat iZ) {
+void SpotLight::setDirection(GLfloat iX, GLfloat iY, GLfloat iZ) {
     this->direction[0] = iX;
     this->direction[1] = iY;
     this->direction[2] = iZ;
     this->direction[3] = 0.0f;
 }
 
-void geSpotLight::setDirection(xyzPointFloat input) {
+void SpotLight::setDirection(xyzPointFloat input) {
     setDirection(input.x, input.y, input.z);
 }
 
-void geLight::toggleEnable() {
+void Light::toggleEnable() {
     this->enabled = !(this->enabled);
 }
 
 /* Gets */
-bool geLight::getLightEnableStatus() {
+bool Light::getLightEnableStatus() {
     return enabled;
 }
 
-std::string geLight::getID() {
+std::string Light::getID() {
     return id;
 }
 
-void geOmniLight::draw() {
+void OmniLight::draw() {
     update();
-#ifdef LIGHT_SPHERE_ENABLED
-    /* Draw sphere in the light location */
-    glPushMatrix ();
-    glTranslatef (location [0], location [1], location [2]);
-    gluSphere (gluQuadric, 0.1, 16, 16);
-    glPopMatrix ();
-#endif
+    if (lightSphereEnabled){
+        /* Draw sphere in the light location */
+        glPushMatrix ();
+        glTranslatef (location [0], location [1], location [2]);
+        gluSphere (gluQuadric, 0.1, 16, 16);
+        glPopMatrix ();
+    }
 }
 
-void geSpotLight::draw() {
+void SpotLight::draw() {
     update();
-#ifdef LIGHT_SPHERE_ENABLED
-    /* Draw sphere in the light location */
-    glPushMatrix ();
-    glTranslatef (location [0], location [1], location [2]);
-    gluSphere (gluQuadric, 0.1, 16, 16);
-    glPopMatrix ();
-#endif
+    if (lightSphereEnabled) {
+        /* Draw sphere in the light location */
+        glPushMatrix ();
+        glTranslatef (location [0], location [1], location [2]);
+        gluSphere (gluQuadric, 0.1, 16, 16);
+        glPopMatrix ();
+    }
 }
 
-void geOmniLight::update() {
+void OmniLight::update() {
     if (enabled) {
         glEnable(openGLid);
 
@@ -160,7 +161,7 @@ void geOmniLight::update() {
 
 }
 
-void geSpotLight::update() {
+void SpotLight::update() {
     if (enabled) {
         glEnable(openGLid);
 
@@ -177,14 +178,26 @@ void geSpotLight::update() {
 
 }
 
-void geLight::enable() {
+void Light::enable() {
     this->enabled = true;
     update();
 }
 
-void geLight::disable() {
+void Light::disable() {
     this->enabled = false;
     update();
+}
+
+Light::~Light(){
+
+}
+
+OmniLight::~OmniLight(){
+
+}
+
+SpotLight::~SpotLight(){
+
 }
 
 }

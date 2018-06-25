@@ -11,16 +11,16 @@
 
 namespace ge {
 
-class geTransform {
+class Transform {
 protected:
     int transformNumber;
     GLdouble matrix[16];
 
 public:
-    geTransform(int number) {
+    Transform(int number) {
         transformNumber = number;
     }
-    virtual ~geTransform() {
+    virtual ~Transform() {
 
     }
 
@@ -28,13 +28,13 @@ public:
     virtual void apply() = 0;
 };
 
-class geTransformTranslate: public geTransform {
+class TransformTranslate: public Transform {
 private:
     GLdouble destination[3];
 
 public:
-    geTransformTranslate(xyzPointDouble in, int tN) :
-            geTransform(tN) {
+    TransformTranslate(xyzPointDouble in, int tN) :
+            Transform(tN) {
         destination[0] = in.x;
         destination[1] = in.y;
         destination[2] = in.z;
@@ -60,8 +60,8 @@ public:
         matrix[15] = 1;
     }
 
-    geTransformTranslate(GLdouble x, GLdouble y, GLdouble z, int tN) :
-            geTransform(tN) {
+    TransformTranslate(GLdouble x, GLdouble y, GLdouble z, int tN) :
+            Transform(tN) {
         destination[0] = x;
         destination[1] = y;
         destination[2] = z;
@@ -96,7 +96,7 @@ public:
     }
 };
 
-class geTransformRotate: public geTransform {
+class TransformRotate: public Transform {
 private:
     GLdouble axisArray[3];
     GLdouble angle;
@@ -118,8 +118,8 @@ private:
     }
 
 public:
-    geTransformRotate(int iAxis, GLdouble iAngle, int tN) :
-            geTransform(tN) {
+    TransformRotate(int iAxis, GLdouble iAngle, int tN) :
+            Transform(tN) {
         angleRad = (iAngle * M_PI) / 180;
 
         axisArray[0] = 0;
@@ -204,7 +204,7 @@ public:
                 break;
 
             default:
-                throw geException(
+                throw Exception(
                         "Bug: Invalid value fed to axis at geTransformRotate!",
                         true);
                 break;
@@ -213,7 +213,7 @@ public:
         angle = iAngle;
     }
 
-    virtual ~geTransformRotate() {
+    virtual ~TransformRotate() {
 
     }
 
@@ -227,12 +227,12 @@ public:
 
 };
 
-class geTransformScale: public geTransform {
+class TransformScale: public Transform {
 private:
     GLdouble scaleFactor[3];
 public:
-    geTransformScale(xyzPointDouble in, int tN) :
-            geTransform(tN) {
+    TransformScale(xyzPointDouble in, int tN) :
+            Transform(tN) {
         scaleFactor[0] = in.x;
         scaleFactor[1] = in.y;
         scaleFactor[2] = in.z;
@@ -258,8 +258,8 @@ public:
         matrix[15] = 1;
     }
 
-    geTransformScale(GLdouble x, GLdouble y, GLdouble z, int tN) :
-            geTransform(tN) {
+    TransformScale(GLdouble x, GLdouble y, GLdouble z, int tN) :
+            Transform(tN) {
         scaleFactor[0] = x;
         scaleFactor[1] = y;
         scaleFactor[2] = z;
@@ -296,4 +296,4 @@ public:
 };
 }
 
-#endif /* GETRANSFORM_HPP_ */
+#endif /* TRANSFORM_HPP_ */

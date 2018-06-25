@@ -4,29 +4,29 @@
  * Texture class methods.
  */
 
-#include "geTexture.hpp"
+#include <Texture.hpp>
 
 namespace ge {
 
-geTexture::geTexture(std::string& xmlIdIn, std::string& input) {
+Texture::Texture(std::string& xmlIdIn, std::string& input) {
     this->loaded = false;
     this->xmlId = xmlIdIn;
     this->fileName = input;
 }
 
-GLuint geTexture::getIdOpenGL() {
+GLuint Texture::getIdOpenGL() {
     return this->idOpenGL;
 }
 
-int geTexture::getWidth() {
+int Texture::getWidth() {
     return this->width;
 }
 
-int geTexture::getHeight() {
+int Texture::getHeight() {
     return this->height;
 }
 
-void geTexture::loadTexture() {
+void Texture::loadTexture() {
 
     if (!this->fileName.empty()) {
 
@@ -55,24 +55,24 @@ void geTexture::loadTexture() {
             free(data);
 
         } else {
-            throw geException(
+            throw Exception(
                     "The texture could not be loaded: [" + this->fileName + "]",
                     true);
         }
     }
 }
 
-void geTexture::apply() {
+void Texture::apply() {
     if (this->loaded) {
         glBindTexture(GL_TEXTURE_2D, idOpenGL);
     }
 }
 
-std::string geTexture::getXmlId() {
+std::string Texture::getXmlId() {
     return this->xmlId;
 }
 
-geTexture::~geTexture() {
+Texture::~Texture() {
 
 }
 

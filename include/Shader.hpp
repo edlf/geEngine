@@ -7,9 +7,11 @@
 #ifndef GESHADER_HPP
 #define GESHADER_HPP
 
+#include <GL/glew.h>
+
 namespace ge {
 
-class geShader {
+class Shader {
 private:
     GLuint ID;
     GLuint vertexShaderPointer;
@@ -20,10 +22,10 @@ private:
     unsigned int totalTimePassed;
 
 public:
-    geShader(const char *vsFile, const char *fsFile);
-    virtual ~geShader();
+    Shader(const char *vsFile, const char *fsFile);
+    virtual ~Shader();
 
-    virtual void update(float time);///< Updates the _time_ uniform (if it exists) with the value _time_.
+    virtual void update(float time);
 
     /* Activates the shader */
     virtual void bind();

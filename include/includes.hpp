@@ -11,8 +11,6 @@
 
 /* Remove the comment bellow to see the engine output */
 //#define ENGINE_VERBOSE
-/* Remove the comment bellow to see white spheres on light sources */
-//#define LIGHT_SPHERE_ENABLED
 /* OpenGL light max */
 #define MAX_LIGHTS 8
 
@@ -64,7 +62,7 @@ extern "C" {
 #include <GL/glui.h>
 
 #include <types.hpp>
-#include "geException.hpp"
+#include <Exception.hpp>
 
 /* Win32 Hacks */
 #ifdef WIN32

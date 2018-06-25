@@ -4,8 +4,8 @@
  * Shader class methods, stolen from CGFlib.
  */
 
+#include <Shader.hpp>
 #include "includes.hpp"
-#include "geShader.hpp"
 
 namespace ge {
 
@@ -70,7 +70,7 @@ static void validateProgram(GLuint program) {
     }
 }
 
-geShader::geShader(const char *vsFile, const char *fsFile) {
+Shader::Shader(const char *vsFile, const char *fsFile) {
     vertexShaderPointer = glCreateShader(GL_VERTEX_SHADER);
     fragmentShaderPointer = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -107,7 +107,7 @@ geShader::geShader(const char *vsFile, const char *fsFile) {
     this->totalTimePassed = 0;
 }
 
-geShader::~geShader() {
+Shader::~Shader() {
     glDetachShader(ID, fragmentShaderPointer);
     glDetachShader(ID, vertexShaderPointer);
 
@@ -116,19 +116,19 @@ geShader::~geShader() {
     glDeleteProgram(ID);
 }
 
-unsigned int geShader::getId() {
+unsigned int Shader::getId() {
     return ID;
 }
 
-void geShader::bind() {
+void Shader::bind() {
     glUseProgram(ID);
 }
 
-void geShader::unbind() {
+void Shader::unbind() {
     glUseProgram(0);
 }
 
-void geShader::update(float time) {
+void Shader::update(float time) {
     if (timeloc != -1) {
         glUniform1f(timeloc, (float) time);
     }

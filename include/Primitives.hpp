@@ -7,9 +7,9 @@
 #ifndef GEPRIMITIVE_HPP_
 #define GEPRIMITIVE_HPP_
 
+#include <Shader.hpp>
+#include <Texture.hpp>
 #include "includes.hpp"
-#include "geTexture.hpp"
-#include "geShader.hpp"
 
 namespace ge {
 namespace Primitives {
@@ -207,9 +207,9 @@ class WaterLine: public PrimitiveInterface {
 protected:
     std::string heightmap, texturemap, fragmentshader, vertexshader;
 
-    geTexture* heightmapTexture;
-    geTexture* texture;
-    geShader* waterShader;
+    Texture* heightmapTexture;
+    Texture* texture;
+    Shader* waterShader;
 
     Plane* plane;
 

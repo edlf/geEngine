@@ -10,11 +10,12 @@
 
 namespace ge {
 
-class geLight {
+class Light {
 protected:
     std::string id;
     int openGLid;
     bool enabled;
+    bool lightSphereEnabled;
 
     GLfloat location[4];
     GLfloat ambient[4];
@@ -26,6 +27,8 @@ protected:
     float kc, kl, kq;
 
 public:
+    virtual ~Light();
+
     /* Sets */
     void setLocation(GLfloat iX, GLfloat iY, GLfloat iZ);
     void setLocation(xyzPointFloat input);
@@ -38,7 +41,6 @@ public:
 
     void toggleEnable();
 
-    /* Gets */
     bool getLightEnableStatus();
     std::string getID();
 
@@ -46,36 +48,43 @@ public:
     virtual void update() = 0;
     void enable();
     void disable();
-
-    virtual ~geLight() {
-    }
 };
 
-class geOmniLight: public geLight {
+class OmniLight: public Light {
 protected:
 
 public:
-    geOmniLight(const std::string& lightID, int openGLid, bool iEnable,
-            xyzPointFloat iLocation, color iAmbient, color iDiffuse,
-            color iSpecular);
+    OmniLight(const std::string& lightID,
+              int openGLid,
+              bool iEnable,
+              xyzPointFloat iLocation,
+              color iAmbient,
+              color iDiffuse,
+              color iSpecular);
+    virtual ~OmniLight();
 
     void draw();
     void update();
-    virtual ~geOmniLight() {
-    }
 };
 
-class geSpotLight: public geLight {
+class SpotLight: public Light {
 protected:
     GLdouble angle;
     GLfloat exponent[1];
     GLfloat direction[4];
 
 public:
-    geSpotLight(const std::string& lightID, int openGLid, bool iEnable,
-            xyzPointFloat iLocation, color iAmbient, color iDiffuse,
-            color iSpecular, GLfloat iAngle, GLfloat iExponent,
-            xyzPointFloat iDirection);
+    SpotLight(const std::string& lightID,
+              int openGLid,
+              bool iEnable,
+              xyzPointFloat iLocation,
+              color iAmbient,
+              color iDiffuse,
+              color iSpecular,
+              GLfloat iAngle,
+              GLfloat iExponent,
+              xyzPointFloat iDirection);
+    virtual ~SpotLight();
 
     void setAngle(GLdouble input);
     void setExponent(GLfloat input);
@@ -84,8 +93,6 @@ public:
 
     void draw();
     void update();
-    virtual ~geSpotLight() {
-    }
 };
 
 }

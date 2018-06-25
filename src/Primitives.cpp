@@ -42,7 +42,7 @@ void PrimitiveInterface::fghCircleTable(double **sint, double **cost,
     if (!(*sint) || !(*cost)) {
         free(*sint);
         free(*cost);
-        throw geException("Failed to allocate memory in fghCircleTable.", true);
+        throw Exception("Failed to allocate memory in fghCircleTable.", true);
     }
 
     /* Compute cos and sin around the circle */
@@ -111,7 +111,7 @@ PrimitiveInterface::~PrimitiveInterface() {
 Rectangle::Rectangle(xyPointDouble pt1, xyPointDouble pt2) {
     /* Check if rectangle is valid */
     if (pt1.x == pt2.x || pt1.y == pt2.y) {
-        throw geException(
+        throw Exception(
                 "Invalid rectangle defined: the sides must not be equal!",
                 true);
     }
@@ -128,7 +128,7 @@ Rectangle::Rectangle(GLdouble inX0, GLdouble inY0, GLdouble inX1,
         GLdouble inY1) {
     /* Check if rectangle is valid */
     if (inX0 == inX1 || inY0 == inY1) {
-        throw geException(
+        throw Exception(
                 "Invalid rectangle defined: the sides must not be equal!",
                 true);
     }
@@ -282,7 +282,7 @@ Cylinder::Cylinder(GLdouble iBase, GLdouble iTop, GLdouble iHeight,
 
     if (slices < 2 || stacks < 1 || baseRadius < 0.0 || topRadius < 0.0
             || height < 0.0) {
-        throw geException("Invalid values fed to geCylinder.", true);
+        throw Exception("Invalid values fed to geCylinder.", true);
     }
 
     /* Compute length (needed for normal calculations) */
@@ -290,7 +290,7 @@ Cylinder::Cylinder(GLdouble iBase, GLdouble iTop, GLdouble iHeight,
     length = sqrt(deltaRadius * deltaRadius + height * height);
 
     if (length == 0.0) {
-        throw geException("Invalid values fed to geCylinder", true);
+        throw Exception("Invalid values fed to geCylinder", true);
     }
 
     zNormal = deltaRadius / length;
@@ -666,7 +666,7 @@ void Patch::insertPoint(GLdouble ix, GLdouble iy, GLdouble iz) {
         }
 
     } else {
-        throw geException("gePatch: Too many points!", true);
+        throw Exception("gePatch: Too many points!", true);
     }
 }
 
@@ -686,7 +686,7 @@ void Patch::insertPoint(xyzPointDouble i) {
         }
 
     } else {
-        throw geException("gePatch: Too many points!", true);
+        throw Exception("gePatch: Too many points!", true);
     }
 }
 
@@ -847,10 +847,10 @@ WaterLine::WaterLine(std::string& hmap, std::string& tmap, std::string& fshader,
     /* Do not create shader object before openGL is initialized */
     this->waterShader = nullptr;
     std::string heightMapTextureName = "INTERNAL_heightMap";
-    this->heightmapTexture = new geTexture(heightMapTextureName,
+    this->heightmapTexture = new Texture(heightMapTextureName,
             this->heightmap);
     std::string textureName = "INTERNAL_textureMap";
-    this->texture = new geTexture(textureName, this->texturemap);
+    this->texture = new Texture(textureName, this->texturemap);
 
     this->dT = 0.0f;
     this->deltaTimeLoc = 0;
@@ -865,7 +865,7 @@ WaterLine::~WaterLine() {
 void WaterLine::draw(GLdouble s, GLdouble t) {
     if (waterShader == nullptr) {
         /* Create the actual shader object */
-        this->waterShader = new geShader(vertexshader.c_str(),
+        this->waterShader = new Shader(vertexshader.c_str(),
                 fragmentshader.c_str());
         this->heightmapTexture->loadTexture();
         this->texture->loadTexture();
