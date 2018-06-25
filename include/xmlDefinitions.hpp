@@ -11,357 +11,376 @@
 namespace ge {
 namespace Xml {
 
+typedef const char* const cString;
+
 // DOCUMENT TYPE
-const char* const DOCUMENT_TYPE = "yaf";
+cString DocumentType = "yaf";
 
-// MAIN SECTION TAGS
-const char* const SECTION_GLOBALS = "globals";
-const char* const SECTION_CAMERAS = "cameras";
-const char* const SECTION_LIGHTS = "lighting";
-const char* const SECTION_TEXTURES = "textures";
-const char* const SECTION_APPEARANCES = "appearances";
-const char* const SECTION_GRAPH = "graph";
-const char* const SECTION_ANIMATIONS = "animations";
+namespace Blocks {
+    cString Node = "node";
+    cString NodeReference = "noderef";
+    cString RootNodeID = "rootid";
+    cString Children = "children";
+}
 
-// BLOCK TAGS
-const char* const BLOCK_NODE = "node";
-const char* const BLOCK_TRANSFORMS = "transforms";
-const char* const BLOCK_CHILDREN = "children";
+namespace Nodes
+{
+    cString Graph = "graph";
 
-// REFERENCE TAGS
-const char* const REFERENCE_APPEARANCE = "appearanceref";
-const char* const REFERENCE_NODE = "noderef";
-const char* const REFERENCE_ANIMATION = "animationref";
+    namespace Globals {
+        cString RootNode = "globals";
 
-// COMMON ATTRIBUTES
-const char* const ATTRIBUTE_ID = "id";
-const char* const ATTRIBUTE_FILE = "file";
-const char* const ATTRIBUTE_ENABLED = "enabled";
-const char* const ATTRIBUTE_VALUE_TRUE = "true";
-const char* const ATTRIBUTE_VALUE_FALSE = "false";
-const char* const ATTRIBUTE_ANGLE = "angle";
+        namespace Attributes {
+            cString Background = "background";
+            cString DrawMode = "drawmode";
+            cString Shading = "shading";
+            cString CullFace = "cullface";
+            cString CullOrder = "cullorder";
+        }
 
-// GLOBAL ATTRIBUTES
-const char* const ATTRIBUTE_BACKGROUND = "background";
+        namespace Values {
+            cString DrawModeFill = "fill";
+            cString DrawmodeLine = "line";
+            cString DrawModePoint = "point";
+            cString ShadingFlat = "flat";
+            cString ShadingGouraud = "gouraud";
+            cString CullFaceNone = "none";
+            cString CullFaceBack = "back";
+            cString CullFaceFront = "front";
+            cString CullFaceBoth = "both";
+            cString CullOrderCCW = "CCW";
+            cString CullOrderCW = "CW";
+        }
+    }
 
-const char* const ATTRIBUTE_DRAWMODE = "drawmode";
-const char* const ATTRIBUTE_VALUE_DRAWMODE_FILL = "fill";
-const char* const ATTRIBUTE_VALUE_DRAWMODE_LINE = "line";
-const char* const ATTRIBUTE_VALUE_DRAWMODE_POINT = "point";
+    namespace Animations {
+        cString RootNode = "animations";
+        cString NodeReference = "animationref";
+        cString Animation = "animation";
 
-const char* const ATTRIBUTE_SHADING = "shading";
-const char* const ATTRIBUTE_VALUE_SHADING_FLAT = "flat";
-const char* const ATTRIBUTE_VALUE_SHADING_GOURAUD = "gouraud";
+        namespace Attributes {
+            cString Span = "span";
+            cString Type = "type";
+            cString x = "xx";
+            cString y = "yy";
+            cString z = "zz";
+        }
 
-const char* const ATTRIBUTE_CULLFACE = "cullface";
-const char* const ATTRIBUTE_VALUE_CULLFACE_NONE = "none";
-const char* const ATTRIBUTE_VALUE_CULLFACE_BACK = "back";
-const char* const ATTRIBUTE_VALUE_CULLFACE_FRONT = "front";
-const char* const ATTRIBUTE_VALUE_CULLFACE_BOTH = "both";
+        namespace Values {
+            cString Linear = "linear";
+        }
+    }
 
-const char* const ATTRIBUTE_CULLORDER = "cullorder";
-const char* const ATTRIBUTE_VALUE_CULLORDER_CCW = "CCW";
-const char* const ATTRIBUTE_VALUE_CULLORDER_CW = "CW";
+    namespace Appearances {
+        cString RootNode = "appearances";
+        cString NodeReference = "appearanceref";
 
-// CAMERA TAGS
-const char* const ATTRIBUTE_INITIAL_CAMERA = "initial";
-const char* const SECTION_CAMERA_PERSPECTIVE = "perspective";
-const char* const SECTION_CAMERA_ORTHO = "ortho";
+        cString Appearance = "appearance";
+        cString Rectangle = "rectangle";
+        cString Triangle = "triangle";
+        cString Cylinder = "cylinder";
+        cString Sphere = "sphere";
+        cString Torus = "torus";
+        cString Plane = "plane";
+        cString Patch = "patch";
+        cString Vehicle = "vehicle";
+        cString WaterLine = "waterline";
+        cString ControlPoint = "controlpoint";
 
-// CAMERA ATTRIBUTES (COMMON)
-const char* const ATTRIBUTE_CAMERA_NEAR = "near";
-const char* const ATTRIBUTE_CAMERA_FAR = "far";
+        namespace Attributes {
+            cString Angle = "angle";
+            cString xy1 = "xy1";
+            cString xy2 = "xy2";
+            cString xyz1 = "xyz1";
+            cString xyz2 = "xyz2";
+            cString xyz3 = "xyz3";
+            cString Base = "base";
+            cString Top = "top";
+            cString Height = "height";
+            cString Slices = "slices";
+            cString Stacks = "stacks";
+            cString Radius = "radius";
+            cString Inner = "inner";
+            cString Outer = "outer";
+            cString Loops = "loops";
+            cString Parts = "parts";
+            cString Order = "order";
+            cString PartsU = "partsU";
+            cString PartsV = "partsV";
+            cString Compute = "compute";
+            cString x = "x";
+            cString y = "y";
+            cString z = "z";
+            cString HeightMap = "heightmap";
+            cString TextureMap = "texturemap";
+            cString FragmentShader = "fragmentshader";
+            cString VertexShader = "vertexshader";
+            cString Emissive = "emissive";
+            cString Ambient = "ambient";
+            cString Diffuse = "diffuse";
+            cString Specular = "specular";
+            cString Shininess = "shininess";
+        }
+    }
 
-// PERSPECTIVE CAMERA ATTRIBUTES
-const char* const ATTRIBUTE_CAMERA_POSITION = "pos";
-const char* const ATTRIBUTE_CAMERA_TARGET = "target";
-const char* const ATTRIBUTE_CAMERA_ANGLE = "angle";
+    namespace Cameras {
+        cString RootNode = "cameras";
+        cString Perspective = "perspective";
+        cString Ortho = "ortho";
 
-// ORTHO CAMERA ATTRIBUTES
-const char* const ATTRIBUTE_CAMERA_LEFT = "left";
-const char* const ATTRIBUTE_CAMERA_RIGHT = "right";
-const char* const ATTRIBUTE_CAMERA_TOP = "top";
-const char* const ATTRIBUTE_CAMERA_BOTTOM = "bottom";
+        namespace Attributes {
+            cString InitialCamera = "initial";
+            cString Near = "near";
+            cString Far = "far";
+            cString Position = "pos";
+            cString Target = "target";
+            cString Angle = "angle";
+            cString Left = "left";
+            cString Right = "right";
+            cString Top = "top";
+            cString Bottom = "bottom";
+        }
+    }
 
-// LIGHTING TAGS
-const char* const SECTION_LIGHTING_OMNI = "omni";
-const char* const SECTION_LIGHTING_SPOT = "spot";
+    namespace DisplayLists {
+        cString RootNode  = "displaylist";
+    }
 
-// LIGHTING ATTRIBUTES
-const char* const ATTRIBUTE_LIGHTING_DOUBLESIDED = "doublesided";
-const char* const ATTRIBUTE_LIGHTING_LOCAL = "local";
+    namespace Lights {
+        cString RootNode = "lighting";
+        cString Omni = "omni";
+        cString Spot = "spot";
 
-// OMNI LIGHTING ATTRIBUTES;
-const char* const ATTRIBUTE_LIGHTING_LOCATION = "location";
-const char* const ATTRIBUTE_LIGHTING_AMBIENT = "ambient";
-const char* const ATTRIBUTE_LIGHTING_DIFFUSE = "diffuse";
-const char* const ATTRIBUTE_LIGHTING_SPECULAR = "specular";
+        namespace Attributes {
+            cString Angle = "angle";
+            cString DoubleSided = "doublesided";
+            cString Local = "local";
+            cString Location = "location";
+            cString Ambient = "ambient";
+            cString Diffuse = "diffuse";
+            cString Specular = "specular";
+            cString Exponent = "exponent";
+            cString Direction = "direction";
+        }
+    }
 
-// SPOT LIGHTING ATTRIBUTES
-const char* const ATTRIBUTE_LIGHTING_EXPONENT = "exponent";
-const char* const ATTRIBUTE_LIGHTING_DIRECTION = "direction";
+    namespace Textures {
+        cString RootNode = "textures";
 
-// APPEARANCE TAG
-const char* const SECTION_APPEARANCE = "appearance";
+        namespace Attributes {
+            cString ID = "textureref";
+            cString LenghtS = "texlength_s";
+            cString LenghtT = "texlength_t";
+        }
+    }
 
-// APPEARANCE ATTRIBUTES
-const char* const ATTRIBUTE_APPEARANCE_EMISSIVE = "emissive";
-const char* const ATTRIBUTE_APPEARANCE_AMBIENT = "ambient";
-const char* const ATTRIBUTE_APPEARANCE_DIFFUSE = "diffuse";
-const char* const ATTRIBUTE_APPEARANCE_SPECULAR = "specular";
-const char* const ATTRIBUTE_APPEARANCE_SHININESS = "shininess";
+    namespace Transforms {
+        cString RootNode = "transforms";
+        cString Translate = "translate";
+        cString Rotate = "rotate";
+        cString Scale = "scale";
 
-// APPEARANCE ATTRIBUTES (OPTIONAL)
-const char* const ATTRIBUTE_APPEARANCE_TEXTURE_ID = "textureref";
-const char* const ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_S = "texlength_s";
-const char* const ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_T = "texlength_t";
+        namespace Attributes {
+            cString To = "to";
+            cString Axis = "axis";
+            cString Factor = "factor";
+        }
+    }
+}
 
-// NODE ATTRIBUTES
-const char* const ATTRIBUTE_NODE_DISPLAYLIST = "displaylist";
+namespace GenericAttributes
+{
+cString ID = "id";
+cString File = "file";
+cString Enabled = "enabled";
+cString ValueTrue = "true";
+cString ValueFalse = "false";
+}
 
-// GRAPH ATTRIBUTES
-const char* const ATTRIBUTE_GRAPH_ROOTID = "rootid";
-
-// TRANSFORM TAG
-const char* const SECTION_TRANSFORM_TRANSLATE = "translate";
-const char* const SECTION_TRANSFORM_ROTATE = "rotate";
-const char* const SECTION_TRANSFORM_SCALE = "scale";
-
-// TRANSFORM ATTRIBUTES
-const char* const ATTRIBUTE_TRANSFORM_TO = "to";
-const char* const ATTRIBUTE_TRANSFORM_AXIS = "axis";
-const char* const ATTRIBUTE_TRANSFORM_FACTOR = "factor";
-
-// OPENGL PRIMITIVE TAGS
-const char* const SECTION_PRIMITIVE_RECTANGLE = "rectangle";
-const char* const SECTION_PRIMITIVE_TRIANGLE = "triangle";
-const char* const SECTION_PRIMITIVE_CYLINDER = "cylinder";
-const char* const SECTION_PRIMITIVE_SPHERE = "sphere";
-const char* const SECTION_PRIMITIVE_TORUS = "torus";
-const char* const SECTION_PRIMITIVE_PLANE = "plane";
-const char* const SECTION_PRIMITIVE_PATCH = "patch";
-const char* const SECTION_PRIMITIVE_VEHICLE = "vehicle";
-const char* const SECTION_PRIMITIVE_WATERLINE = "waterline";
-const char* const SECTION_PRIMITIVE_CONTROLPOINT = "controlpoint";
-
-// OPENGL PRIMITIVE ATTRIBUTES
-const char* const ATTRIBUTE_PRIMITIVE_XY1 = "xy1";
-const char* const ATTRIBUTE_PRIMITIVE_XY2 = "xy2";
-const char* const ATTRIBUTE_PRIMITIVE_XYZ1 = "xyz1";
-const char* const ATTRIBUTE_PRIMITIVE_XYZ2 = "xyz2";
-const char* const ATTRIBUTE_PRIMITIVE_XYZ3 = "xyz3";
-const char* const ATTRIBUTE_PRIMITIVE_BASE = "base";
-const char* const ATTRIBUTE_PRIMITIVE_TOP = "top";
-const char* const ATTRIBUTE_PRIMITIVE_HEIGHT = "height";
-const char* const ATTRIBUTE_PRIMITIVE_SLICES = "slices";
-const char* const ATTRIBUTE_PRIMITIVE_STACKS = "stacks";
-const char* const ATTRIBUTE_PRIMITIVE_RADIUS = "radius";
-const char* const ATTRIBUTE_PRIMITIVE_INNER = "inner";
-const char* const ATTRIBUTE_PRIMITIVE_OUTER = "outer";
-const char* const ATTRIBUTE_PRIMITIVE_LOOPS = "loops";
-const char* const ATTRIBUTE_PRIMITIVE_PARTS = "parts";
-const char* const ATTRIBUTE_PRIMITIVE_ORDER = "order";
-const char* const ATTRIBUTE_PRIMITIVE_PARTSU = "partsU";
-const char* const ATTRIBUTE_PRIMITIVE_PARTSV = "partsV";
-const char* const ATTRIBUTE_PRIMITIVE_COMPUTE = "compute";
-const char* const ATTRIBUTE_PRIMITIVE_X = "x";
-const char* const ATTRIBUTE_PRIMITIVE_Y = "y";
-const char* const ATTRIBUTE_PRIMITIVE_Z = "z";
-const char* const ATTRIBUTE_PRIMITIVE_HEIGHTMAP = "heightmap";
-const char* const ATTRIBUTE_PRIMITIVE_TEXTUREMAP = "texturemap";
-const char* const ATTRIBUTE_PRIMITIVE_FRAGMENTSHADER = "fragmentshader";
-const char* const ATTRIBUTE_PRIMITIVE_VERTEXSHADER = "vertexshader";
-
-// ANIMATION ATTRIBUTES
-const char* const SECTION_ANIMATION = "animation";
-const char* const ATTRIBUTE_ANIMATION_SPAN = "span";
-const char* const ATTRIBUTE_ANIMATION_TYPE = "type";
-const char* const VALUE_ANIMATION_LINEAR = "linear";
-const char* const ATTRIBUTE_ANIMATION_X = "xx";
-const char* const ATTRIBUTE_ANIMATION_Y = "yy";
-const char* const ATTRIBUTE_ANIMATION_Z = "zz";
-
-// ERRORS
-const std::string SECTION_GLOBALS_ERROR =
+namespace Errors
+{
+const std::string SECTION_GLOBALS =
         "XML: Globals have already been loaded!";
 
-const std::string ATTRIBUTE_BACKGROUND_ERROR =
+const std::string ATTRIBUTE_BACKGROUND =
         "Globals: Error while parsing the background values.";
-const std::string ATTRIBUTE_DRAWMODE_ERROR =
+const std::string ATTRIBUTE_DRAWMODE =
         "Globals: Error while parsing the draw mode value.";
-const std::string ATTRIBUTE_SHADING_ERROR =
+const std::string ATTRIBUTE_SHADING =
         "Globals: Error while parsing the shading value.";
-const std::string ATTRIBUTE_CULLFACE_ERROR =
+const std::string ATTRIBUTE_CULLFACE =
         "Globals: Error while parsing the cull face value.";
-const std::string ATTRIBUTE_CULLORDER_ERROR =
+const std::string ATTRIBUTE_CULLORDER =
         "Globals: Error while parsing the cull order value.";
 
-const std::string SECTION_CAMERA_ID_ERROR =
+const std::string SECTION_CAMERA_ID =
         "Cameras: Error while reading the camera id string.";
-const std::string ATTRIBUTE_INITIAL_CAMERA_ERROR =
+const std::string ATTRIBUTE_INITIAL_CAMERA =
         "Cameras: Error while reading the initial camera string.";
-const std::string ATTRIBUTE_CAMERA_NEAR_ERROR =
+const std::string ATTRIBUTE_CAMERA_NEAR =
         "Cameras: Error while reading the near value.";
-const std::string ATTRIBUTE_CAMERA_FAR_ERROR =
+const std::string ATTRIBUTE_CAMERA_FAR =
         "Cameras: Error while reading the far value.";
-const std::string ATTRIBUTE_CAMERA_ANGLE_ERROR =
+const std::string ATTRIBUTE_CAMERA_ANGLE =
         "Cameras: Error while reading the angle value.";
-const std::string ATTRIBUTE_CAMERA_POSITION_ERROR =
+const std::string ATTRIBUTE_CAMERA_POSITION =
         "Cameras: Error while reading the position values.";
-const std::string ATTRIBUTE_CAMERA_TARGET_ERROR =
+const std::string ATTRIBUTE_CAMERA_TARGET =
         "Cameras: Error while reading the target values.";
-const std::string ATTRIBUTE_CAMERA_LEFT_ERROR =
+const std::string ATTRIBUTE_CAMERA_LEFT =
         "Cameras: Error while reading the left value.";
-const std::string ATTRIBUTE_CAMERA_RIGHT_ERROR =
+const std::string ATTRIBUTE_CAMERA_RIGHT =
         "Cameras: Error while reading the right value.";
-const std::string ATTRIBUTE_CAMERA_TOP_ERROR =
+const std::string ATTRIBUTE_CAMERA_TOP =
         "Cameras: Error while reading the top value.";
-const std::string ATTRIBUTE_CAMERA_BOTTOM_ERROR =
+const std::string ATTRIBUTE_CAMERA_BOTTOM =
         "Cameras: Error while reading the bottom value.";
 
-const std::string ATTRIBUTE_LIGHTING_DOUBLESIDED_ERROR =
+const std::string ATTRIBUTE_LIGHTING_DOUBLESIDED =
         "Lighting: Error while reading the double sided string.";
-const std::string ATTRIBUTE_LIGHTING_LOCAL_ERROR =
+const std::string ATTRIBUTE_LIGHTING_LOCAL =
         "Lighting: Error while reading the local string.";
-const std::string ATTRIBUTE_LIGHTING_ENABLED_ERROR =
+const std::string ATTRIBUTE_LIGHTING_ENABLED =
         "Lighting: Error while reading the lighting enabled string.";
-const std::string ATTRIBUTE_LIGHTING_G_AMBIENT_ERROR =
+const std::string ATTRIBUTE_LIGHTING_G_AMBIENT =
         "Lighting: Error while reading the ambient light values.";
 
-const std::string SECTION_LIGHTING_ID_ERROR =
+const std::string SECTION_LIGHTING_ID =
         "Lighting: Error while reading the light id string.";
-const std::string SECTION_LIGHTING_ENABLED_ERROR =
+const std::string SECTION_LIGHTING_ENABLED =
         "Lighting: Error while reading the enabled string.";
-const std::string ATTRIBUTE_LIGHTING_LOCATION_ERROR =
+const std::string ATTRIBUTE_LIGHTING_LOCATION =
         "Lighting: Error while reading the location values.";
-const std::string ATTRIBUTE_LIGHTING_AMBIENT_ERROR =
+const std::string ATTRIBUTE_LIGHTING_AMBIENT =
         "Lighting: Error while reading the ambient values.";
-const std::string ATTRIBUTE_LIGHTING_DIFFUSE_ERROR =
+const std::string ATTRIBUTE_LIGHTING_DIFFUSE =
         "Lighting: Error while reading the diffuse values.";
-const std::string ATTRIBUTE_LIGHTING_SPECULAR_ERROR =
+const std::string ATTRIBUTE_LIGHTING_SPECULAR =
         "Lighting: Error while reading the specular values.";
-const std::string SECTION_LIGHTING_ANGLE_ERROR =
+const std::string SECTION_LIGHTING_ANGLE =
         "Lighting: Error while reading the angle value.";
-const std::string ATTRIBUTE_LIGHTING_EXPONENT_ERROR =
+const std::string ATTRIBUTE_LIGHTING_EXPONENT =
         "Lighting: Error while reading the exponent value.";
-const std::string ATTRIBUTE_LIGHTING_DIRECTION_ERROR =
+const std::string ATTRIBUTE_LIGHTING_DIRECTION =
         "Lighting: Error while reading the direction value.";
 
-const std::string SECTION_TEXTURE_ID_ERROR =
+const std::string SECTION_TEXTURE_ID =
         "Textures: Error while reading the texture id string.";
-const std::string SECTION_TEXTURE_FILE_ERROR =
+const std::string SECTION_TEXTURE_FILE =
         "Textures: Error while reading the file name string.";
 
-const std::string SECTION_APPEARANCE_ID_ERROR =
+const std::string SECTION_APPEARANCE_ID =
         "Appearances: Error while reading the appearance id.";
-const std::string ATTRIBUTE_APPEARANCE_EMISSIVE_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_EMISSIVE =
         "Appearances: Error while reading the emissive values.";
-const std::string ATTRIBUTE_APPEARANCE_AMBIENT_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_AMBIENT =
         "Appearances: Error while reading the ambient values.";
-const std::string ATTRIBUTE_APPEARANCE_DIFFUSE_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_DIFFUSE =
         "Appearances: Error while reading the diffuse values.";
-const std::string ATTRIBUTE_APPEARANCE_SPECULAR_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_SPECULAR =
         "Appearances: Error while reading the specular values.";
-const std::string ATTRIBUTE_APPEARANCE_SHININESS_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_SHININESS =
         "Appearances: Error while reading the shininess value.";
-const std::string ATTRIBUTE_APPEARANCE_TEXTURE_ID_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_TEXTURE_ID =
         "Appearances: Error while reading the texture id.";
-const std::string ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_S_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_S =
         "Appearances: Error while reading the texture s length value.";
-const std::string ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_T_ERROR =
+const std::string ATTRIBUTE_APPEARANCE_TEXTURE_LENGHT_T =
         "Appearances: Error while reading the texture t length value.";
 
-const std::string ATTRIBUTE_GRAPH_ROOTID_ERROR =
+const std::string ATTRIBUTE_GRAPH_ROOTID =
         "Graph: Error while reading the root id.";
-const std::string SECTION_GRAPH_ID_ERROR =
+const std::string SECTION_GRAPH_ID =
         "Graph: Error while reading the node id.";
-const std::string ATTRIBUTE_NODE_DISPLAYLIST_ERROR =
+const std::string ATTRIBUTE_NODE_DISPLAYLIST =
         "Graph: Error while reading the display list.";
-const std::string ATTRIBUTE_TRANSFORM_FACTOR_ERROR =
+const std::string ATTRIBUTE_TRANSFORM_FACTOR =
         "Transform: Error while reading the scale factors.";
-const std::string ATTRIBUTE_TRANSFORM_AXIS_ERROR =
+const std::string ATTRIBUTE_TRANSFORM_AXIS =
         "Transform: Error while reading transform axis.";
-const std::string ATTRIBUTE_ANGLE_ERROR =
+const std::string ATTRIBUTE_ANGLE =
         "Transform: Error while reading the angle value.";
-const std::string ATTRIBUTE_TRANSFORM_TO_ERROR =
+const std::string ATTRIBUTE_TRANSFORM_TO =
         "Transform: Error while reading the translation factors.";
-const std::string SECTION_GRAPH_APPEARANCE_ID_ERROR =
+const std::string SECTION_GRAPH_APPEARANCE_ID =
         "Node: Error while reading the appearance reference id.";
-const std::string SECTION_GRAPH_ANIMATION_ID_ERROR =
+const std::string SECTION_GRAPH_ANIMATION_ID =
         "Node: Error while reading the animation reference id.";
-const std::string ATTRIBUTE_PRIMITIVE_XY1_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_XY1 =
         "Rectangle: Error while loading vertice 1.";
-const std::string ATTRIBUTE_PRIMITIVE_XY2_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_XY2 =
         "Rectangle: Error while loading vertice 2.";
-const std::string ATTRIBUTE_PRIMITIVE_XYZ1_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_XYZ1 =
         "Triangle: Error while loading vertice 1.";
-const std::string ATTRIBUTE_PRIMITIVE_XYZ2_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_XYZ2 =
         "Triangle: Error while loading vertice 2.";
-const std::string ATTRIBUTE_PRIMITIVE_XYZ3_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_XYZ3 =
         "Triangle: Error while loading vertice 3.";
-const std::string ATTRIBUTE_PRIMITIVE_CYL_BASE_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_CYL_BASE =
         "Cylinder: Error while loading base.";
-const std::string ATTRIBUTE_PRIMITIVE_CYL_TOP_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_CYL_TOP =
         "Cylinder: Error while loading top.";
-const std::string ATTRIBUTE_PRIMITIVE_CYL_HEIGHT_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_CYL_HEIGHT =
         "Cylinder: Error while loading height.";
-const std::string ATTRIBUTE_PRIMITIVE_CYL_SLICES_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_CYL_SLICES =
         "Cylinder: Error while loading slices.";
-const std::string ATTRIBUTE_PRIMITIVE_CYL_STACKS_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_CYL_STACKS =
         "Cylinder: Error while loading stacks.";
-const std::string ATTRIBUTE_PRIMITIVE_SPHERE_RADIUS_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_SPHERE_RADIUS =
         "Sphere: Error while loading radius.";
-const std::string ATTRIBUTE_PRIMITIVE_SPHERE_SLICES_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_SPHERE_SLICES =
         "Sphere: Error while loading slices.";
-const std::string ATTRIBUTE_PRIMITIVE_SPHERE_STACKS_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_SPHERE_STACKS =
         "Sphere: Error while loading stacks.";
-const std::string ATTRIBUTE_PRIMITIVE_TORUS_INNER_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_TORUS_INNER =
         "Torus: Error while loading inner value.";
-const std::string ATTRIBUTE_PRIMITIVE_TORUS_OUTER_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_TORUS_OUTER =
         "Torus: Error while loading outer value.";
-const std::string ATTRIBUTE_PRIMITIVE_TORUS_SLICES_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_TORUS_SLICES =
         "Torus: Error while loading slices.";
-const std::string ATTRIBUTE_PRIMITIVE_TORUS_LOOPS_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_TORUS_LOOPS =
         "Torus: Error while loading loops.";
-const std::string ATTRIBUTE_PRIMITIVE_PLANE_PARTS_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PLANE_PARTS =
         "Plane: Error while loading parts.";
-const std::string ATTRIBUTE_PRIMITIVE_PATCH_ORDER_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PATCH_ORDER =
         "Patch: Error while loading order.";
-const std::string ATTRIBUTE_PRIMITIVE_PATCH_PARTSU_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PATCH_PARTSU =
         "Patch: Error while loading partsU.";
-const std::string ATTRIBUTE_PRIMITIVE_PATCH_PARTSV_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PATCH_PARTSV =
         "Patch: Error while loading partsV.";
-const std::string ATTRIBUTE_PRIMITIVE_PATCH_COMPUTE_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PATCH_COMPUTE =
         "Patch: Error while loading compute.";
-const std::string ATTRIBUTE_PRIMITIVE_PATCH_X_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PATCH_X =
         "Patch: Error while reading the x value.";
-const std::string ATTRIBUTE_PRIMITIVE_PATCH_Y_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PATCH_Y =
         "Patch: Error while reading the y value.";
-const std::string ATTRIBUTE_PRIMITIVE_PATCH_Z_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_PATCH_Z =
         "Patch: Error while reading the z value.";
-const std::string ATTRIBUTE_PRIMITIVE_WL_HEIGHTMAP_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_WL_HEIGHTMAP =
         "Waterline: Could not read height map.";
-const std::string ATTRIBUTE_PRIMITIVE_WL_TEXTUREMAP_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_WL_TEXTUREMAP =
         "Waterline: Could not read texture map.";
-const std::string ATTRIBUTE_PRIMITIVE_WL_FRAGMENTSHADER_ERROR =
+const std::string ATTRIBUTE_PRIMITIVE_WL_FRAGMENTSHADER =
         "Waterline: Could not read fragment shader.";
 const std::string ATTRIBUTE_PRIMITIVE_WL_VERTEXSHADER_ERRROR =
         "Waterline: Could not read vertex shader.";
-const std::string SECTION_GRAPH_CHILDREN_ID_ERROR =
+const std::string SECTION_GRAPH_CHILDREN_ID =
         "Children: Could not read node reference id.";
 
-const std::string ATTRIBUTE_ANIMATION_ID_ERROR =
+const std::string ATTRIBUTE_ANIMATION_ID =
         "Animations: Error while reading the animation id string.";
-const std::string ATTRIBUTE_ANIMATION_SPAN_ERROR =
+const std::string ATTRIBUTE_ANIMATION_SPAN =
         "Animation: Error while reading animation span.";
-const std::string ATTRIBUTE_ANIMATION_TYPE_ERROR =
+const std::string ATTRIBUTE_ANIMATION_TYPE =
         "Animation: Error while reading animation type.";
-const std::string ATTRIBUTE_ANIMATION_X_ERROR =
+const std::string ATTRIBUTE_ANIMATION_X =
         "Animation: Error while reading the x value.";
-const std::string ATTRIBUTE_ANIMATION_Y_ERROR =
+const std::string ATTRIBUTE_ANIMATION_Y =
         "Animation: Error while reading the y value.";
-const std::string ATTRIBUTE_ANIMATION_Z_ERROR =
+const std::string ATTRIBUTE_ANIMATION_Z =
         "Animation: Error while reading the z value.";
+}
+
 
 } // namespace xml
 }
