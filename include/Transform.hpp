@@ -17,38 +17,19 @@ protected:
     int transformNumber;
     GLdouble matrix[16];
 
+    void setIndentityMatrix();
+
 public:
-    Transform(int number) {
-        transformNumber = number;
-        setIndentityMatrix();
-    }
-    virtual ~Transform() { }
+    Transform() = delete;
+    Transform(Transform const&) = delete;
+    Transform& operator=(Transform const&) = delete;
 
-    virtual GLdouble* getTransformationMatrix() = 0;
-    virtual void apply() = 0;
-    void setIndentityMatrix()
-    {
-        matrix[0] = 1;
-        matrix[1] = 0;
-        matrix[2] = 0;
-        matrix[3] = 0;
+    Transform(int number);
+    virtual ~Transform();
 
-        matrix[4] = 0;
-        matrix[5] = 1;
-        matrix[6] = 0;
-        matrix[7] = 0;
-
-        matrix[8] = 0;
-        matrix[9] = 0;
-        matrix[10] = 1;
-        matrix[11] = 0;
-
-        matrix[12] = 0;
-        matrix[13] = 0;
-        matrix[14] = 0;
-        matrix[15] = 1;
-    }
     virtual void updateMatrix() = 0;
+    virtual void apply() = 0;
+    GLdouble* getTransformationMatrix();
 };
 
 class TransformTranslate: public Transform {
@@ -56,34 +37,16 @@ private:
     xyzPointDouble destination;
 
 public:
-    TransformTranslate(xyzPointDouble in, int tN) :
-            Transform(tN) {
-        destination = in;
-        updateMatrix();
-    }
+    TransformTranslate() = delete;
+    TransformTranslate(TransformTranslate const&) = delete;
+    TransformTranslate& operator=(TransformTranslate const&) = delete;
 
-    TransformTranslate(GLdouble x, GLdouble y, GLdouble z, int tN) :
-            Transform(tN) {
-        destination.x = x;
-        destination.y = y;
-        destination.z = z;
-        updateMatrix();
-    }
+    TransformTranslate(xyzPointDouble in, int tN);
+    TransformTranslate(GLdouble x, GLdouble y, GLdouble z, int tN);
+    virtual ~TransformTranslate();
 
-    GLdouble* getTransformationMatrix() {
-        return matrix;
-    }
-
-    virtual void updateMatrix()
-    {
-        matrix[12] = destination.x;
-        matrix[13] = destination.y;
-        matrix[14] = destination.z;
-    }
-
-    void apply() {
-        glTranslated(destination.x, destination.y, destination.z);
-    }
+    virtual void updateMatrix();
+    virtual void apply();
 };
 
 class TransformRotate: public Transform {
@@ -93,144 +56,34 @@ private:
     GLdouble angleRad;
     int axis;
 
-    unsigned int getAxisId() {
-        if (axisArray.x == 1) {
-            return 0;
-        }
-
-        if (axisArray.y == 1) {
-            return 1;
-        }
-
-        if (axisArray.z == 1) {
-            return 2;
-        }
-        return 0;
-    }
+    unsigned int getAxisId();
 
 public:
-    TransformRotate(int iAxis, GLdouble iAngle, int tN) :
-            Transform(tN) {
-        axis = iAxis;
-        angleRad = (iAngle * M_PI) / 180;
+    TransformRotate() = delete;
+    TransformRotate(TransformRotate const&) = delete;
+    TransformRotate& operator=(TransformRotate const&) = delete;
 
-        axisArray.x = 0;
-        axisArray.y = 0;
-        axisArray.z = 0;
+    TransformRotate(int iAxis, GLdouble iAngle, int tN);
+    virtual ~TransformRotate();
 
-        angle = iAngle;
-        updateMatrix();
-    }
-
-    virtual ~TransformRotate() {
-
-    }
-
-    GLdouble* getTransformationMatrix() {
-        return matrix;
-    }
-
-    virtual void updateMatrix()
-    {
-        /* 0 for x, 1 for y and 2 for z */
-        switch (axis) {
-            case 0:
-                axisArray.x = 1;
-
-                /* X axis rotation (roll) */
-                matrix[0] = 1;
-                matrix[1] = 0;
-                matrix[2] = 0;
-
-                matrix[4] = 0;
-                matrix[5] = cos(angleRad);
-                matrix[6] = sin(angleRad);
-
-                matrix[8] = 0;
-                matrix[9] = -sin(angleRad);
-                matrix[10] = cos(angleRad);
-                break;
-
-            case 1:
-                axisArray.y = 1;
-
-                /* Y axis rotation (pitch) */
-                matrix[0] = cos(angleRad);
-                matrix[1] = 0;
-                matrix[2] = -sin(angleRad);
-
-                matrix[4] = 0;
-                matrix[5] = 1;
-                matrix[6] = 0;
-
-                matrix[8] = sin(angleRad);
-                matrix[9] = 0;
-                matrix[10] = cos(angleRad);
-                break;
-
-            case 2:
-                axisArray.z = 1;
-
-                /* Z axis rotation (yaw) */
-                matrix[0] = cos(angleRad);
-                matrix[1] = sin(angleRad);
-                matrix[2] = 0;
-
-                matrix[4] = -sin(angleRad);
-                matrix[5] = cos(angleRad);
-                matrix[6] = 0;
-
-                matrix[8] = 0;
-                matrix[9] = 0;
-                matrix[10] = 1;
-                break;
-
-            default:
-                throw Exception(
-                        "Bug: Invalid value fed to axis at geTransformRotate!",
-                        true);
-                break;
-        }
-    }
-
-    void apply() {
-        glRotated(angle, axisArray.x, axisArray.y, axisArray.z);
-    }
-
+    virtual void updateMatrix();
+    virtual void apply();
 };
 
 class TransformScale: public Transform {
 private:
     xyzPointDouble scaleFactor;
 public:
-    TransformScale(xyzPointDouble in, int tN) :
-            Transform(tN) {
-        scaleFactor = in;
-        updateMatrix();
-    }
+    TransformScale() = delete;
+    TransformScale(TransformScale const&) = delete;
+    TransformScale& operator=(TransformScale const&) = delete;
 
-    TransformScale(GLdouble x, GLdouble y, GLdouble z, int tN) :
-            Transform(tN) {
-        scaleFactor.x = x;
-        scaleFactor.y = y;
-        scaleFactor.z = z;
-        updateMatrix();
-    }
+    TransformScale(xyzPointDouble in, int tN);
+    TransformScale(GLdouble x, GLdouble y, GLdouble z, int tN);
+    virtual ~TransformScale();
 
-    GLdouble* getTransformationMatrix() {
-        return matrix;
-    }
-
-    virtual void updateMatrix()
-    {
-        matrix[0]  = scaleFactor.x;
-        matrix[5]  = scaleFactor.y;
-        matrix[10] = scaleFactor.z;
-    }
-
-    void apply() {
-        glScaled(scaleFactor.x, scaleFactor.y, scaleFactor.z);
-    }
+    virtual void updateMatrix();
+    virtual void apply();
 };
 }
 
